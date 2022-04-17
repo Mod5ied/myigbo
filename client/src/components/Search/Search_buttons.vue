@@ -4,7 +4,7 @@
     class="fixed flex flex-row justify-center w-full gap-10 px-5 py-2 bottom-4 md:bottom-0 md:gap-20"
   >
     <!-- Should grab data and search and give its dictionary when btn is clicked -->
-    <span class="search-btns" title="Dictionary">
+    <span class="search-btns" v-if="useDict" title="Dictionary">
       <router-link :to="{ name: 'Dictionary' }">
         <i class="flex items-center text-gray-100">
           <svg
@@ -25,7 +25,7 @@
         </i>
       </router-link>
     </span>
-    <span class="search-btns" v-if="isSearched" title="Translator">
+    <span class="search-btns" v-if="useTrans" title="Translator">
       <router-link :to="{ name: 'Dictionary' }">
         <i class="flex items-center text-gray-100">
           <svg
@@ -43,7 +43,7 @@
         </i>
       </router-link>
     </span>
-    <span class="search-btns" title="Learn to speak">
+    <span class="search-btns" v-if="useSpeaker" title="Learn to speak">
       <router-link :to="{ name: 'Dictionary' }">
         <i class="flex items-center text-gray-100">
           <svg
@@ -61,7 +61,7 @@
         </i>
       </router-link>
     </span>
-    <span class="search-btns" title="Exit" @click="refreshState">
+    <span class="search-btns" v-if="useExit" title="Exit" @click="refreshState">
       <a>
         <i class="flex items-center text-gray-100">
           <svg
@@ -85,18 +85,26 @@
 <script setup>
 import { inject, ref } from "vue";
 
-//reactive button states
-let isSearched = ref(true);
+//reactive button states.
+let useDict = ref(true);
+let useExit = ref(false);
+let useTrans = ref(true);
+let useSpeaker = ref(false);
 const useState = [false, true];
 
-//event bus initialized
+//event bus initialized.
 const emitter = inject("emitter");
 emitter.on("hide-buttons", (payload) => {
-  isSearched.value = payload;
+  //comes form {search-box} hides speak & dict.
+  useSpeaker.value = payload[0];
+  useDict.value = payload[0];
+  useExit.value = true;
 });
-//refresh 'fn'
+
+//refresh 'fn'.
 const refreshState = () => {
-  isSearched.value = true;
+  useExit.value = false;
+  useDict.value = true;
   emitter.emit("clear-input"); //goes to {Search-box}.
   emitter.emit("clear-result", false); //goes to {Search-box} since its more direct.
   emitter.emit("revert-btns", useState); //goes to {Search-box} input btns.

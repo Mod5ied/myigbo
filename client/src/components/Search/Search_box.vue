@@ -1,17 +1,20 @@
 <template>
-  <div class="relative flex justify-center w-full cursor-pointer">
+  <div
+    class="relative flex justify-center w-full cursor-pointer"
+    :class="searchClass"
+  >
     <form
       @submit.prevent="handleSubmit"
       class="flex items-center justify-around w-full md:justify-start"
     >
       <i
         v-if="isDictionary"
-        class="relative flex items-center justify-center w-8 h-8 transition border-2 rounded-lg md:left-10 hover:border-gray-200 md:hover:border-indigo-300 hover:duration-300"
+        class="relative flex items-center justify-center w-8 h-8 transition border-2 rounded-lg dark:border-gray-800 dark:text-slate-400 md:left-10 hover:border-gray-200 md:hover:border-indigo-300 hover:duration-300"
       >
         <router-link :to="{ name: 'Search' }">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="w-5 h-5 md:w-6 md:h-6"
+            class="w-5 h-5 md:w-5 md:h-5"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -38,7 +41,7 @@
         <div
           id="input_icons"
           class="absolute flex items-center justify-between gap-5 right-10 sm:right-16 md:right-8"
-          :class="dynaClass"
+          :class="dictClass"
         >
           <i class="flex items-center text-gray-400 hover:text-gray-600">
             <svg
@@ -99,7 +102,7 @@
 </template>
 
 <script setup>
-import { inject, ref, watchEffect, watch } from "vue";
+import { inject, ref } from "vue";
 
 //reactive input data.
 let input = ref("");
@@ -107,12 +110,15 @@ let placeholder = ref("Search by word");
 let notTyping = ref(true);
 let isTyping = ref(false);
 let isDictionary = props.HideArrow;
-let dynaClass = props.DynaClass;
+let searchClass = props.SearchClass;
+let dictClass = props.DictClass;
+const useState = [false, true];
 
 //props for renderin component state
 const props = defineProps({
   HideArrow: Boolean,
-  DynaClass: String,
+  SearchClass: String,
+  DictClass: String,
 });
 
 //event bus initialized.
@@ -120,7 +126,7 @@ const emitter = inject("emitter");
 
 //methods
 function hideCard() {
-  emitter.emit("hide-card", false);
+  emitter.emit("hide-card", useState);
 }
 function clearInputBox() {
   input.value = null;
@@ -141,7 +147,7 @@ emitter.on("revert-btns", (payload) => {
 //input 'fns()'
 const handleSubmit = function () {
   emitter.emit("hide-buttons", false);
-  emitter.emit("show-card", true); //goes to {search-res & Search}.
+  emitter.emit("show-results", true); //goes to {search-res & Search}.
 };
 const hideResultComponent = function () {
   emitter.emit("hide-results", false); //goes to {search-res & Search}.
@@ -150,11 +156,4 @@ const hideResultComponent = function () {
 };
 
 // watchers -> to alter reactive state.
-// watch(isTyping, () => {
-//   if (
-//     input.value.length < 1
-//       ? (notTyping.value = false)
-//       : (notTyping.value = true)
-//   );
-// });
 </script>
