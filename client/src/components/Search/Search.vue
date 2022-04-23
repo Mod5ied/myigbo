@@ -6,9 +6,7 @@
       class="flex flex-row justify-between w-full px-3 py-5 list-none border-b dark:border-b-gray-800 md:px-5 md:py-4 dark:bg-slate-900 bg-gray-50"
     >
       <span class="flex w-full text-gray-400 md:w-8 md:relative md:left-10">
-        <i
-          class="flex items-center justify-between w-full cursor-pointer md:w-6"
-        >
+        <i class="flex justify-between w-full cursor-pointer md:items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="w-5 h-5 md:hidden"
@@ -23,12 +21,31 @@
           </svg>
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="w-5 h-5 hover:text-orange-400 dark:text-orange-500 dark:hover:text-orange-300"
+            class="w-5 h-5 md:w-20 hover:text-orange-400 dark:text-orange-500 dark:hover:text-orange-300"
             viewBox="0 0 20 20"
             fill="currentColor"
+            v-if="darkState"
+            @click="setDarkMode"
           >
             <path
               d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"
+            />
+          </svg>
+
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-6 h-6 md:w-20 hover:text-orange-400 dark:text-orange-500 dark:hover:text-orange-300"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+            v-if="lightState"
+            @click="setLightMode"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
             />
           </svg>
         </i>
@@ -54,12 +71,12 @@
           <h1
             class="text-xl font-bold text-center text-indigo-600 dark:text-white"
           >
-            IboTrans Services
+            IgboTrans service
           </h1>
           <p
             class="w-4/5 text-sm font-medium text-center text-gray-400 dark:text-slate-400"
           >
-            Discover translations, learn new words, synonyms and more
+            Discover translations, learn new words, synonyms and more in Igbo!
           </p>
         </span>
       </div>
@@ -77,7 +94,7 @@
 
 <script setup>
 // import { computed, reactive } from "@vue/reactivity";
-import { defineAsyncComponent, inject, ref, watchEffect } from "vue";
+import { defineAsyncComponent, inject, onMounted, ref, watchEffect } from "vue";
 import Search_box from "./Search_box.vue";
 import Search_buttons from "./Search_buttons.vue";
 import Search_history from "./Search_history.vue";
@@ -92,6 +109,10 @@ let search_box = ref(false);
 let hasResult = ref(false); //if new search 👈 is truthy
 let useHistory = ref(true);
 let HideArrow = ref(false);
+//dark nd light mode states.
+let currentState = ref(null);
+let darkState = ref(true);
+let lightState = ref(null);
 
 //reactive class states
 let SearchClass = "mt-10 md:mt-0";
@@ -117,4 +138,55 @@ emitter.on("hide-results", (payload) => {
   hasResult.value = payload;
   useHistory.value = true;
 });
+
+//fns() for tweaking light and dark modes.
+const setDarkMode = () => {
+  //emit a set-dark event to App.vue.
+  emitter.emit("set-dark", "dark");
+  //hide the moon.
+  darkState.value = false;
+  lightState.value = true;
+};
+const setLightMode = () => {
+  //emit a set-light event to App.vue.
+  emitter.emit("set-light", "light");
+  //hide the sun.
+  lightState.value = false;
+  darkState.value = true;
+};
+
+//fns() to check for state in localStorage
+const checkState = () => {
+  const state = localStorage.getItem("state");
+  // console.log(state);
+};
+currentState.value = checkState();
+
+/* would determine icons visibilty with state value 👆 */
+// switch (currentState) {
+//   case "light":
+//     darkState.value = true;
+//     lightState.value = false;
+//     break;
+//   case "dark":
+//     darkState.value = false;
+//     lightState.value = true;
+//     break;
+
+//   default:
+//     darkState.value = true;
+//     lightState.value = false;
+//     break;
+// }
+
+// onMounted(() => {
+//   if (currentState.value == "light") {
+//     lightState.value = false;
+//     darkState.value = true;
+//   }
+//   if (currentState.value == "dark") {
+//     lightState.value = true;
+//     darkState.value = false;
+//   }
+// });
 </script>
