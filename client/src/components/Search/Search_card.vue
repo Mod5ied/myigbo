@@ -1,9 +1,11 @@
 <template>
   <div
-    class="flex flex-col justify-center w-full p-3 bg-indigo-900 rounded-md shadow-lg md:w-1/3"
+    class="flex flex-col justify-center w-full p-3 bg-indigo-900 rounded-md shadow-lg dark:bg-slate-700 md:w-1/3"
   >
     <span class="flex flex-row justify-between px-4 py-2">
-      <h3 class="text-2xl font-bold text-gray-200">Nwanyi</h3>
+      <h3 class="text-2xl font-bold text-gray-200 dark:text-slate-300">
+        Nwanyi
+      </h3>
       <i
         title="Listen"
         class="flex items-center p-2 transition bg-red-400 rounded-md hover:bg-red-500 hover:duration-300 hover:scale-105"
@@ -23,12 +25,14 @@
       </i>
     </span>
     <span
-      class="flex items-center justify-start gap-4 px-4 py-2 w text-sm text-gray-400"
+      class="flex items-center justify-start gap-4 px-4 py-2 text-sm text-gray-400 w dark:text-slate-400"
     >
       <p class="text-red-400">Show IPA</p>
       <p>"[nYaa - nyii]"</p>
     </span>
-    <p class="px-4 py-2 text-sm font-medium text-gray-400">Female Human.</p>
+    <p class="px-4 py-2 text-sm font-medium text-gray-400 dark:text-slate-400">
+      Female Human.
+    </p>
   </div>
 </template>
 

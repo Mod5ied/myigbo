@@ -7,10 +7,7 @@
       @submit.prevent="handleSubmit"
       class="flex items-center justify-around w-full md:justify-start"
     >
-      <i
-        v-if="isDictionary"
-        class="relative flex items-center justify-center w-8 h-8 transition border-2 rounded-lg dark:border-gray-800 dark:text-slate-400 md:left-10 hover:border-gray-200 md:hover:border-indigo-300 hover:duration-300"
-      >
+      <i v-if="isDictionary" class="search_box_nav">
         <router-link :to="{ name: 'Search' }">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -43,7 +40,10 @@
           class="absolute flex items-center justify-between gap-5 right-10 sm:right-16 md:right-8"
           :class="dictClass"
         >
-          <i class="flex items-center text-gray-400 hover:text-gray-600">
+          <i
+            @click="handleSubmit"
+            class="flex items-center text-gray-400 hover:text-gray-600"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="w-5 h-5"

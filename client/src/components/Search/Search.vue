@@ -61,24 +61,33 @@
       </span>
     </header>
     <main
-      class="flex flex-col items-center justify-center gap-3 py-10 md:py-6 md:gap-10"
+      class="flex flex-col items-center justify-center gap-3 py-10 md:px-5 md:py-6 md:gap-10"
     >
-      <div id="intro" class="flex flex-col items-center justify-center gap-10">
-        <img src="../../assets/home.svg" alt="" />
-        <!-- ✋ load the interactive component 
-        when user hovers over image/section -->
-        <span class="flex flex-col items-center justify-center gap-3 flex-cols">
-          <h1
-            class="text-xl font-bold text-center text-indigo-600 dark:text-white"
+      <div id="parent" class="flex flex-col items-center">
+        <!-- <div
+          id="intro"
+          class="flex flex-col items-center justify-center gap-10"
+        >
+          <img src="../../assets/home.svg" alt="" />
+          ✋ load the interactive component 
+        when user hovers over image/section
+          <span
+            class="flex flex-col items-center justify-center gap-3 flex-cols"
           >
-            IgboTrans service
-          </h1>
-          <p
-            class="w-4/5 text-sm font-medium text-center text-gray-400 dark:text-slate-400"
-          >
-            Discover translations, learn new words, synonyms and more in Igbo!
-          </p>
-        </span>
+            <h1
+              class="text-xl font-bold text-center text-indigo-600 dark:text-white"
+            >
+              IgboTrans service
+            </h1>
+            <p
+              class="w-4/5 text-sm font-medium text-center text-gray-400 dark:text-slate-400"
+            >
+              Discover translations, learn new words, synonyms and more in Igbo!
+            </p>
+          </span>
+        </div> -->
+        <!-- Would be async loaded to DOM on hover. -->
+        <Search_Interact />
       </div>
       <Search_box :HideArrow="HideArrow" :SearchClass="SearchClass" />
       <Search_history v-if="useHistory" />
@@ -93,11 +102,11 @@
 </template>
 
 <script setup>
-// import { computed, reactive } from "@vue/reactivity";
-import { defineAsyncComponent, inject, onMounted, ref, watchEffect } from "vue";
+import { defineAsyncComponent, inject, ref } from "vue";
 import Search_box from "./Search_box.vue";
 import Search_buttons from "./Search_buttons.vue";
 import Search_history from "./Search_history.vue";
+import Search_Interact from "../Interactive/Search_Interact.vue";
 
 //async load nested components
 const AsyncResults = defineAsyncComponent(() => import("./Search_result.vue"));

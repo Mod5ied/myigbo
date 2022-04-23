@@ -5,31 +5,9 @@
     >
       <Search_box :HideArrow="HideArrow" />
     </header>
-    <main class="flex flex-col items-center justify-center gap-10 px-8 py-5">
-      <Search_card :class="DictClass" />
-      <!-- scroll section -->
-      <span
-        class="flex items-center justify-between gap-12 px-8 md:justify-center w-96 scrollable md:cursor-pointer"
-      >
-        <h4
-          class="text-lg font-semibold text-gray-400 transition-all dark:text-slate-400 dark:hover:text-indigo-700 focus:text-indigo-900 hover:duration-300 hover:text-indigo-900"
-        >
-          Definitions
-        </h4>
-        <h4
-          class="text-lg font-semibold text-gray-400 transition-all dark:text-slate-400 dark:hover:text-indigo-700 focus:text-indigo-900 hover:duration-300 hover:text-indigo-900"
-        >
-          Synonyms
-        </h4>
-        <h4
-          class="text-lg font-semibold text-gray-400 transition-all dark:text-slate-400 dark:hover:text-indigo-700 focus:text-indigo-900 hover:duration-300 hover:text-indigo-900"
-        >
-          Antonyms
-        </h4>
-      </span>
-      <span>
-        <Dict_card />
-      </span>
+    <main class="flex flex-col">
+      <Dict_Interact />
+      <async-results v-if="useResults" />
     </main>
     <footer
       class="flex justify-end w-full px-3 md:justify-between md:gap-5 md:px-10 md:fixed md:bottom-3"
@@ -50,7 +28,7 @@
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          class="w-10 h-10 md:w-12 md:h-12"
+          class="w-8 h-8 md:w-9 md:h-9"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -68,14 +46,16 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { defineAsyncComponent, ref } from "vue";
 import Search_box from "../Search/Search_box.vue";
-import Search_card from "../Search/Search_card.vue";
-import Dict_card from "./Dict_card.vue";
+import Dict_Interact from "../Interactive/Dict_Interact.vue";
+
+//async load the results component when required.
+const AsyncResults = defineAsyncComponent(() => import("./Dict_results.vue"));
 
 //dynamic values
-let DictClass = "w-80";
 let HideArrow = ref(true);
+let useResults = ref(true);
 </script>
 
 <style scoped>
