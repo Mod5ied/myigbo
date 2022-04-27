@@ -7,7 +7,7 @@
     >
       <span class="flex flex-col justify-center w-full gap-1 p-2">
         <p
-          class="flex justify-between text-xs font-bold text-left text-slate-400"
+          class="flex items-center justify-between text-xs font-bold text-left text-slate-400"
         >
           Pick the correct one:
           <i class="flex items-center text-xs text-red-400">

@@ -1,5 +1,11 @@
 <template>
-  <div class="flex flex-col items-center w-full gap-2 py-3">
+  <div
+    class="flex flex-col items-center w-full gap-2 px-4 py-3"
+    :class="dyna_class"
+  >
+    <h2 class="font-extrabold text-gray-700 dark:text-orange-400">
+      QUIZ TIME!
+    </h2>
     <div
       id="parent"
       class="flex flex-col gap-3 py-2 rounded-md bg-slate-300 dark:bg-slate-700"
@@ -85,14 +91,17 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { inject, ref } from "vue";
+
+const props = defineProps({
+  dynamicClass: String,
+});
 
 let useTranslation = ref(false);
+let dyna_class = props.dynamicClass;
 
-//fn to set useTranslation to true
+//fn to set useTranslation to true.
 function useTrans() {
   useTranslation.value = !useTranslation.value;
 }
 </script>
-
-<style scoped></style>

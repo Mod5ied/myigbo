@@ -1,11 +1,13 @@
 import "./index.css";
+import mitt from "mitt";
 import App from "./App.vue";
 import { createApp } from "vue";
 import { createWebHistory, createRouter } from "vue-router";
-import Admin from "./components/Admin/Admin.vue";
-import Search from "./components/Search/Search.vue";
-import Dictionary from "./components/Dictionary/Dictionary.vue";
-import mitt from "mitt";
+
+//dynamic routing.
+const Admin = () => import("./components/Admin/Admin.vue");
+const Search = () => import("./components/Search/Search.vue");
+const Dictionary = () => import("./components/Dictionary/Dictionary.vue");
 
 const emitter = mitt();
 const router = createRouter({

@@ -114,7 +114,7 @@ let searchClass = props.SearchClass;
 let dictClass = props.DictClass;
 const useState = [false, true];
 
-//props for renderin component state
+//props for rendering component state.
 const props = defineProps({
   HideArrow: Boolean,
   SearchClass: String,
@@ -124,7 +124,7 @@ const props = defineProps({
 //event bus initialized.
 const emitter = inject("emitter");
 
-//methods
+//methods.
 function hideCard() {
   emitter.emit("hide-card", useState);
 }
@@ -144,10 +144,17 @@ emitter.on("revert-btns", (payload) => {
 });
 
 //emitter to trigger hide Search btns.
-//input 'fns()'
+//input 'fns()'.
 const handleSubmit = function () {
-  emitter.emit("hide-buttons", false);
-  emitter.emit("show-results", true); //goes to {search-res & Search}.
+  try {
+    if (input.value.length >= 2) {
+      emitter.emit("hide-buttons", false); //goes to {search-btns & dict-interact}.
+      emitter.emit("show-results", true); //goes to {search-res & Search}.
+    }
+    return;
+  } catch (err) {
+    console.error(err.message);
+  }
 };
 const hideResultComponent = function () {
   emitter.emit("hide-results", false); //goes to {search-res & Search}.

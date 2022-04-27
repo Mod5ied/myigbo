@@ -6,8 +6,12 @@
       <Search_box :HideArrow="HideArrow" />
     </header>
     <main class="flex flex-col">
-      <Dict_Interact />
-      <async-results v-if="useResults" />
+      <Transition>
+        <DictInteract v-if="useInteract" :dynamicClass="clas" />
+      </Transition>
+      <Transition>
+        <async-results v-if="useResults" />
+      </Transition>
     </main>
     <footer
       class="flex justify-end w-full px-3 md:justify-between md:gap-5 md:px-10 md:fixed md:bottom-3"
@@ -23,6 +27,7 @@
         ></ion-icon>
       </i>
       <i
+        @click="handleView"
         title="Play a Puzzle"
         class="flex items-center text-red-300 transition-all hover:text-red-500 focus:text-red-700 hover:duration-300"
       >
@@ -46,16 +51,40 @@
 </template>
 
 <script setup>
-import { defineAsyncComponent, ref } from "vue";
+import { defineAsyncComponent, inject, ref } from "vue";
 import Search_box from "../Search/Search_box.vue";
-import Dict_Interact from "../Interactive/Dict_Interact.vue";
+// import Dict_Interact from "../Interactive/Dict_Interact.vue";
 
 //async load the results component when required.
 const AsyncResults = defineAsyncComponent(() => import("./Dict_results.vue"));
+const DictInteract = defineAsyncComponent(() =>
+  import("../Interactive/Dict_Interact.vue")
+);
 
-//dynamic values
+//define emitter.
+const emitter = inject("emitter");
+
+//dynamic values.
 let HideArrow = ref(true);
-let useResults = ref(true);
+let useResults = ref(null);
+let useInteract = ref(true);
+let clas = "mt-20";
+
+//functions.
+const handleView = () => {
+  useResults.value = false;
+  setTimeout(() => {
+    useInteract.value = true;
+  }, 1000);
+};
+
+//emitter response to actually hide { Dict-interact }.
+emitter.on("hide-buttons", (payload) => {
+  useInteract.value = payload;
+  setTimeout(() => {
+    useResults.value = !payload;
+  }, 1000);
+});
 </script>
 
 <style scoped>
@@ -67,5 +96,13 @@ let useResults = ref(true);
 .scrollable::-webkit-scrollbar {
   width: 0;
   height: 0;
+}
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.8s ease;
+}
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
 }
 </style>

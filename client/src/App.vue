@@ -62,7 +62,7 @@ emitter.on("set-light", (payload) => {
 </template>
 
 <style>
-@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@300;500;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@300;500;700;800;900&display=swap");
 #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

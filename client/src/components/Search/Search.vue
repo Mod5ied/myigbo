@@ -21,7 +21,7 @@
           </svg>
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="w-5 h-5 md:w-20 hover:text-orange-400 dark:text-orange-500 dark:hover:text-orange-300"
+            class="w-5 h-5 text-orange-400 md:w-20 hover:text-orange-300 dark:text-orange-500 dark:hover:text-orange-300"
             viewBox="0 0 20 20"
             fill="currentColor"
             v-if="darkState"
@@ -64,34 +64,51 @@
       class="flex flex-col items-center justify-center gap-3 py-10 md:px-5 md:py-6 md:gap-10"
     >
       <div id="parent" class="flex flex-col items-center">
-        <!-- <div
-          id="intro"
-          class="flex flex-col items-center justify-center gap-10"
-        >
-          <img src="../../assets/home.svg" alt="" />
-          ✋ load the interactive component 
-        when user hovers over image/section
-          <span
-            class="flex flex-col items-center justify-center gap-3 flex-cols"
+        <Transition>
+          <div
+            id="intro"
+            class="flex flex-col items-center justify-center gap-10"
+            v-if="useIntro"
           >
-            <h1
-              class="text-xl font-bold text-center text-indigo-600 dark:text-white"
+            <img :src="image2" alt="" class="w-1/2" />
+            <!-- <img :src="darkState ? images[1] : images[0]" alt="" class="dark:" /> -->
+            <!-- ✋ load the interactive component 
+                  when user hovers over image/section -->
+            <span
+              class="flex flex-col items-center justify-center gap-3 flex-cols"
             >
-              IgboTrans service
-            </h1>
-            <p
-              class="w-4/5 text-sm font-medium text-center text-gray-400 dark:text-slate-400"
-            >
-              Discover translations, learn new words, synonyms and more in Igbo!
-            </p>
-          </span>
-        </div> -->
+              <h1
+                class="flex gap-2 text-xl font-bold text-center text-cyan-600 dark:text-white"
+              >
+                IGBO-TRANS
+                <span class="font-black text-red-400">{{ name }} </span>
+              </h1>
+              <p
+                class="w-4/5 text-sm font-medium text-center text-gray-400 dark:text-slate-400"
+              >
+                Discover translations, learn new words, synonyms and more in
+                Igbo.
+              </p>
+              <p
+                v-if="useTrigger"
+                @click="handleInteract"
+                class="text-sm font-medium text-center text-red-400 underline transition-all cursor-pointer dark:text-slate-400 hover:text-cyan-600 hover:duration-300"
+              >
+                Practice here!
+              </p>
+            </span>
+          </div>
+        </Transition>
         <!-- Would be async loaded to DOM on hover. -->
-        <Search_Interact />
+        <Transition>
+          <SearchInteract v-if="useInteract" />
+        </Transition>
       </div>
       <Search_box :HideArrow="HideArrow" :SearchClass="SearchClass" />
       <Search_history v-if="useHistory" />
-      <async-results v-if="hasResult" />
+      <Transition>
+        <async-results v-if="hasResult" />
+      </Transition>
     </main>
     <footer>
       <div>
@@ -102,22 +119,48 @@
 </template>
 
 <script setup>
-import { defineAsyncComponent, inject, ref } from "vue";
+import { defineAsyncComponent, inject, onMounted, ref } from "vue";
 import Search_box from "./Search_box.vue";
 import Search_buttons from "./Search_buttons.vue";
 import Search_history from "./Search_history.vue";
-import Search_Interact from "../Interactive/Search_Interact.vue";
+// import image1 from "../../assets/home.svg";
+import image2 from "../../assets/Solutions_2.png";
+
+//dynamic arrays.
+// const images = ref([image1, image2]); //👈 should be used to loop through homepage images.
+const array = ["Translate", "Teaches", "Transcends", "Services"];
+let name = ref("Services");
+
+//fucntion to randomize home text.
+function arrDelay(arr, delegate, delay) {
+  let i = 0;
+  let interval = setInterval(() => {
+    //each loop, call passed in function.
+    delegate(arr[i]);
+    //increment, & if we're past array, clr interval...
+    if (i++ >= arr.length - 1) clearInterval(interval);
+  }, delay);
+  return interval;
+}
+//homepage name is altered when comp is mounted.
+onMounted(() => {
+  arrDelay(array, (obj) => (name.value = obj), 6000);
+});
 
 //async load nested components
 const AsyncResults = defineAsyncComponent(() => import("./Search_result.vue"));
+const SearchInteract = defineAsyncComponent(() =>
+  import("../Interactive/Search_Interact.vue")
+);
 
 //reactive states for all mini components
-let search_btns = ref(false);
-let search_card = ref(false);
-let search_box = ref(false);
-let hasResult = ref(false); //if new search 👈 is truthy
-let useHistory = ref(true);
-let HideArrow = ref(false);
+let hasResult = ref(false); //👈 if new search is truthy.
+let useIntro = ref(true); //👈 to show the intro section.
+let useTrigger = ref(true); //👈 to show the { Practice here } section.
+let useHistory = ref(true); //👈 to show the history tab.
+let useInteract = ref(false); //👈 to show the interact section.
+let HideArrow = ref(false); // 👈 to hide the search-box arrow.
+
 //dark nd light mode states.
 let currentState = ref(null);
 let darkState = ref(true);
@@ -164,38 +207,29 @@ const setLightMode = () => {
   darkState.value = true;
 };
 
-//fns() to check for state in localStorage
-const checkState = () => {
-  const state = localStorage.getItem("state");
-  // console.log(state);
+//fn() to switch on the interactive mode.
+const handleInteract = () => {
+  useTrigger.value = false;
+  useIntro.value = false;
+  setTimeout(() => {
+    useInteract.value = true;
+  }, 1000);
 };
+
+//fns() to check for state in localStorage
+function checkState() {
+  const state = localStorage.getItem("state");
+}
 currentState.value = checkState();
-
-/* would determine icons visibilty with state value 👆 */
-// switch (currentState) {
-//   case "light":
-//     darkState.value = true;
-//     lightState.value = false;
-//     break;
-//   case "dark":
-//     darkState.value = false;
-//     lightState.value = true;
-//     break;
-
-//   default:
-//     darkState.value = true;
-//     lightState.value = false;
-//     break;
-// }
-
-// onMounted(() => {
-//   if (currentState.value == "light") {
-//     lightState.value = false;
-//     darkState.value = true;
-//   }
-//   if (currentState.value == "dark") {
-//     lightState.value = true;
-//     darkState.value = false;
-//   }
-// });
 </script>
+
+<style scoped>
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.8s ease;
+}
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
+</style>
