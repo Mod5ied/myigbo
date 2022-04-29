@@ -14,9 +14,14 @@
         <p class="p-2 text-gray-700 dark:text-slate-300">
           Gini bu aha onye dere akwukwuo - "Things fall apart"?
         </p>
-        <p v-if="useTranslation" class="p-2 text-gray-700 dark:text-slate-300">
-          Who wrote the book - "Things fall apart"?
-        </p>
+        <Transition>
+          <p
+            v-if="useTranslation"
+            class="p-2 text-gray-700 dark:text-slate-300"
+          >
+            Who wrote the book - "Things fall apart"?
+          </p>
+        </Transition>
         <i
           class="flex items-center justify-end p-2 text-orange-400"
           @click="useTrans"
@@ -105,3 +110,14 @@ function useTrans() {
   useTranslation.value = !useTranslation.value;
 }
 </script>
+
+<style scoped>
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.8s ease;
+}
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
+</style>

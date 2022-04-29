@@ -16,16 +16,6 @@
     <footer
       class="flex justify-end w-full px-3 md:justify-between md:gap-5 md:px-10 md:fixed md:bottom-3"
     >
-      <i class="hidden md:flex md:items-center md:gap-3 md:text-2xl">
-        <ion-icon
-          name="logo-twitter"
-          class="text-2xl text-blue-700 transition hover:text-blue-300 focus:text-blue-300 hover:duration-300"
-        ></ion-icon>
-        <ion-icon
-          name="logo-github"
-          class="text-2xl text-gray-700 transition hover:text-gray-500 focus:text-gray-500 hover:duration-300"
-        ></ion-icon>
-      </i>
       <i
         @click="handleView"
         title="Play a Puzzle"
@@ -53,9 +43,6 @@
 <script setup>
 import { defineAsyncComponent, inject, ref } from "vue";
 import Search_box from "../Search/Search_box.vue";
-// import Dict_Interact from "../Interactive/Dict_Interact.vue";
-
-//async load the results component when required.
 const AsyncResults = defineAsyncComponent(() => import("./Dict_results.vue"));
 const DictInteract = defineAsyncComponent(() =>
   import("../Interactive/Dict_Interact.vue")
@@ -75,15 +62,15 @@ const handleView = () => {
   useResults.value = false;
   setTimeout(() => {
     useInteract.value = true;
-  }, 1000);
+  }, 800);
 };
 
-//emitter response to actually hide { Dict-interact }.
+//emitter message is to actually to hide { Dict-interact }.
 emitter.on("hide-buttons", (payload) => {
   useInteract.value = payload;
   setTimeout(() => {
     useResults.value = !payload;
-  }, 1000);
+  }, 800);
 });
 </script>
 
@@ -96,13 +83,5 @@ emitter.on("hide-buttons", (payload) => {
 .scrollable::-webkit-scrollbar {
   width: 0;
   height: 0;
-}
-.v-enter-active,
-.v-leave-active {
-  transition: opacity 0.8s ease;
-}
-.v-enter-from,
-.v-leave-to {
-  opacity: 0;
 }
 </style>

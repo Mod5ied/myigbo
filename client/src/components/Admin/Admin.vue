@@ -12,11 +12,11 @@
             Welcome Admin
           </li></router-link
         >
-        <!-- <router-link :to="{ name: 'Dashboard' }"
+        <router-link :to="{ name: 'Search' }"
           ><li class="text-sm font-semibold font-body">
             Homepage
           </li></router-link
-        > -->
+        >
       </ul>
     </header>
     <!-- Container for the two Upload forms -->
@@ -303,7 +303,7 @@
             v-for="{ name, translation, genre, _id } in allposts.data"
             :key="_id"
           >
-            {{ name }} > {{ translation }} || {{ genre }}
+            "{{ name }} > {{ translation }} -> {{ genre }}"
           </li>
         </div>
       </div>

@@ -9,6 +9,14 @@
   margin: 0;
   padding: 0;
 }
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.5s ease;
+}
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
 .shell {
   @apply flex flex-col justify-around w-4/5 gap-4 px-12 py-8 mt-6 border border-gray-200 rounded-md shadow-sm hover:bg-gray-50;
 }
