@@ -35,6 +35,17 @@ class PostProxy {
       }
     });
   };
+  static batchUpload = async (data) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const res = await axios.post(`${url}/post/batch`, data);
+        const results = await res.data;
+        resolve(results);
+      } catch (err) {
+        reject(err?.response?.data);
+      }
+    });
+  };
   static deleteOnePost = async (data) => {
     return new Promise(async (resolve, reject) => {
       try {
@@ -74,7 +85,7 @@ class StateProxy {
     });
   };
   /** @returns A boolean of App state */
-  static getState = () => {
+  static getState = async () => {
     return new Promise(async (resolve, reject) => {
       try {
         const res = await axios.get(`${url2}state`);

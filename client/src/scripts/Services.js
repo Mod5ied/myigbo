@@ -1,7 +1,10 @@
 "use strict";
+import isOnline from "is-online";
 import { PostProxy, StateProxy } from "./Proxy.js";
-const { getPosts, createPosts, updatePost, deleteOnePost } = PostProxy;
+import { get, set, del } from "idb-keyval";
 const { getState, useSwitch } = StateProxy;
+const { getPosts, createPosts, batchUpload, updatePost, deleteOnePost } =
+  PostProxy;
 
 class Requests {
   /**
@@ -161,6 +164,7 @@ class Utilities {
    * @param {string} load @param {string} state @param {Function} get @param {string} fail
    */
   static returnState = async (load, state, fail) => {
+    let response;
     load.value = true;
     fail.value = false;
     setInterval(async () => {
@@ -175,7 +179,9 @@ class Utilities {
         });
       }
     }, 10000);
+    return response;
   };
+
   /** @param {string} data  */
   static returnSwitch = async (data, l_load, l_loaded, c_load, c_loaded) => {
     l_load = data !== "local" ? false : true;
@@ -188,7 +194,7 @@ class Utilities {
     } catch (err) {
       console.error({
         message: "Error switching databases",
-        detail: `err.message`,
+        detail: err.message,
       });
     }
   };
@@ -204,4 +210,115 @@ class Utilities {
   };
 }
 
-export { Utilities, Requests };
+class OfflineStorage {
+  //todo: implement1 [METHODS NEED NO RETURN OBJECT METHOD.]
+
+  /**
+   * @description makes a  request to Indexed Storage.
+   * @returns array of data
+   */
+  static fetchLocalData = async () => {
+    let localData;
+    try {
+      localData = get("offlineData");
+    } catch (err) {
+      console.error({
+        message: "Error fetching local data",
+        detail: `err.message`,
+      });
+    }
+    return localData;
+  };
+  /**
+   * @param {function} payload @description checks if payload exists in IDB storage.
+   * @returns true if saved, false if it fails as payload exists.
+   */
+  static replicaGuard = async (payload) => {
+    //fetch localData and check if record exists;
+    //if it does, notify on the console, move to next operation.
+    // save data to local storage.
+    let response;
+    response = await this.saveToLocal(payload);
+    // const localData = await this.fetchLocalData();
+    // try {
+    //   //todo: ascertain if entry already exists.
+    //   //! run a switch,checking the state of localDate, if undef - ret message, if - !null save.
+    //   const isExist = localData?.some(async (object) => {
+    //     try {
+    //       if (payload.name === object?.name) {
+    //         response = true;
+    //         console.log("At least one upload exists in local memory");
+    //       }
+    //     } catch (err) {
+    //       return err.message;
+    //     }
+    //   });
+    //   //* proceed to upload regardless
+    //   // response = await this.saveToLocal(payload);
+    // } catch (err) {
+    //   console.error({
+    //     message: `Error occurred while validating upload`,
+    //     detail: err,
+    //   });
+    // }
+    return response ?? false;
+  };
+  static saveToLocal = async (payload) => {
+    let response;
+    let resp;
+    try {
+      /* sets a new DB with payload if IDb query returns empty,
+          appends payload to existing data if IDb is query returns data.
+       */
+      const localData = await get("offlineData");
+      if (
+        localData === undefined || !localData
+          ? ((resp = await set("offlineData", [payload])),
+            (response = resp ? true : false))
+          : (localData.push(payload),
+            await set("offlineData", localData),
+            (response = true))
+      );
+    } catch (err) {
+      console.error({
+        message: `Error occurred while uploading to Indexed storage`,
+        details: err.message,
+      });
+    }
+    return response ?? false;
+  };
+  static handleOffline = async (name, translation, genre) => {
+    console.log({ name, translation, genre });
+    let response;
+    try {
+      response = await this.replicaGuard({ name, translation, genre });
+    } catch (err) {
+      console.error({
+        message: `Error occurred during offline operation`,
+        details: err,
+      });
+    }
+    console.log(response);
+    return response ?? false;
+  };
+  static pushToCloud = async () => {
+    let response;
+    let payload;
+    const onlineState = await isOnline();
+    try {
+      onlineState
+        ? ((payload = await get("offlineData")),
+          (response = await batchUpload(payload)),
+          await del("offlineData"))
+        : console.log({ message: `No internet connection` });
+    } catch (err) {
+      console.error({
+        message: `Error occurred while pushing to cloud`,
+        details: err.message,
+      });
+    }
+    return response ?? false;
+  };
+}
+
+export { OfflineStorage, Utilities, Requests };

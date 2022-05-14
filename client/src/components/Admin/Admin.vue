@@ -498,9 +498,21 @@
   </div>
 </template>
 <script setup>
-import { computed, reactive, ref, toRefs, unref, watchEffect } from "vue";
+import isOnline from "is-online";
 import { useRouter } from "vue-router";
-import { Requests, Utilities } from "../../scripts/Services";
+import { StateProxy } from "../../scripts/Proxy";
+import { Requests, Utilities, OfflineStorage } from "../../scripts/Services";
+import {
+  computed,
+  onMounted,
+  reactive,
+  ref,
+  toRefs,
+  unref,
+  watchEffect,
+} from "vue";
+const { getState } = StateProxy;
+const { handleOffline, pushToCloud } = OfflineStorage;
 const { returnState, returnSwitch } = Utilities;
 const { fetchAllPost, addNewPost, deletePost, patchPost, useRefreshStore } =
   Requests;
@@ -544,6 +556,13 @@ let localLoaded = ref(null);
 let cloudLoading = ref(null);
 let cloudLoaded = ref(null);
 
+//fetch data from idb on component mount.
+onMounted(async () => {
+  // await pushToCloud();
+  // const p = await isOnline();
+  // console.log(p);
+});
+
 //computed issues
 //computed to render ok_class if serverState is true, and fail_class if serverState is false
 const useState = computed(() => {
@@ -568,22 +587,40 @@ function refreshStore() {
   useRefreshStore(allposts, Router);
 }
 
-getServerState();
+// getServerState();
 
 async function fetchPost() {
   await fetchAllPost(ok_fetch, Serve, allposts, fail_fetch);
 }
 async function addPost() {
-  await addNewPost(
-    fail_upload,
-    Loading,
-    message,
-    ok_upload,
-    name.value,
-    translation.value,
-    genre.value,
-    Router
-  );
+  try {
+    const onlineState = await getState();
+    !onlineState
+      ? (console.log("sending online"),
+        await addNewPost(
+          fail_upload,
+          Loading,
+          message,
+          ok_upload,
+          name.value,
+          translation.value,
+          genre.value,
+          Router
+        ))
+      : console.log("Saving to IndexedDb"),
+      await handleOffline(name.value, translation.value, genre.value);
+  } catch (err) {
+    //left for dev. purposes (localDB for storage.)
+    switch (err.message) {
+      case "Network Error":
+        console.log("Saving to IndexedDb");
+        await handleOffline(name.value, translation.value, genre.value);
+        break;
+      default:
+        console.log("Network Error");
+        break;
+    }
+  }
 }
 async function removePost() {
   await deletePost(
