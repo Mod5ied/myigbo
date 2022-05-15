@@ -587,7 +587,7 @@ function refreshStore() {
   useRefreshStore(allposts, Router);
 }
 
-// getServerState();
+getServerState();
 
 async function fetchPost() {
   await fetchAllPost(ok_fetch, Serve, allposts, fail_fetch);
@@ -595,7 +595,7 @@ async function fetchPost() {
 async function addPost() {
   try {
     const onlineState = await getState();
-    !onlineState
+    onlineState
       ? (console.log("sending online"),
         await addNewPost(
           fail_upload,

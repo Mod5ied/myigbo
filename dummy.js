@@ -51,19 +51,31 @@
 let obj = [
   { name: "fire", translation: "oku", genre: "noun" },
   { name: "hand", translation: "aka", genre: "noun" },
+  { name: "money", translation: "ego", genre: "noun" },
+  { name: "water", translation: "mmiri", genre: "noun" },
+  { name: "leg", translation: "ukwu", genre: "noun" },
+  { name: "leg", translation: "okpa", genre: "verb" },
+  { name: "head", translation: "isi", genre: "noun" },
 ];
 
-const arr = { name: "hand", translation: "aka", genre: "noun" };
+const arr = { name: "leg", translation: "ukwu", genre: "noun" };
 
-const trueme = () => {
+const trueme = (x) => {
   console.log("yesoo");
+  console.log(x);
 };
 
-const p = obj.some((ob) => {
-  if (arr.name == ob.name) {
-    return trueme();
-  }
-  return false;
-});
+// const p = obj.some((ob) => {
+//   if (arr.name == ob.name) {
+//     return trueme();
+//   }
+//   return false;
+// });
 
-console.log(p);
+const c = obj.map((ob) =>
+  ob.name === arr.name && ob.genre === arr.genre ? (trueme(ob), true) : false
+);
+
+console.log(c);
+
+// console.log(p);

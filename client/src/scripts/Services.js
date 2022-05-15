@@ -211,59 +211,82 @@ class Utilities {
 }
 
 class OfflineStorage {
-  //todo: implement1 [METHODS NEED NO RETURN OBJECT METHOD.]
-
   /**
    * @description makes a  request to Indexed Storage.
+   * @checks if data exists ? returns null : 👇
    * @returns array of data
    */
-  static fetchLocalData = async () => {
-    let localData;
+  static useFetch = async () => {
+    let response;
     try {
-      localData = get("offlineData");
+      const resp = await get("offlineData");
+      if (resp == undefined || !resp) {
+        response = null;
+        console.log("No data was found in IDB");
+      } else {
+        response = resp;
+        console.log("🛒"); //data was found in idb.
+      }
     } catch (err) {
       console.error({
-        message: "Error fetching local data",
-        detail: `err.message`,
+        message: "Error fetching local data @ useFetch",
+        detail: err.message,
       });
     }
-    return localData;
+    return response;
   };
   /**
-   * @param {function} payload @description checks if payload exists in IDB storage.
+   * @returns true or false if data exists or not in IDB
+   * @param {Object} payload @param {[Object]} state
+   * @returns {null} if state is null.
+   */
+  static useExists = async (payload, state) => {
+    let response;
+    try {
+      if (state === null) {
+        return;
+      }
+      //* obj.map is a lil fairly accurate than obj.some.
+      const isExists = state.map(
+        (obj) =>
+          obj.name === payload.name && obj.genre === payload.genre
+            ? (response = true) //hence, we can't save the payload.
+            : (response = false) //hence, we can save the payload.
+      );
+    } catch (err) {
+      console.error({
+        message: `Error while checking for duplicates @ useExists`,
+        details: err.message,
+      });
+    }
+    return response;
+  };
+  /**
+   * @param {Object} payload @description checks if payload exists in IDB storage.
    * @returns true if saved, false if it fails as payload exists.
    */
-  static replicaGuard = async (payload) => {
-    //fetch localData and check if record exists;
-    //if it does, notify on the console, move to next operation.
-    // save data to local storage.
+  static useGuard = async (payload) => {
     let response;
-    response = await this.saveToLocal(payload);
-    // const localData = await this.fetchLocalData();
-    // try {
-    //   //todo: ascertain if entry already exists.
-    //   //! run a switch,checking the state of localDate, if undef - ret message, if - !null save.
-    //   const isExist = localData?.some(async (object) => {
-    //     try {
-    //       if (payload.name === object?.name) {
-    //         response = true;
-    //         console.log("At least one upload exists in local memory");
-    //       }
-    //     } catch (err) {
-    //       return err.message;
-    //     }
-    //   });
-    //   //* proceed to upload regardless
-    //   // response = await this.saveToLocal(payload);
-    // } catch (err) {
-    //   console.error({
-    //     message: `Error occurred while validating upload`,
-    //     detail: err,
-    //   });
-    // }
-    return response ?? false;
+    const state = await this.useFetch(); //should return if useFetch rets null||undefined.
+    const resp = await this.useExists(payload, state);
+
+    try {
+      if (resp === undefined || resp === false) {
+        const res = await this.useSave(payload);
+        response = res;
+      } else {
+        response = false;
+        console.error("🛑"); //query exists in idb.
+      }
+    } catch (err) {
+      console.error({
+        message: "Failed to save @ useGuard",
+        detail: err.message,
+      });
+    }
+    return response;
   };
-  static saveToLocal = async (payload) => {
+  static useSave = async (payload) => {
     let response;
     let resp;
     try {
@@ -277,7 +300,8 @@ class OfflineStorage {
             (response = resp ? true : false))
           : (localData.push(payload),
             await set("offlineData", localData),
-            (response = true))
+            (response = true),
+            console.log("✅"))
       );
     } catch (err) {
       console.error({
@@ -288,10 +312,10 @@ class OfflineStorage {
     return response ?? false;
   };
   static handleOffline = async (name, translation, genre) => {
-    console.log({ name, translation, genre });
     let response;
     try {
-      response = await this.replicaGuard({ name, translation, genre });
+      const resp = await this.useGuard({ name, translation, genre });
+      response = resp;
     } catch (err) {
       console.error({
         message: `Error occurred during offline operation`,
