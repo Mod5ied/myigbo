@@ -57,7 +57,9 @@
         <li class="search-links">
           <router-link :to="{ name: 'Dictionary' }">Dictionary</router-link>
         </li>
-        <li class="search-links">Register</li>
+        <li class="search-links">
+          <router-link :to="{ name: 'Admin' }">Admin</router-link>
+        </li>
       </span>
     </header>
     <main

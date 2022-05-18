@@ -1,18 +1,19 @@
 <template>
   <div
+    id="home"
     class="flex flex-col items-center justify-start overflow-x-hidden select-none"
   >
     <Header1 />
-    <div class="w-full h-screen">
-      <aside class="h-full">
+    <div class="flex w-full h-screen" id="main">
+      <aside class="w-1/5">
         <Sidebar />
       </aside>
-      <main>
+      <main class="flex justify-center w-4/5">
         <AddWord v-if="useAdd" />
-        <!-- <AddQuiz v-if="useQuiz" /> -->
-        <!-- <DeleteWord v-if="useDelete" /> -->
-        <!-- <UpdateWord v-if="useUpdate" /> -->
-        <!-- <PeekWords v-if="usePeekWords" /> -->
+        <AddQuiz v-if="useQuiz" />
+        <DeleteWord v-if="useClear" />
+        <UpdateWord v-if="useUpdate" />
+        <PeekWords v-if="usePeek" />
       </main>
     </div>
   </div>
@@ -24,10 +25,9 @@ import { StateProxy } from "../../scripts/Proxy";
 import { Requests, Utilities, OfflineStorage } from "../../scripts/Services";
 import {
   ref,
-  toRefs,
   unref,
+  inject,
   computed,
-  reactive,
   onMounted,
   watchEffect,
   defineAsyncComponent,
@@ -38,18 +38,18 @@ import Sidebar from "./components/Sidebar.vue";
 const AddWord = defineAsyncComponent(() =>
   import("../Admin/views/AddWord.vue")
 );
-const AddQuiz = defineAsyncComponent(() => {
-  import("../Admin/views/AddQuiz.vue");
-});
-const DeleteWord = defineAsyncComponent(() => {
-  import("../Admin/views/DeleteWord.vue");
-});
-const UpdateWord = defineAsyncComponent(() => {
-  import("../Admin/views/UpdateWord.vue");
-});
-const PeekWords = defineAsyncComponent(() => {
-  import("../Admin/views/PeekWords.vue");
-});
+const AddQuiz = defineAsyncComponent(() =>
+  import("../Admin/views/AddQuiz.vue")
+);
+const DeleteWord = defineAsyncComponent(() =>
+  import("../Admin/views/DeleteWord.vue")
+);
+const UpdateWord = defineAsyncComponent(() =>
+  import("../Admin/views/UpdateWord.vue")
+);
+const PeekWords = defineAsyncComponent(() =>
+  import("../Admin/views/PeekWords.vue")
+);
 
 const { getState } = StateProxy;
 const { handleOffline, pushToCloud } = OfflineStorage;
@@ -57,13 +57,65 @@ const { returnState, returnSwitch } = Utilities;
 const { fetchAllPost, addNewPost, deletePost, patchPost, useRefreshStore } =
   Requests;
 const Router = useRouter();
+const emitter = inject("emitter");
 
 //async states
-let useAdd = ref(true);
+let useAdd = ref(false);
 let useClear = ref(false);
 let useUpdate = ref(false);
 let useQuiz = ref(false);
 let usePeek = ref(false);
+
+const useCanceler = (payload, i, j, k, l, m, n) => {
+  i.value = payload;
+  j.value = !payload;
+  k.value = !payload;
+  l.value = !payload;
+  m.value = !payload;
+  n.value = !payload;
+};
+
+//emitter listener for toggles.
+emitter.on("addWord", (payload) => {
+  useAdd.value = payload;
+  // with transition, use timeout to ease out wifout conflict.
+  useClear.value = !payload;
+  useUpdate.value = !payload;
+  useQuiz.value = !payload;
+  usePeek.value = !payload;
+});
+emitter.on("addQuiz", (payload) => {
+  useQuiz.value = payload;
+  // with transition, use timeout to ease out wifout conflict.
+  useAdd.value = !payload;
+  useClear.value = !payload;
+  useUpdate.value = !payload;
+  usePeek.value = !payload;
+});
+emitter.on("updateWord", (payload) => {
+  useUpdate.value = payload;
+  // with transition, use timeout to ease out wifout conflict.
+  useAdd.value = !payload;
+  useClear.value = !payload;
+  useQuiz.value = !payload;
+  usePeek.value = !payload;
+});
+emitter.on("deleteWord", (payload) => {
+  useClear.value = payload;
+  // with transition, use timeout to ease out wifout conflict.
+  useAdd.value = !payload;
+  useUpdate.value = !payload;
+  useQuiz.value = !payload;
+  usePeek.value = !payload;
+});
+emitter.on("peekWords", (payload) => {
+  usePeek.value = payload;
+  // with transition, use timeout to ease out wifout conflict.
+  useAdd.value = !payload;
+  useClear.value = !payload;
+  useUpdate.value = !payload;
+  useQuiz.value = !payload;
+});
 
 //template vars
 let uploadSuccess = ref(false);
@@ -201,3 +253,15 @@ async function useSwitch(data) {
   );
 }
 </script>
+
+<style scoped>
+#main {
+  overflow-x: scroll;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+#main::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+</style>

@@ -1,12 +1,11 @@
 <template>
-  <div>
+  <div class="w-1/2 mr-40 p-4 h-full flex">
     <form
       @submit.prevent="addPost"
-      class="flex flex-col justify-around w-1/2 gap-3 py-4"
-      v-if="showForm1"
+      class="flex flex-col justify-around w-full h-3/4 gap-3 p-6 border rounded-lg"
     >
       <div
-        class="flex flex-row items-center justify-between gap-4 p-2 text-gray-800 font-body"
+        class="flex flex-row items-center justify-between gap-4 p-2 text-sm text-gray-800 font-body"
       >
         <label for="english">English Words</label>
         <input
@@ -20,7 +19,7 @@
         />
       </div>
       <div
-        class="flex flex-row items-center justify-between gap-4 p-2 text-gray-800 font-body"
+        class="flex flex-row items-center justify-between gap-4 p-2 text-sm text-gray-800 font-body"
       >
         <label for="igbo">Igbo Translation</label>
         <input
@@ -34,7 +33,7 @@
         />
       </div>
       <div
-        class="flex flex-row items-center justify-between gap-4 p-2 text-gray-800 font-body"
+        class="flex flex-row items-center justify-between gap-4 p-2 text-sm text-gray-800 font-body"
       >
         <label for="igbo">Word Genre</label>
         <input
@@ -54,7 +53,7 @@
         >
           Upload
           <!-- loading state -->
-          <i class="flex items-center" v-if="Loading">
+          <i class="flex items-center" v-if="loading">
             <svg
               role="status"
               class="w-4 h-4 mr-2 text-gray-200 animate-spin dark:text-gray-100 fill-green-600"
@@ -110,4 +109,10 @@
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import { ref } from "vue";
+
+let fail_upload = ref(true);
+let ok_upload = ref(true);
+let loading = ref(true);
+</script>
