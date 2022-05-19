@@ -35,6 +35,22 @@ class PostProxy {
       }
     });
   };
+  static createQuiz = async (data) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const res = await axios.post(`${url}/quiz`, {
+          question: data.question,
+          answerRight: data.right_answer,
+          answerWrong1: data.wrong_answer1,
+          answerWrong2: data.wrong_answer2,
+        });
+        const results = await res.data;
+        resolve(results);
+      } catch (err) {
+        reject(err?.response?.data);
+      }
+    });
+  };
   static batchUpload = async (data) => {
     return new Promise(async (resolve, reject) => {
       try {

@@ -1,14 +1,14 @@
 <template>
   <div class="flex flex-col items-center w-1/2 h-full gap-6 p-4 mr-40">
     <div
-      class="flex flex-col justify-around w-full gap-2 px-12 transition duration-300 border-2 border-gray-200 rounded-md shadow-sm h-1/2 hover:border-2 hover:border-red-300"
+      class="flex flex-col justify-around w-full gap-2 px-12 transition duration-300 border-2 border-gray-200 rounded-md shadow-sm bg-gray-50 h-1/2 hover:border-2 hover:border-red-300"
     >
       <h2 class="w-44 btns hover:bg-gray-200" @click="useDelete = !useDelete">
-        Delete a Post Here:
+        Delete a Word Here:
       </h2>
       <!-- Form here -->
       <form
-        @submit.prevent="removePost"
+        @submit.prevent="removeWord"
         class="flex flex-col w-full gap-8 mb-5 h-1/4"
         v-if="useDelete"
       >
@@ -19,7 +19,7 @@
           <input
             type="text"
             placeholder="English words only!"
-            v-model="deleteConst"
+            v-model.trim="deleteConst"
             required
             class="input-bar hover:bg-gray-100 hover:border-gray-300 focus:border-gray-300"
           />
@@ -66,7 +66,7 @@
                 viewBox="0 0 100 101"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
-                v-if="Loading"
+                v-if="loading"
               >
                 <path
                   d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
@@ -86,13 +86,41 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, unref, watchEffect } from "vue";
+import { useRouter } from "vue-router";
+import { Requests } from "../../../scripts/Services";
+const { deletePost } = Requests;
+const Router = useRouter();
 
 //show states.
-let useDelete = ref(true);
+let useDelete = ref(false);
 
 //input states.
 let deleteConst = ref("");
 
+//submit states.
+let loading = ref(false);
+let errMessage = ref("");
+let ok_delete = ref(false);
+let fail_delete = ref(false);
+const ok_class = ref("text-green-600");
+const fail_class = ref("text-red-500");
+
+//watcher to lowercase input state.
+watchEffect(() => {
+  deleteConst.value = deleteConst.value.toLowerCase();
+});
+
 //delete function.
+const removeWord = async () => {
+  await deletePost(
+    fail_delete,
+    loading,
+    deleteConst,
+    errMessage,
+    ok_delete,
+    unref,
+    Router
+  );
+};
 </script>

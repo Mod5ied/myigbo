@@ -1,11 +1,11 @@
 <template>
-  <div class="w-1/2 mr-40 p-4 h-full flex">
+  <div class="flex w-1/2 h-full p-4 mr-40">
     <form
-      @submit.prevent="addPost"
-      class="flex flex-col justify-around w-full h-3/4 gap-3 p-6 border rounded-lg"
+      @submit.prevent="submitWord"
+      class="flex flex-col justify-around w-full gap-3 p-6 border rounded-lg bg-gray-50 h-3/4"
     >
       <div
-        class="flex flex-row items-center justify-between gap-4 p-2 text-sm text-gray-800 font-body"
+        class="flex flex-row items-center justify-between gap-4 p-2 text-gray-800 font-body"
       >
         <label for="english">English Words</label>
         <input
@@ -14,12 +14,12 @@
           name="english"
           placeholder="Enter an English word"
           required
-          v-model="name"
+          v-model.trim="name"
           class="lowercase input-bar hover:bg-gray-100 hover:border-gray-300 focus:border-gray-300"
         />
       </div>
       <div
-        class="flex flex-row items-center justify-between gap-4 p-2 text-sm text-gray-800 font-body"
+        class="flex flex-row items-center justify-between gap-4 p-2 text-gray-800 font-body"
       >
         <label for="igbo">Igbo Translation</label>
         <input
@@ -28,12 +28,12 @@
           name="igbo"
           placeholder="Enter Igbo translation"
           required
-          v-model="translation"
+          v-model.trim="translation"
           class="lowercase input-bar hover:bg-gray-100 hover:border-gray-300 focus:border-gray-300"
         />
       </div>
       <div
-        class="flex flex-row items-center justify-between gap-4 p-2 text-sm text-gray-800 font-body"
+        class="flex flex-row items-center justify-between gap-4 p-2 text-gray-800 font-body"
       >
         <label for="igbo">Word Genre</label>
         <input
@@ -42,7 +42,7 @@
           name="igbo"
           placeholder="e.g: Medicals(Noun)"
           required
-          v-model="genre"
+          v-model.trim="genre"
           class="lowercase input-bar hover:bg-gray-100 hover:border-gray-300 focus:border-gray-300"
         />
       </div>
@@ -110,9 +110,64 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, watchEffect } from "vue";
+import isOnline from "is-online";
+import { Requests, OfflineStorage } from "../../../scripts/Services";
+import { useRouter } from "vue-router";
+const { handleOffline } = OfflineStorage;
+const { addNewPost } = Requests;
+const Router = useRouter();
 
-let fail_upload = ref(true);
-let ok_upload = ref(true);
-let loading = ref(true);
+//submit states.
+let fail_upload = ref(false);
+let ok_upload = ref(false);
+let loading = ref(false);
+let errMessage = ref("");
+const ok_class = ref("text-green-600");
+const fail_class = ref("text-red-500");
+
+//input states.
+let name = ref("");
+let genre = ref("");
+let translation = ref("");
+
+//watcher to smallint user-input
+watchEffect(() => {
+  name.value = name.value.toLowerCase();
+  genre.value = genre.value.toLowerCase();
+  translation.value = translation.value.toLowerCase();
+});
+
+//fn to submit form.
+async function submitWord() {
+  try {
+    const onlineState = await isOnline();
+    !onlineState
+      ? (console.log("sending online"),
+        await addNewPost(
+          fail_upload,
+          loading,
+          errMessage,
+          ok_upload,
+          name.value,
+          translation.value,
+          genre.value,
+          Router
+        ))
+      : console.log("Saving to IndexedDb"),
+      await handleOffline(name.value, translation.value, genre.value);
+  } catch (err) {
+    console.log(err);
+    //left for dev. purposes (localDB for storage.)
+    // switch (err.message) {
+    //   case "Network Error":
+    //     console.log("Saving to IndexedDb");
+    //     await handleOffline(name.value, translation.value, genre.value);
+    //     break;
+    //   default:
+    //     console.log("Network Error");
+    //     break;
+    // }
+  }
+}
 </script>

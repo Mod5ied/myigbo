@@ -3,11 +3,11 @@
     class="flex flex-col items-center w-1/2 h-full gap-6 p-4 mr-40 font-body"
   >
     <span
-      class="flex justify-between w-3/5 overflow-hidden rounded-md bg-slate-300"
+      class="flex justify-between w-3/4 overflow-hidden bg-blue-300 rounded-md"
     >
       <button
         @click="formsToggle('showGenre')"
-        class="w-1/2 px-6 text-sm font-bold text-gray-100 bg-emerald-500"
+        class="w-1/2 px-6 text-sm font-bold text-gray-100 bg-blue-500"
       >
         Update genre
       </button>
@@ -20,8 +20,8 @@
     </span>
     <!-- forms1(genre) here👇 -->
     <form
-      @submit.prevent="updateOnePost"
-      class="flex flex-col justify-around w-full gap-3 p-6 border rounded-lg h-3/4"
+      @submit.prevent="updateGenre"
+      class="flex flex-col justify-around w-full gap-3 p-6 border rounded-lg bg-gray-50 h-2/4"
       v-if="showGenre"
     >
       <div
@@ -32,7 +32,7 @@
           <input
             type="text"
             placeholder="English word only!"
-            v-model="patchName"
+            v-model.trim="patchName"
             required
             class="input-bar hover:bg-gray-100 hover:border-gray-300 focus:border-gray-300"
           />
@@ -42,7 +42,7 @@
           <input
             type="text"
             placeholder="e.g: Medicals(Noun)"
-            v-model="patchGenre"
+            v-model.trim="patchGenre"
             required
             class="input-bar hover:bg-gray-100 hover:border-gray-300 focus:border-gray-300"
           />
@@ -55,7 +55,7 @@
         >
           Update
           <!-- loading state -->
-          <i class="flex items-center" v-if="Loading">
+          <i class="flex items-center" v-if="loading">
             <svg
               role="status"
               class="w-4 h-4 mr-2 text-gray-200 animate-spin dark:text-gray-100 fill-green-600"
@@ -74,13 +74,14 @@
             </svg>
           </i>
           <!-- loaded state -->
-          <i class="flex flex-row items-center" v-if="ok_patch">
+          <i class="flex flex-row items-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="w-5 h-5"
               viewBox="0 0 20 20"
               fill="currentColor"
               :class="ok_class"
+              v-if="ok_patch"
             >
               <path
                 fill-rule="evenodd"
@@ -108,8 +109,8 @@
     </form>
     <!-- forms2(defs here 👇 -->
     <form
-      @submit.prevent="updateOnePost"
-      class="flex flex-col justify-around w-full gap-3 p-6 border rounded-lg h-3/4"
+      @submit.prevent="updateTranslation"
+      class="flex flex-col justify-around w-full gap-3 p-6 border rounded-lg bg-gray-50 h-2/4"
       v-if="showTrans"
     >
       <div
@@ -120,7 +121,7 @@
           <input
             type="text"
             placeholder="English word only!"
-            v-model="patchName"
+            v-model.trim="patchName"
             required
             class="input-bar hover:bg-gray-100 hover:border-gray-300 focus:border-gray-300"
           />
@@ -131,7 +132,7 @@
           <input
             type="text"
             placeholder="New Definition here"
-            v-model="patchDefinition"
+            v-model.trim="patchTranslation"
             required
             class="input-bar hover:bg-gray-100 hover:border-gray-300 focus:border-gray-300"
           />
@@ -144,7 +145,7 @@
         >
           Update
           <!-- loading state -->
-          <i class="flex items-center" v-if="Loading">
+          <i class="flex items-center" v-if="loading">
             <svg
               role="status"
               class="w-4 h-4 mr-2 text-gray-200 animate-spin dark:text-gray-100 fill-green-600"
@@ -199,21 +200,45 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, watchEffect } from "vue";
+import { useRouter } from "vue-router";
+import { Requests, OfflineStorage } from "../../../scripts/Services";
+const { patchPost } = Requests;
+const Router = useRouter();
 
 //forms state.
 let showTrans = ref(false);
 let showGenre = ref(false);
 
+//inputs state.
+let patchName = ref("");
+let patchGenre = ref("");
+let patchTranslation = ref("");
+
+//submit states.
+let ok_patch = ref(false);
+let fail_patch = ref(false);
+let loading = ref(false);
+let errMessage = ref("");
+const ok_class = ref("text-green-600");
+const fail_class = ref("text-red-500");
+
+//watcher to lowercase input-states values.
+watchEffect(() => {
+  patchName.value = patchName.value.toLowerCase();
+  patchGenre.value = patchGenre.value.toLowerCase();
+  patchTranslation.value = patchTranslation.value.toLowerCase();
+});
+
 //fn to toggle forms states.
 const formsToggle = (state) => {
   switch (state) {
     case "showGenre":
-      showGenre.value = true;
+      showGenre.value = !showGenre.value;
       showTrans.value = false;
       break;
     case "showTrans":
-      showTrans.value = true;
+      showTrans.value = !showTrans.value;
       showGenre.value = false;
       break;
     default:
@@ -221,5 +246,29 @@ const formsToggle = (state) => {
       showGenre.value = false;
       break;
   }
+};
+
+//fns to submit and update.
+const updateGenre = async () => {
+  await patchPost(
+    fail_patch,
+    ok_patch,
+    loading,
+    errMessage,
+    patchName,
+    patchGenre,
+    Router
+  );
+};
+const updateTranslation = async () => {
+  await patchPost(
+    fail_patch,
+    ok_patch,
+    loading,
+    errMessage,
+    patchName,
+    patchTranslation,
+    Router
+  );
 };
 </script>

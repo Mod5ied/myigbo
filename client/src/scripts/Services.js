@@ -3,8 +3,14 @@ import isOnline from "is-online";
 import { PostProxy, StateProxy } from "./Proxy.js";
 import { get, set, del } from "idb-keyval";
 const { getState, useSwitch } = StateProxy;
-const { getPosts, createPosts, batchUpload, updatePost, deleteOnePost } =
-  PostProxy;
+const {
+  getPosts,
+  createPosts,
+  createQuiz,
+  batchUpload,
+  updatePost,
+  deleteOnePost,
+} = PostProxy;
 
 class Requests {
   /**
@@ -78,6 +84,48 @@ class Requests {
         });
     }
   };
+  static addNewQuiz = async (
+    fail,
+    load,
+    ok,
+    question,
+    right_answer,
+    wrong_answer1,
+    wrong_answer2,
+    router
+  ) => {
+    try {
+      fail.value = false;
+      load.value = true;
+      const newObj = Utilities.returnObject(
+        question,
+        right_answer,
+        wrong_answer1,
+        wrong_answer2
+      );
+      await createQuiz(newObj);
+      const { state, data } = message.value;
+      setTimeout(async () => {
+        if (
+          state
+            ? ((load.value = false), (ok.value = true))
+            : ((load.value = false), (ok.value = false))
+        )
+          Utilities.useReload(ok, state, 2000, router);
+      }, 2000);
+    } catch (err) {
+      if (
+        (!err.state
+          ? ((load.value = false), (fail.value = true))
+          : (fail.value = false),
+        (message.value = err.message))
+      )
+        console.error({
+          message: `Error while uploading post: ${err.message}`,
+        });
+    }
+  };
+
   /**
    * @param {string} ok @param {string} message  @param {string} load
    * @param {Function}use @param {string} del_con @param {string} fail
@@ -159,28 +207,29 @@ class Utilities {
     };
     return newObj;
   };
-  /**
-   * @returns A reactive String
-   * @param {string} load @param {string} state @param {Function} get @param {string} fail
-   */
-  static returnState = async (load, state, fail) => {
-    let response;
-    load.value = true;
-    fail.value = false;
-    setInterval(async () => {
-      try {
-        state.value = await getState();
-        load.value = false;
-      } catch (err) {
-        load.value = false;
-        fail.value = true;
-        console.error({
-          message: `Failed to fetch server-state: ${err.message}`,
-        });
-      }
-    }, 10000);
-    return response;
-  };
+  // /**
+  //  * @returns A reactive String
+  //  * @param {string} load @param {string} state @param {Function} get @param {string} fail
+  //  */
+  // static returnState = async (load, state, fail) => {
+  //   let response;
+  //   load = true;
+  //   fail = false;
+  //   setInterval(async () => {
+  //     try {
+  //       state = await getState();
+  //       load = false;
+  //     } catch (err) {
+  //       load = false;
+  //       fail = true;
+  //       console.error({
+  //         message: `Failed to fetch server-state: ${err.message}`,
+  //       });
+  //     }
+  //   }, 10000);
+  //   response = state;
+  //   return response;
+  // };
 
   /** @param {string} data  */
   static returnSwitch = async (data, l_load, l_loaded, c_load, c_loaded) => {

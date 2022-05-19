@@ -1,39 +1,39 @@
 <template>
   <div
-    class="flex flex-col items-center justify-start w-full h-full gap-8 py-16 border-r font-body"
+    class="flex flex-col items-center justify-start w-full h-full gap-8 py-16 border-r dark:border-r-slate-800 bg-gray-50 dark:bg-slate-900 font-body"
   >
     <button
       @click="dispatch(Dispatch.add, true)"
       :to="{ name: 'AddWord' }"
-      class="btnAdd"
+      :class="useAdd ? 'side_span_active' : 'side_span'"
     >
       Add to library
     </button>
     <button
       @click="dispatch(Dispatch.update, true)"
       :to="{ name: 'UpdateWord' }"
-      class="btnUpdate"
+      :class="useUpdate ? 'side_span_active' : 'side_span'"
     >
       Update a word
     </button>
     <button
       @click="dispatch(Dispatch.delete, true)"
       :to="{ name: 'DeleteWord' }"
-      class="btnDel"
+      :class="useDelete ? 'side_span_active' : 'side_span'"
     >
       Delete a word
     </button>
     <button
       @click="dispatch(Dispatch.peek, true)"
       :to="{ name: 'PeekWords' }"
-      class="btnPeek"
+      :class="usePeek ? 'side_span_active' : 'side_span'"
     >
       View library
     </button>
     <button
       @click="dispatch(Dispatch.quiz, true)"
       :to="{ name: 'AddQuiz' }"
-      class="btnQuiz"
+      :class="useQuiz ? 'side_span_active' : 'side_span'"
     >
       Add a quiz
     </button>
@@ -83,18 +83,38 @@ const dispatch = (action, state) => {
   switch (action) {
     case "addWord":
       toggleView(action, state, useAdd);
+      useQuiz.value = false;
+      usePeek.value = false;
+      useDelete.value = false;
+      useUpdate.value = false;
       break;
     case "addQuiz":
-      toggleView(action, state), useQuiz;
+      toggleView(action, state, useQuiz);
+      useAdd.value = false;
+      usePeek.value = false;
+      useDelete.value = false;
+      useUpdate.value = false;
       break;
     case "updateWord":
       toggleView(action, state, useUpdate);
+      useAdd.value = false;
+      useQuiz.value = false;
+      usePeek.value = false;
+      useDelete.value = false;
       break;
     case "deleteWord":
       toggleView(action, state, useDelete);
+      useAdd.value = false;
+      useQuiz.value = false;
+      usePeek.value = false;
+      useUpdate.value = false;
       break;
     case "peekWords":
       toggleView(action, state, usePeek);
+      useAdd.value = false;
+      useQuiz.value = false;
+      useDelete.value = false;
+      useUpdate.value = false;
       break;
     default:
       toggleView(action, state);
