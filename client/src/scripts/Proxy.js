@@ -9,7 +9,24 @@ class PostProxy {
   static getPosts = async () => {
     return new Promise(async (resolve, reject) => {
       try {
-        const res = await axios.get(`${url}allpost`);
+        const res = await axios.get(`${url}allWords`);
+        const results = await res.data;
+        resolve(results);
+        if (results.state == false) {
+          throw new Error(results.state);
+        }
+      } catch (err) {
+        reject(err);
+      }
+    });
+  };
+  /**
+   *@params {allSearchQuiz} or {allDictQuiz}.
+   */
+  static getQuiz = async (quiz) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const res = await axios.get(`${url}${quiz}`);
         const results = await res.data;
         resolve(results);
         if (results.state == false) {
@@ -23,7 +40,7 @@ class PostProxy {
   static createPosts = async (data) => {
     return new Promise(async (resolve, reject) => {
       try {
-        const res = await axios.post(`${url}post`, {
+        const res = await axios.post(`${url}post/quiz`, {
           name: data.name,
           translation: data.translation,
           genre: data.genre,
