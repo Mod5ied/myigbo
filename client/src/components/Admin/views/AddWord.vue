@@ -2,10 +2,10 @@
   <div class="flex w-1/2 h-full p-4 mr-40">
     <form
       @submit.prevent="submitWord"
-      class="flex flex-col justify-around w-full gap-3 p-6 border rounded-lg bg-gray-50 h-3/4"
+      class="flex flex-col justify-around w-full gap-3 p-6 border rounded-lg bg-gray-50 dark:bg-slate-900 dark:border-slate-700 h-3/4"
     >
       <div
-        class="flex flex-row items-center justify-between gap-4 p-2 text-gray-800 font-body"
+        class="flex flex-row items-center justify-between gap-4 p-2 text-gray-800 dark:text-slate-200 font-body"
       >
         <label for="english">English Words</label>
         <input
@@ -15,11 +15,11 @@
           placeholder="Enter an English word"
           required
           v-model.trim="name"
-          class="lowercase input-bar hover:bg-gray-100 hover:border-gray-300 focus:border-gray-300"
+          class="dark_inputs"
         />
       </div>
       <div
-        class="flex flex-row items-center justify-between gap-4 p-2 text-gray-800 font-body"
+        class="flex flex-row items-center justify-between gap-4 p-2 text-gray-800 dark:text-slate-200 font-body"
       >
         <label for="igbo">Igbo Translation</label>
         <input
@@ -29,11 +29,11 @@
           placeholder="Enter Igbo translation"
           required
           v-model.trim="translation"
-          class="lowercase input-bar hover:bg-gray-100 hover:border-gray-300 focus:border-gray-300"
+          class="dark_inputs"
         />
       </div>
       <div
-        class="flex flex-row items-center justify-between gap-4 p-2 text-gray-800 font-body"
+        class="flex flex-row items-center justify-between gap-4 p-2 text-gray-800 dark:text-slate-200 font-body"
       >
         <label for="igbo">Word Genre</label>
         <input
@@ -43,13 +43,13 @@
           placeholder="e.g: Medicals(Noun)"
           required
           v-model.trim="genre"
-          class="lowercase input-bar hover:bg-gray-100 hover:border-gray-300 focus:border-gray-300"
+          class="dark_inputs"
         />
       </div>
       <!-- submitting section -->
       <span class="flex flex-row items-center gap-2 p-2 text-right">
         <button
-          class="sub-btns hover:bg-green-400 hover:shadow-md hover:border-transparent"
+          class="sub-btns hover:bg-emerald-500 dark:text-emerald-500 dark:hover:text-slate-200 hover:text-slate-200 hover:shadow-md hover:border-transparent"
         >
           Upload
           <!-- loading state -->

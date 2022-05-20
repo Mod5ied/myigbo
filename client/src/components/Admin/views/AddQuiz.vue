@@ -3,7 +3,7 @@
     class="flex flex-col items-center w-1/2 h-full gap-6 p-4 mr-40 font-body"
   >
     <span
-      class="flex justify-between w-3/5 overflow-hidden bg-blue-300 rounded-md"
+      class="flex justify-between w-3/5 overflow-hidden bg-blue-300 rounded-md mt-14"
     >
       <button
         @click="formsToggle('showSearch')"
@@ -21,11 +21,11 @@
     <!-- searchQuiz form 👇 -->
     <form
       @submit.prevent="submitQuiz('search')"
-      class="flex flex-col justify-around w-full gap-3 p-6 border rounded-lg bg-gray-50 dark:bg-slate-900 h-1/2"
+      class="flex flex-col justify-around w-full gap-3 p-6 border rounded-lg bg-gray-50 dark:bg-slate-900 dark:border-slate-700 h-1/2"
       v-if="useSearch"
     >
       <div
-        class="flex flex-row items-center justify-between p-2 text-gray-800 font-body"
+        class="flex flex-row items-center justify-between p-2 text-gray-800 dark:text-slate-200 font-body"
       >
         <label for="english">Quiz question</label>
         <input
@@ -35,11 +35,11 @@
           placeholder="Enter the question"
           required
           v-model="question"
-          class="lowercase input-bar hover:bg-gray-100 hover:border-gray-300 focus:border-gray-300"
+          class="dark_inputs"
         />
       </div>
       <div
-        class="flex flex-row items-center justify-between p-2 text-gray-800 font-body"
+        class="flex flex-row items-center justify-between p-2 text-gray-800 dark:text-slate-200 font-body"
       >
         <label for="igbo"> Right answer </label>
         <input
@@ -49,11 +49,11 @@
           placeholder="Enter the answer"
           required
           v-model="right_answer"
-          class="lowercase input-bar hover:bg-gray-100 hover:border-gray-300 focus:border-gray-300"
+          class="dark_inputs"
         />
       </div>
       <div
-        class="flex flex-row items-center justify-between p-2 text-gray-800 font-body"
+        class="flex flex-row items-center justify-between p-2 text-gray-800 dark:text-slate-200 font-body"
       >
         <label for="igbo"> Wrong answer </label>
         <input
@@ -63,14 +63,12 @@
           placeholder="Enter the answer"
           required
           v-model="wrong_answer"
-          class="lowercase input-bar hover:bg-gray-100 hover:border-gray-300 focus:border-gray-300"
+          class="dark_inputs"
         />
       </div>
       <!-- submitting section 👇 -->
       <span class="flex flex-row items-center gap-2 p-2 text-right">
-        <button
-          class="sub-btns hover:bg-emerald-500 hover:text-slate-100 hover:shadow-md hover:border-transparent"
-        >
+        <button class="dark_btns">
           Upload
           <!-- loading state -->
           <i class="flex items-center" v-if="loading">
@@ -129,11 +127,11 @@
     <!-- dictionaryQuiz form 👇 -->
     <form
       @submit.prevent="submitQuiz('dict')"
-      class="flex flex-col justify-around w-full gap-3 p-6 border rounded-lg bg-gray-50 h-3/4"
+      class="flex flex-col justify-around w-full gap-3 p-6 border rounded-lg bg-gray-50 h-3/4 dark:bg-slate-900 dark:border-slate-600"
       v-if="useDict"
     >
       <div
-        class="flex flex-row items-center justify-between p-2 text-gray-800 font-body"
+        class="flex flex-row items-center justify-between p-2 text-gray-800 dark:text-slate-200 font-body"
       >
         <label for="english">Quiz question</label>
         <input
@@ -143,11 +141,11 @@
           placeholder="Enter the question"
           required
           v-model="question"
-          class="lowercase input-bar hover:bg-gray-100 hover:border-gray-300 focus:border-gray-300"
+          class="dark_inputs"
         />
       </div>
       <div
-        class="flex flex-row items-center justify-between p-2 text-gray-800 font-body"
+        class="flex flex-row items-center justify-between p-2 text-gray-800 dark:text-slate-200 font-body"
       >
         <label for="igbo"> Right answer </label>
         <input
@@ -157,11 +155,11 @@
           placeholder="Enter the answer"
           required
           v-model="right_answer"
-          class="lowercase input-bar hover:bg-gray-100 hover:border-gray-300 focus:border-gray-300"
+          class="dark_inputs"
         />
       </div>
       <div
-        class="flex flex-row items-center justify-between p-2 text-gray-800 font-body"
+        class="flex flex-row items-center justify-between p-2 text-gray-800 dark:text-slate-200 font-body"
       >
         <label for="igbo"> Wrong answer1 </label>
         <input
@@ -171,11 +169,11 @@
           placeholder="Enter the answer"
           required
           v-model="wrong_answer_one"
-          class="lowercase input-bar hover:bg-gray-100 hover:border-gray-300 focus:border-gray-300"
+          class="dark_inputs"
         />
       </div>
       <div
-        class="flex flex-row items-center justify-between p-2 text-gray-800 font-body"
+        class="flex flex-row items-center justify-between p-2 text-gray-800 dark:text-slate-200 font-body"
       >
         <label for="igbo"> Wrong answer2 </label>
         <input
@@ -185,14 +183,12 @@
           placeholder="Enter the answer"
           required
           v-model="wrong_answer_two"
-          class="lowercase input-bar hover:bg-gray-100 hover:border-gray-300 focus:border-gray-300"
+          class="dark_inputs"
         />
       </div>
       <!-- submitting section 👇 -->
       <span class="flex flex-row items-center gap-2 p-2 text-right">
-        <button
-          class="sub-btns hover:bg-emerald-500 hover:text-slate-100 hover:shadow-md hover:border-transparent"
-        >
+        <button class="dark_btns">
           Upload
           <!-- loading state -->
           <i class="flex items-center" v-if="loading">

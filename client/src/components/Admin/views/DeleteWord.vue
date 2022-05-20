@@ -1,9 +1,7 @@
 <template>
   <div class="flex flex-col items-center w-1/2 h-full gap-6 p-4 mr-40">
-    <div
-      class="flex flex-col justify-around w-full gap-2 px-12 transition duration-300 border-2 border-gray-200 rounded-md shadow-sm bg-gray-50 h-1/2 hover:border-2 hover:border-red-300"
-    >
-      <h2 class="w-44 btns hover:bg-gray-200" @click="useDelete = !useDelete">
+    <div class="delete_body">
+      <h2 class="delete_btn" @click="useDelete = !useDelete">
         Delete a Word Here:
       </h2>
       <!-- Form here -->
@@ -13,7 +11,7 @@
         v-if="useDelete"
       >
         <span
-          class="flex flex-row items-center justify-around w-full gap-2 text-gray-800 font-body"
+          class="flex flex-row items-center justify-around w-full gap-2 text-gray-800 dark:text-slate-200 font-body"
         >
           <label for="deleteConst">Enter word:</label>
           <input
@@ -21,7 +19,7 @@
             placeholder="English words only!"
             v-model.trim="deleteConst"
             required
-            class="input-bar hover:bg-gray-100 hover:border-gray-300 focus:border-gray-300"
+            class="dark_inputs"
           />
         </span>
         <!-- submitting here 👇 -->

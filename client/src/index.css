@@ -30,7 +30,7 @@
   @apply flex items-center gap-4 p-2 text-base text-gray-700 transition duration-300 bg-transparent border-2 border-green-300 rounded-md cursor-pointer md:font-medium font-body hover:bg-green-400 hover:text-gray-100;
 }
 .btns-danger {
-  @apply flex items-center justify-center w-1/2 gap-4 p-2 text-base text-gray-700 transition duration-300 bg-transparent border-2 border-red-400 rounded-md cursor-pointer md:font-medium font-body hover:bg-red-500 hover:text-gray-200;
+  @apply flex items-center justify-center w-1/2 gap-4 p-2 text-base text-gray-700 transition duration-300 bg-transparent border-2 border-red-400 rounded-md cursor-pointer dark:text-red-400 dark:hover:text-slate-200 md:font-medium font-body hover:bg-red-500 hover:text-gray-200;
 }
 
 .sub-btns {
@@ -40,7 +40,7 @@
   @apply w-2/3 px-5 py-2 transition duration-300 bg-white border-2 border-gray-100 rounded-lg;
 }
 .tags {
-  @apply flex items-center h-4 px-1 py-2 text-xs font-semibold text-gray-700 transition duration-300 border-2 border-gray-300 rounded-lg font-body;
+  @apply flex items-center h-4 px-1 py-2 text-xs font-semibold text-gray-700 transition duration-300 border-2 border-gray-300 rounded-lg dark:border-slate-500 dark:text-blue-600 font-body;
 }
 
 /* Search buttons */
@@ -73,8 +73,25 @@
 
 /* Admin page, Sidebar spans */
 .side_span {
-  @apply w-3/5 p-2 mb-4 text-center border rounded-md;
+  @apply w-3/5 p-2 mb-4 text-center transition-all border rounded-lg dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:duration-300;
 }
 .side_span_active {
-  @apply w-3/5 p-2 mb-4 text-center border rounded-md bg-emerald-500 text-slate-200;
+  @apply w-3/5 p-2 mb-4 text-center border rounded-lg dark:text-emerald-500 dark:border-emerald-500 bg-emerald-500 text-slate-200 dark:bg-transparent;
+}
+
+/* Admin page, Add word dark-theme input styles */
+/* Admin page, Add quiz dark-theme input styles */
+.dark_inputs {
+  @apply lowercase input-bar hover:bg-gray-100 hover:border-gray-300 focus:border-gray-300 dark:text-slate-400 dark:border-none dark:ring-1 dark:bg-slate-800 dark:hover:bg-slate-700;
+}
+.dark_btns {
+  @apply flex items-center justify-center w-1/2 gap-4 p-2 mx-auto font-medium transition duration-300 bg-transparent border-2 rounded-md cursor-pointer border-emerald-500 font-body hover:bg-emerald-500 dark:text-emerald-500 dark:hover:text-slate-200 hover:text-slate-100 hover:shadow-md hover:border-transparent;
+}
+
+/* Delete component body */
+.delete_body {
+  @apply flex flex-col justify-around w-full gap-2 px-12 mt-24 transition duration-300 border-2 border-gray-200 rounded-md shadow-sm dark:border-slate-700 dark:bg-slate-900 bg-gray-50 h-1/2 hover:border-2 dark:hover:border-red-500 hover:border-red-300;
+}
+.delete_btn {
+  @apply p-2 text-base text-gray-700 transition duration-300 bg-transparent border-2 border-gray-100 rounded-md cursor-pointer dark:text-slate-300 w-44 dark:border-slate-700 md:font-semibold font-body hover:bg-gray-200 dark:hover:bg-slate-800;
 }

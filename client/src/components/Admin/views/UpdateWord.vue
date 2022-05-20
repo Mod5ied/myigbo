@@ -3,7 +3,7 @@
     class="flex flex-col items-center w-1/2 h-full gap-6 p-4 mr-40 font-body"
   >
     <span
-      class="flex justify-between w-3/4 overflow-hidden bg-blue-300 rounded-md"
+      class="flex justify-between w-3/4 overflow-hidden bg-blue-300 rounded-md mt-14"
     >
       <button
         @click="formsToggle('showGenre')"
@@ -21,11 +21,11 @@
     <!-- forms1(genre) here👇 -->
     <form
       @submit.prevent="updateGenre"
-      class="flex flex-col justify-around w-full gap-3 p-6 border rounded-lg bg-gray-50 h-2/4"
+      class="flex flex-col justify-around w-full gap-3 p-6 border rounded-lg dark:bg-slate-900 dark:border-slate-700 bg-gray-50 h-2/4"
       v-if="showGenre"
     >
       <div
-        class="flex flex-col justify-start w-full gap-6 text-gray-800 font-body"
+        class="flex flex-col justify-start w-full gap-6 text-gray-800 dark:text-slate-200 font-body"
       >
         <span class="flex flex-row items-center justify-between gap-4 p-2">
           <label for="patchName">Enter the word</label>
@@ -34,7 +34,7 @@
             placeholder="English word only!"
             v-model.trim="patchName"
             required
-            class="input-bar hover:bg-gray-100 hover:border-gray-300 focus:border-gray-300"
+            class="dark_inputs"
           />
         </span>
         <span class="flex flex-row items-center justify-between gap-4 p-2">
@@ -44,14 +44,14 @@
             placeholder="e.g: Medicals(Noun)"
             v-model.trim="patchGenre"
             required
-            class="input-bar hover:bg-gray-100 hover:border-gray-300 focus:border-gray-300"
+            class="dark_inputs"
           />
         </span>
       </div>
       <!-- submitting section👇 -->
       <span class="flex flex-row items-center gap-2 p-2 text-right">
         <button
-          class="sub-btns hover:text-slate-100 hover:bg-emerald-500 hover:shadow-md hover:border-transparent"
+          class="sub-btns hover:text-slate-100 dark:text-emerald-500 dark:hover:text-slate-200 hover:bg-emerald-500 hover:shadow-md hover:border-transparent"
         >
           Update
           <!-- loading state -->
@@ -110,11 +110,11 @@
     <!-- forms2(defs here 👇 -->
     <form
       @submit.prevent="updateTranslation"
-      class="flex flex-col justify-around w-full gap-3 p-6 border rounded-lg bg-gray-50 h-2/4"
+      class="flex flex-col justify-around w-full gap-3 p-6 border rounded-lg dark:bg-slate-900 dark:border-slate-700 bg-gray-50 h-2/4"
       v-if="showTrans"
     >
       <div
-        class="flex flex-col justify-start w-full gap-6 text-gray-800 font-body"
+        class="flex flex-col justify-start w-full gap-6 text-gray-800 dark:text-slate-200 font-body"
       >
         <span class="flex flex-row items-center justify-between gap-4 p-2">
           <label for="patchName">Enter the word</label>
@@ -123,7 +123,7 @@
             placeholder="English word only!"
             v-model.trim="patchName"
             required
-            class="input-bar hover:bg-gray-100 hover:border-gray-300 focus:border-gray-300"
+            class="dark_inputs"
           />
         </span>
 
@@ -134,14 +134,14 @@
             placeholder="New Definition here"
             v-model.trim="patchTranslation"
             required
-            class="input-bar hover:bg-gray-100 hover:border-gray-300 focus:border-gray-300"
+            class="dark_inputs"
           />
         </span>
       </div>
       <!-- submitting section -->
       <span class="flex flex-row items-center gap-2 p-2 text-right">
         <button
-          class="sub-btns hover:bg-emerald-500 hover:text-slate-100 hover:shadow-md hover:border-transparent"
+          class="sub-btns dark:text-emerald-500 dark:hover:text-slate-200 hover:bg-emerald-500 hover:text-slate-100 hover:shadow-md hover:border-transparent"
         >
           Update
           <!-- loading state -->

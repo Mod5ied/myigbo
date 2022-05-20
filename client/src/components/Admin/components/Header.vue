@@ -1,19 +1,23 @@
 <template>
   <header
-    class="flex flex-row items-center justify-between w-full px-12 py-3 border-b border-gray-200 dark:border dark:border-slate-800 bg-gray-50 dark:bg-slate-900 font-body"
+    class="flex flex-row items-center justify-between w-full px-12 border-b border-gray-200 h-14 dark:border dark:border-slate-800 bg-gray-50 dark:bg-slate-900 font-body"
   >
     <section id="left">
       <h1 class="text-lg font-semibold dark:text-slate-300">
         IgboTrans Library
       </h1>
     </section>
-    <div id="right" class="flex items-center justify-between w-2/5">
-      <section class="flex items-center gap-4 text-sm dark:text-slate-300">
-        <router-link :to="{ name: 'Search' }">Home</router-link>
-        <router-link to="">About</router-link>
-        <router-link to="">*Future</router-link>
+    <div id="right" class="flex items-center justify-between w-1/3 h-full">
+      <section
+        class="flex items-center h-full gap-10 px-1 text-sm dark:text-slate-300"
+      >
+        <router-link class="search-links" :to="{ name: 'Search' }"
+          >Home</router-link
+        >
+        <router-link class="search-links" to="">About</router-link>
+        <router-link class="search-links" to="">*Future</router-link>
       </section>
-      <section class="flex">
+      <section class="flex items-center h-full">
         <span
           class="flex flex-row justify-around gap-1 px-2 text-sm text-gray-600 cursor-pointer dark:text-slate-300 font-body"
         >
@@ -57,13 +61,6 @@
           </i>
         </span>
       </section>
-
-      <section>
-        <ul>
-          <li><a href=""></a></li>
-          <li><a href=""></a></li>
-        </ul>
-      </section>
     </div>
   </header>
 </template>
@@ -72,7 +69,6 @@
 import { ref } from "vue";
 import isOnline from "is-online";
 import { Utilities } from "../../../scripts/Services";
-import { computed } from "@vue/reactivity";
 const { returnState } = Utilities;
 
 let darkState = ref(false);
@@ -91,9 +87,5 @@ const fail_class = ref("text-red-500");
   } catch (err) {
     return err;
   }
-
-  //todo: would be used to ensure connection is established before reqs or posts.
 })();
-
-const setDarkMode = () => {};
 </script>

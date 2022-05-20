@@ -3,7 +3,7 @@
     class="flex flex-col items-center w-3/5 h-full gap-6 p-4 mr-40 font-body"
   >
     <span
-      class="flex justify-between w-3/5 overflow-hidden rounded-md bg-slate-300"
+      class="flex justify-between w-3/5 mt-12 overflow-hidden rounded-md bg-slate-300"
     >
       <button
         @click="fetchWords"
@@ -72,7 +72,7 @@
     </span>
     <div class="flex flex-row gap-4 p-2">
       <div
-        class="flex flex-row flex-wrap gap-1 p-1 border border-gray-200 rounded-md"
+        class="flex flex-row flex-wrap gap-1 p-1 border border-gray-200 rounded-md dark:border-slate-500"
       >
         <li
           class="tags"
