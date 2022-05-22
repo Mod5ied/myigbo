@@ -157,7 +157,7 @@ async function submitWord() {
       : console.log("Saving to IndexedDb"),
       await handleOffline(name.value, translation.value, genre.value);
   } catch (err) {
-    console.log(err);
+    console.log(err.message);
     //left for dev. purposes (localDB for storage.)
     // switch (err.message) {
     //   case "Network Error":

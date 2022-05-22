@@ -19,7 +19,11 @@
           week
         </p>
       </span>
-      <Search_card v-if="isSearching" />
+      <Search_card
+        v-if="isSearching"
+        :useArray="useArray"
+        :userInput="userInput"
+      />
     </div>
   </div>
 </template>
@@ -28,12 +32,22 @@
 import { ref, inject } from "vue";
 import Search_card from "./Search_card.vue";
 
-//reactive states for nested components
-let isSearching = ref(true);
-let dynamicClass = "";
-
-//emitter is initialized.
+//define even-emitter.
 const emitter = inject("emitter");
+
+//registers props from {Search}.
+const props = defineProps({
+  useArray: {
+    type: Array,
+  },
+  userInput: String,
+});
+
+//reactive states for nested components.
+let dynamicClass = "";
+let isSearching = ref(true);
+let useArray = props.useArray;
+let userInput = props.userInput;
 
 //emitter is received.
 emitter.on("hide-card", (payload) => {

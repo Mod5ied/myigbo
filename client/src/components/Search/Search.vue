@@ -109,7 +109,12 @@
       <Search_box :HideArrow="HideArrow" :SearchClass="SearchClass" />
       <Search_history v-if="useHistory" />
       <Transition>
-        <async-results v-if="hasResult" />
+        <Search_result
+          v-if="hasResult"
+          :useArray="useArray"
+          :userInput="userInput"
+          :fnExec="fnExec"
+        />
       </Transition>
     </main>
     <footer>
@@ -122,11 +127,18 @@
 
 <script setup>
 import { defineAsyncComponent, inject, onMounted, ref } from "vue";
+import { Requests } from "../../scripts/Services";
 import Search_box from "./Search_box.vue";
+import Search_result from "./Search_result.vue";
 import Search_buttons from "./Search_buttons.vue";
 import Search_history from "./Search_history.vue";
 // import image1 from "../../assets/home.svg";
 import image2 from "../../assets/Solutions_2.png";
+//async load nested components
+// const SearchResults = defineAsyncComponent(() => import("./Search_result.vue"));
+const SearchInteract = defineAsyncComponent(() =>
+  import("../Interactive/Search_Interact.vue")
+);
 
 //dynamic arrays.
 // const images = ref([image1, image2]); //👈 should be used to loop through homepage images.
@@ -145,15 +157,13 @@ function arrDelay(arr, delegate, delay) {
   return interval;
 }
 //homepage name is altered when comp is mounted.
-onMounted(() => {
+onMounted(async () => {
   arrDelay(array, (obj) => (name.value = obj), 6000);
+  useArray.value = await fetchWords();
 });
 
-//async load nested components
-const AsyncResults = defineAsyncComponent(() => import("./Search_result.vue"));
-const SearchInteract = defineAsyncComponent(() =>
-  import("../Interactive/Search_Interact.vue")
-);
+//import the fetch fucntion from request class.
+const { fetchWords } = Requests;
 
 //reactive states for all mini components
 let hasResult = ref(false); //👈 if new search is truthy.
@@ -162,6 +172,9 @@ let useTrigger = ref(true); //👈 to show the { Practice here } section.
 let useHistory = ref(true); //👈 to show the history tab.
 let useInteract = ref(false); //👈 to show the interact section.
 let HideArrow = ref(false); // 👈 to hide the search-box arrow.
+let useArray = ref(null); // 👈 to store the array that is fetched on mount.
+let userInput = ref(""); //👈 to be sent to search-result > search-card.
+let fnExec = ref(null); //👈 to be sent to search-result > search-card.
 
 //dark nd light mode states.
 let currentState = ref(null);
@@ -176,6 +189,15 @@ let menu = ref(false);
 
 //emitter is initialized.
 const emitter = inject("emitter");
+
+//emitter to grab user input.
+emitter.on("use-input", (payload) => {
+  userInput.value = payload;
+});
+
+emitter.on("find-word", () => {
+  fnExec.value = "true"; //👈 to be sent to search-result > search-card.
+});
 
 //emits events
 emitter.on("clear-result", (payload) => {

@@ -4,7 +4,7 @@
   >
     <span class="flex flex-row justify-between px-4 py-2">
       <h3 class="text-2xl font-bold text-gray-200 dark:text-slate-300">
-        Nwanyi
+        {{ userRecord.translation }}
       </h3>
       <i
         title="Listen"
@@ -28,14 +28,41 @@
       class="flex items-center justify-start gap-4 px-4 py-2 text-sm text-gray-400 w dark:text-slate-400"
     >
       <p class="text-red-400">Show IPA</p>
-      <p>"[nYaa - nyii]"</p>
+      <p>[{{ userRecord.genre }}]</p>
     </span>
     <p class="px-4 py-2 text-sm font-medium text-gray-400 dark:text-slate-400">
-      Female Human.
+      {{ userRecord.name }}
     </p>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, inject, watchEffect, onMounted } from "vue";
+
+//registers props from {Search_result}.
+const props = defineProps({
+  useArray: {
+    type: Array,
+  },
+  userInput: String,
+  fnExec: String,
+});
+
+//reactive template states.
+let userInput = props.userInput;
+let useArray = props.useArray;
+let useExec = props.fnExec;
+let userRecord = ref(null);
+
+//fn to filter and return exact values.
+const findWord = (input) => {
+  userRecord.value = useArray.find((obj) => obj.name === input);
+  return;
+};
+
+// watchers -> to execute method.
+watchEffect(() => {
+  useExec = findWord(userInput);
+  // useExec === true ? console.log("im doin it") : console.log("its false");
+});
 </script>

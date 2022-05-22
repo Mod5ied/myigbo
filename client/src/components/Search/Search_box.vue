@@ -30,7 +30,7 @@
       >
         <input
           class="input-box"
-          v-model="input"
+          v-model.trim="input"
           type="text"
           :placeholder="placeholder"
           :oninput="hideResultComponent"
@@ -102,7 +102,7 @@
 </template>
 
 <script setup>
-import { inject, ref } from "vue";
+import { inject, ref, watchEffect } from "vue";
 
 //reactive input data.
 let input = ref("");
@@ -113,6 +113,11 @@ let isDictionary = props.HideArrow;
 let searchClass = props.SearchClass;
 let dictClass = props.DictClass;
 const useState = [false, true];
+
+// watchers -> to alter reactive state.
+watchEffect(() => {
+  input.value = input.value.toLowerCase();
+});
 
 //props for rendering component state.
 const props = defineProps({
@@ -135,7 +140,7 @@ function clearInputBox() {
 //emits to clear input.
 emitter.on("clear-input", () => {
   //comes from {Search}
-  input.value = null;
+  // input.value = null;
 });
 emitter.on("revert-btns", (payload) => {
   //comes from {search-btns}
@@ -148,6 +153,9 @@ emitter.on("revert-btns", (payload) => {
 const handleSubmit = function () {
   try {
     if (input.value.length >= 2) {
+      emitter.emit("find-word"); //goes to {search-card}.
+      emitter.emit("use-input", input.value); //goes to {search-card}.
+      //todo: exec findWord fn wthin the cards emit handler.
       emitter.emit("hide-buttons", false); //goes to {search-btns & dict-interact}.
       emitter.emit("show-results", true); //goes to {search-res & Search}.
     }
@@ -161,6 +169,4 @@ const hideResultComponent = function () {
   isTyping.value = true;
   notTyping.value = false;
 };
-
-// watchers -> to alter reactive state.
 </script>

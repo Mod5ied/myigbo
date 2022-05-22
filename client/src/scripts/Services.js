@@ -14,18 +14,18 @@ const {
 
 class Requests {
   /**
-   * @param {string} ok @param {string} serve @param {Array} all @param {string} ok
-   * @param {Function}get @param {Array} use @param {string} fail
+   * @param {string} ok @param {string} serve @param {Array} store @param {string} ok
+   * @param {Function}get @param {string} fail
    */
-  static fetchAllPost = async (ok, serve, all, fail) => {
+  static fetchAllPost = async (ok, serve, store, fail) => {
     let post_data;
     try {
       ok.value = false;
       serve.value = true;
 
       setTimeout(async () => {
-        all.value = await getPosts();
-        let { state, data } = all.value;
+        store.value = await getPosts();
+        let { state, data } = store.value;
         post_data = data;
         if (
           state
@@ -43,6 +43,19 @@ class Requests {
     }
     return post_data;
   };
+
+  static fetchWords = async () => {
+    let allWords;
+    try {
+      const store = await getPosts();
+      let { state, data } = store;
+      allWords = data;
+    } catch (err) {
+      console.error({ message: `Error while getting posts: ${err.state}` });
+    }
+    return allWords;
+  };
+
   /**
    * @param {string} ok @param {string} message @param {Function} ret @param {string} load
    * @param {string} fail @param {string} name

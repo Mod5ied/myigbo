@@ -21,9 +21,8 @@
 <script setup>
 import isOnline from "is-online";
 import { useRouter } from "vue-router";
-import { StateProxy } from "../../scripts/Proxy";
 import { Utilities, OfflineStorage } from "../../scripts/Services";
-import { ref, inject, computed, onMounted, defineAsyncComponent } from "vue";
+import { ref, inject, onMounted, defineAsyncComponent } from "vue";
 import Header1 from "./components/Header.vue";
 import Sidebar from "./components/Sidebar.vue";
 
@@ -43,7 +42,6 @@ const PeekWords = defineAsyncComponent(() =>
   import("../Admin/views/PeekWords.vue")
 );
 
-const { getState } = StateProxy;
 const { handleOffline, pushToCloud } = OfflineStorage;
 const { returnState, returnSwitch } = Utilities;
 const Router = useRouter();
@@ -98,12 +96,6 @@ emitter.on("peekWords", (payload) => {
   useQuiz.value = false;
 });
 
-// //footer vars
-// let localLoading = ref(null);
-// let localLoaded = ref(null);
-// let cloudLoading = ref(null);
-// let cloudLoaded = ref(null);
-
 //fetch data from idb on component mount.
 onMounted(async () => {
   // await pushToCloud();
@@ -111,14 +103,7 @@ onMounted(async () => {
   // console.log(p);
 });
 
-//functions
-async function getServerState() {
-  returnState(serverLoading, serverState, fail_server);
-  //todo: would be used to ensure connection is established before reqs or posts.
-}
-
-// getServerState();
-
+//! to be deprecated in production.
 async function useSwitch(data) {
   await returnSwitch(
     data,

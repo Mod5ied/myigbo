@@ -40,7 +40,7 @@ class PostProxy {
   static createPosts = async (data) => {
     return new Promise(async (resolve, reject) => {
       try {
-        const res = await axios.post(`${url}post/quiz`, {
+        const res = await axios.post(`${url}post`, {
           name: data.name,
           translation: data.translation,
           genre: data.genre,
@@ -55,7 +55,7 @@ class PostProxy {
   static createQuiz = async (data) => {
     return new Promise(async (resolve, reject) => {
       try {
-        const res = await axios.post(`${url}/quiz`, {
+        const res = await axios.post(`${url}post/quiz`, {
           question: data.question,
           answerRight: data.right_answer,
           answerWrong1: data.wrong_answer1,
