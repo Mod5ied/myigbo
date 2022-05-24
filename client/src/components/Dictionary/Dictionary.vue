@@ -3,14 +3,20 @@
     <header
       class="flex flex-row justify-between w-full px-3 py-1 list-none border-b dark:border-b-gray-800 md:py1 dark:bg-slate-900 bg-gray-50"
     >
-      <Search_box :HideArrow="HideArrow" />
+      <DictSearch />
     </header>
     <main class="flex flex-col">
+      <div v-if="useError">
+        <div>
+          <h3>{{ errorState }}</h3>
+        </div>
+      </div>
       <Transition>
         <DictInteract v-if="useInteract" :dynamicClass="clas" />
       </Transition>
       <Transition>
-        <async-results v-if="useResults" />
+        <!--:passArray="useArray"  only pass when ure ready  -->
+        <DictResults v-if="useResults" />
       </Transition>
     </main>
     <footer
@@ -41,9 +47,12 @@
 </template>
 
 <script setup>
-import { defineAsyncComponent, inject, ref } from "vue";
-import Search_box from "../Search/Search_box.vue";
-const AsyncResults = defineAsyncComponent(() => import("./Dict_results.vue"));
+import { Requests } from "../../scripts/Services";
+import { ErrorStates } from "../../scripts/ErrorScript";
+import { defineAsyncComponent, inject, ref, onMounted } from "vue";
+import DictSearch from "./components/Dict_search.vue";
+const { errorMatcher } = ErrorStates;
+const DictResults = defineAsyncComponent(() => import("./Dict_results.vue"));
 const DictInteract = defineAsyncComponent(() =>
   import("../Interactive/Dict_Interact.vue")
 );
@@ -51,11 +60,26 @@ const DictInteract = defineAsyncComponent(() =>
 //define emitter.
 const emitter = inject("emitter");
 
+//import the fetch fucntion from request class.
+const { fetchWords } = Requests;
+
+onMounted(async () => {
+  try {
+    // useArray.value = await fetchWords();
+    //only call when runtime errr is fixed.
+  } catch (err) {
+    errorMatcher(503, errorState);
+  }
+});
+
 //dynamic values.
+let clas = "mt-20";
+let useArray = ref([]);
 let HideArrow = ref(true);
 let useResults = ref(null);
 let useInteract = ref(true);
-let clas = "mt-20";
+let useError = ref(false);
+let errorState = ref("");
 
 //functions.
 const handleView = () => {
@@ -71,6 +95,20 @@ emitter.on("hide-buttons", (payload) => {
   setTimeout(() => {
     useResults.value = !payload;
   }, 800);
+});
+
+//emit to listen for error-events from dict_search component.
+emitter.on("enable-use-error", () => {
+  useError.value = !useError.value;
+  errorMatcher(300, errorState);
+});
+emitter.on("disable-use-error", (payload) => {
+  useError = payload;
+});
+emitter.on("submit-error", (payload) => {
+  // errorMatcher(500, errorState)
+  useError.value = !useError.value;
+  errorState.value = payload;
 });
 </script>
 

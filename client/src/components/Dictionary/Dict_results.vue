@@ -28,7 +28,7 @@
       </h4>
     </span>
     <span>
-      <dict-card />
+      <dict-card :useArray="useArray" />
     </span>
   </div>
 </template>
@@ -38,8 +38,15 @@ import Search_card from "../Search/Search_card.vue";
 import { defineAsyncComponent, inject } from "vue";
 const DictCard = defineAsyncComponent(() => import("./Dict_card.vue"));
 
+const props = defineProps({
+  passArray: {
+    type: Array,
+  },
+});
+
 //dynamic classes.
 let DictClass = "w-80";
+let useArray = props?.passArray;
 
 //defines the emitter.
 const emitter = inject("emitter");

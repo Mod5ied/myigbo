@@ -9,11 +9,13 @@
       class="absolute flex flex-col w-full gap-12 px-4 -mt-60 md:place-items-center md:-mt-60"
     >
       <span class="flex flex-col items-center gap-2 justify-centerst">
-        <h2 class="text-2xl font-semibold text-indigo-800 dark:text-white">
+        <h2
+          class="text-2xl font-semibold text-cyan-600 dark:text-white select-none"
+        >
           Word of the day
         </h2>
         <p
-          class="text-base font-medium text-center text-gray-500 dark:text-slate-400 md:w-4/5"
+          class="text-base font-medium text-center text-gray-500 dark:text-slate-400 md:w-4/5 select-none"
         >
           Build your vocabulary with new words and definitions every day of the
           week

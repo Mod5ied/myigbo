@@ -109,7 +109,7 @@
       <Search_box :HideArrow="HideArrow" :SearchClass="SearchClass" />
       <Search_history v-if="useHistory" />
       <Transition>
-        <Search_result
+        <SearchResult
           v-if="hasResult"
           :useArray="useArray"
           :userInput="userInput"
@@ -129,16 +129,18 @@
 import { defineAsyncComponent, inject, onMounted, ref } from "vue";
 import { Requests } from "../../scripts/Services";
 import Search_box from "./Search_box.vue";
-import Search_result from "./Search_result.vue";
+// import Search_result from "./Search_result.vue";
 import Search_buttons from "./Search_buttons.vue";
 import Search_history from "./Search_history.vue";
 // import image1 from "../../assets/home.svg";
 import image2 from "../../assets/Solutions_2.png";
-//async load nested components
-// const SearchResults = defineAsyncComponent(() => import("./Search_result.vue"));
+const SearchResult = defineAsyncComponent(() => import("./Search_result.vue"));
 const SearchInteract = defineAsyncComponent(() =>
   import("../Interactive/Search_Interact.vue")
 );
+
+//import the fetch fucntion from request class.
+const { fetchWords } = Requests;
 
 //dynamic arrays.
 // const images = ref([image1, image2]); //👈 should be used to loop through homepage images.
@@ -161,9 +163,6 @@ onMounted(async () => {
   arrDelay(array, (obj) => (name.value = obj), 6000);
   useArray.value = await fetchWords();
 });
-
-//import the fetch fucntion from request class.
-const { fetchWords } = Requests;
 
 //reactive states for all mini components
 let hasResult = ref(false); //👈 if new search is truthy.
@@ -189,6 +188,8 @@ let menu = ref(false);
 
 //emitter is initialized.
 const emitter = inject("emitter");
+
+// 👇 👇 👇 👇 👇 👇 👇 LOOK INTO THIS THOURGHOULY AS IT RELATES TO DICTIONARY'S SEARCH CARD.
 
 //emitter to grab user input.
 emitter.on("use-input", (payload) => {

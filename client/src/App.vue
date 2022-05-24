@@ -1,14 +1,15 @@
 <script setup>
 import { inject, onMounted, ref } from "vue";
+const emitter = inject("emitter");
+
 let parentDiv = ref(null);
 let currentState = ref(null);
+
 //parent element reference.
 onMounted(() => {
   parentDiv.value = document.getElementById("parent");
+  persistState();
 });
-
-//define our emitter here.
-const emitter = inject("emitter");
 
 //dynamic states
 let local_state = ref(null);
@@ -36,9 +37,6 @@ function persistState() {
       break;
   }
 }
-onMounted(() => {
-  persistState();
-});
 
 //emitters that sets payload to localStorage database on emission of event.
 //dark-mode.

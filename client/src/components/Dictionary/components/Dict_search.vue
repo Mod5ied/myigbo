@@ -7,7 +7,7 @@
       @submit.prevent="handleSubmit"
       class="flex items-center justify-around w-full md:justify-start"
     >
-      <i v-if="isDictionary" class="search_box_nav">
+      <i class="search_box_nav">
         <router-link :to="{ name: 'Search' }">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -33,7 +33,6 @@
           v-model.trim="input"
           type="text"
           :placeholder="placeholder"
-          :oninput="hideResultComponent"
         />
         <div
           id="input_icons"
@@ -58,7 +57,7 @@
             </svg>
           </i>
           <i
-            class="flex items-center text-gray-400 hover:text-gray-600"
+            class="flex items-center text-slate-400 hover:text-slate-600"
             v-if="notTyping"
           >
             <svg
@@ -104,44 +103,39 @@
 <script setup>
 import { inject, ref, watchEffect } from "vue";
 
+//event bus initialized.
+const emitter = inject("emitter");
+//props for rendering component state.
+const props = defineProps({
+  SearchClass: String,
+  HideArrow: Boolean,
+  DictClass: String,
+});
+
 //reactive input data.
 let input = ref("");
-let placeholder = ref("Search by word");
 let notTyping = ref(true);
 let isTyping = ref(false);
-let isDictionary = props.HideArrow;
-let searchClass = props.SearchClass;
-let dictClass = props.DictClass;
 const useState = [false, true];
+let dictClass = props.DictClass;
+let placeholder = ref("Search dictionary by word");
+let searchClass = props.SearchClass;
 
 // watchers -> to alter reactive state.
 watchEffect(() => {
   input.value = input.value.toLowerCase();
 });
 
-//props for rendering component state.
-const props = defineProps({
-  HideArrow: Boolean,
-  SearchClass: String,
-  DictClass: String,
-});
-
-//event bus initialized.
-const emitter = inject("emitter");
+//TODO: make mic icon inactive once typing exceeds two(2) letters.
 
 //methods.
 function hideCard() {
   emitter.emit("hide-card", useState);
 }
 function clearInputBox() {
-  input.value = null; // clears the input box.
+  input.value = null;
 }
 
-//emits to clear input.
-// emitter.on("clear-input", () => {
-//   //comes from {Search}
-//   // input.value = null;
-// });
 emitter.on("revert-btns", (payload) => {
   //comes from {search-btns}
   isTyping.value = payload[0];
@@ -152,19 +146,22 @@ emitter.on("revert-btns", (payload) => {
 const handleSubmit = function () {
   try {
     if (input.value.length >= 2) {
-      emitter.emit("find-word"); //goes to {search-card}.
-      emitter.emit("use-input", input.value); //goes to {search-card}.
+      //   emitter.emit("find-word"); //goes to {search-card}.
+      //   emitter.emit("use-input", input.value); //goes to {search-card}.
+      //   emitter.emit("show-results", true); //goes to {search-res & Search}.
       emitter.emit("hide-buttons", false); //goes to {search-btns & dict-interact}.
-      emitter.emit("show-results", true); //goes to {search-res & Search}.
+      emitter.emit("disable-use-error", false);
+      emitter.emit("here-input", input.value);
+      return;
     }
-    return;
+    return emitter.emit("enable-use-error");
   } catch (err) {
-    console.error(err.message);
+    emitter.emit("submit-error", err.message); // goes to {Dict-results}
   }
 };
-const hideResultComponent = () => {
-  emitter.emit("hide-results", false); //goes to {search-res & Search}.
-  isTyping.value = true;
-  notTyping.value = false;
-};
+// const hideResultComponent = function () {
+//   emitter.emit("hide-results", false); //goes to {search-res & Search}.
+//   isTyping.value = true;
+//   notTyping.value = false;
+// };
 </script>

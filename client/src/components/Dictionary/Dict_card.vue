@@ -70,13 +70,23 @@
 <script setup>
 import { inject, ref, watchEffect } from "vue";
 
+//define the emitter.
+const emitter = inject("emitter");
+const props = {
+  useArray: {
+    type: Array,
+  },
+};
+
 //dynamic variables.
 let useDefi = ref(null);
 let useSynonyms = ref(null);
 let useAntonyms = ref(null);
+let useArray = props?.useArray;
 
-//define the emitter.
-const emitter = inject("emitter");
+emitter.on("here-input", (pay) => {
+  console.log(pay);
+});
 
 //emitt comes from {dict-results}.
 emitter.on("alter-synonym", (payload) => {
