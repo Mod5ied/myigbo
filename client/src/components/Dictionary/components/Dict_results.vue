@@ -3,7 +3,8 @@
     id="results"
     class="flex flex-col items-center justify-center gap-10 px-8 py-5"
   >
-    <Search_card :class="DictClass" />
+    <DictCard />
+    <!-- :class="DictClass",,  use later -->
     <!-- scroll section -->
     <span
       class="flex items-center justify-between gap-12 px-8 md:justify-center w-96 scrollable md:cursor-pointer"
@@ -28,25 +29,26 @@
       </h4>
     </span>
     <span>
-      <dict-card :useArray="useArray" />
+      <dict-card :useRecord="useRecord" />
     </span>
   </div>
 </template>
 
 <script setup>
-import Search_card from "../Search/Search_card.vue";
 import { defineAsyncComponent, inject } from "vue";
-const DictCard = defineAsyncComponent(() => import("./Dict_card.vue"));
+const DictCard = defineAsyncComponent(() =>
+  import("../components/Dict_card.vue")
+);
 
 const props = defineProps({
-  passArray: {
-    type: Array,
+  useRecord: {
+    type: {},
   },
 });
 
-//dynamic classes.
+//dynamic variable definitions.
 let DictClass = "w-80";
-let useArray = props?.passArray;
+let useRecord = props?.useRecord;
 
 //defines the emitter.
 const emitter = inject("emitter");
@@ -69,9 +71,4 @@ function handleSwitch(payload, val) {
       break;
   }
 }
-
-//emitter listens for event.
-emitter.on("changed", (payload) => {
-  console.log(`it emitted ${payload}`);
-});
 </script>

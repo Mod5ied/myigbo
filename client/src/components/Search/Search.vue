@@ -111,9 +111,8 @@
       <Transition>
         <SearchResult
           v-if="hasResult"
-          :useArray="useArray"
-          :userInput="userInput"
-          :fnExec="fnExec"
+          :useRecord="useRecord"
+          :useError="useError"
         />
       </Transition>
     </main>
@@ -126,28 +125,33 @@
 </template>
 
 <script setup>
-import { defineAsyncComponent, inject, onMounted, ref } from "vue";
+import {
+  defineAsyncComponent,
+  inject,
+  onErrorCaptured,
+  onMounted,
+  ref,
+} from "vue";
 import { Requests } from "../../scripts/Services";
-import Search_box from "./Search_box.vue";
-// import Search_result from "./Search_result.vue";
-import Search_buttons from "./Search_buttons.vue";
-import Search_history from "./Search_history.vue";
-// import image1 from "../../assets/home.svg";
 import image2 from "../../assets/Solutions_2.png";
-const SearchResult = defineAsyncComponent(() => import("./Search_result.vue"));
+import Search_box from "./components/Search_box.vue";
+// import image1 from "../../assets/home.svg";
+import Search_buttons from "./components/Search_buttons.vue";
+import Search_history from "./components/Search_history.vue";
+const SearchResult = defineAsyncComponent(() =>
+  import("./components/Search_result.vue")
+);
 const SearchInteract = defineAsyncComponent(() =>
   import("../Interactive/Search_Interact.vue")
 );
-
-//import the fetch fucntion from request class.
 const { fetchWords } = Requests;
 
 //dynamic arrays.
 // const images = ref([image1, image2]); //👈 should be used to loop through homepage images.
-const array = ["Translate", "Teaches", "Transcends", "Services"];
 let name = ref("Services");
+const array = ["Translate", "Teaches", "Transcends", "Services"];
 
-//fucntion to randomize home text.
+//function to randomize home text.
 function arrDelay(arr, delegate, delay) {
   let i = 0;
   let interval = setInterval(() => {
@@ -171,9 +175,10 @@ let useTrigger = ref(true); //👈 to show the { Practice here } section.
 let useHistory = ref(true); //👈 to show the history tab.
 let useInteract = ref(false); //👈 to show the interact section.
 let HideArrow = ref(false); // 👈 to hide the search-box arrow.
-let useArray = ref(null); // 👈 to store the array that is fetched on mount.
-let userInput = ref(""); //👈 to be sent to search-result > search-card.
-let fnExec = ref(null); //👈 to be sent to search-result > search-card.
+let useArray = ref([]); // 👈 to store the array that is fetched on mount.
+let useRecord = ref(null); // 👈 to be sent to search-result > search-card.
+let useError = ref(false); // 👈 to be sent to search-result > search-card.
+let errorState = ref(""); // 👈 to be sent to search-result > search-card.
 
 //dark nd light mode states.
 let currentState = ref(null);
@@ -189,15 +194,10 @@ let menu = ref(false);
 //emitter is initialized.
 const emitter = inject("emitter");
 
-// 👇 👇 👇 👇 👇 👇 👇 LOOK INTO THIS THOURGHOULY AS IT RELATES TO DICTIONARY'S SEARCH CARD.
-
 //emitter to grab user input.
 emitter.on("use-input", (payload) => {
-  userInput.value = payload;
-});
-
-emitter.on("find-word", () => {
-  fnExec.value = "true"; //👈 to be sent to search-result > search-card.
+  console.log(payload);
+  matchWord(payload);
 });
 
 //emits events
@@ -215,6 +215,9 @@ emitter.on("hide-results", (payload) => {
   hasResult.value = payload;
   useHistory.value = true;
 });
+
+//emit to catch error events.
+emitter.on("submit-error", (payload) => {});
 
 //fns() for tweaking light and dark modes.
 const setDarkMode = () => {
@@ -241,11 +244,28 @@ const handleInteract = () => {
   }, 1000);
 };
 
+const matchWord = (input) => {
+  //seek to manage app crash, should useArray be undefined||null.
+  const result = useArray.value.find((obj) => obj.name === input);
+  if (!result || result === null) {
+    useError.value = true;
+    errorMatcher(404, errorState);
+    return;
+  }
+  //⚠️⚠️ Error not being passed to card when user is not found ⚠️⚠️
+  useError.value = false; //to be sent as props to search-card too.
+  useRecord.value = result;
+};
+
 //fns() to check for state in localStorage
 function checkState() {
   const state = localStorage.getItem("state");
 }
 currentState.value = checkState();
+
+onErrorCaptured((error, component, info) => {
+  console.log("An error occurred: \n", error, component, info);
+});
 </script>
 
 <style scoped>

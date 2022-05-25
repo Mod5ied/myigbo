@@ -29,4 +29,6 @@ const router = createRouter({
   ],
 });
 
+// Vue.config.errorHandler(err, vm, info)
+
 createApp(App).use(router).provide("emitter", emitter).mount("#app");

@@ -12,12 +12,18 @@
         </div>
       </div>
       <Transition>
-        <DictInteract v-if="useInteract" :dynamicClass="clas" />
+        <DictInteract v-if="useInteract" :dynamicClass="klass" />
       </Transition>
       <Transition>
         <!--:passArray="useArray"  only pass when ure ready  -->
-        <DictResults v-if="useResults" />
+        <DictResults v-if="useResults" :useRecord="useRecord" />
       </Transition>
+      <!-- <ErrorBoundary>
+        <Transition>
+          :passArray="useArray"  only pass when ure ready 
+          <DictResults v-if="useResults" />
+        </Transition>
+      </ErrorBoundary> -->
     </main>
     <footer
       class="flex justify-end w-full px-3 md:justify-between md:gap-5 md:px-10 md:fixed md:bottom-3"
@@ -49,45 +55,70 @@
 <script setup>
 import { Requests } from "../../scripts/Services";
 import { ErrorStates } from "../../scripts/ErrorScript";
-import { defineAsyncComponent, inject, ref, onMounted } from "vue";
+import ErrorBoundaryVue from "../../ErrorBoundary.vue";
+import {
+  defineAsyncComponent,
+  inject,
+  ref,
+  onMounted,
+  onErrorCaptured,
+} from "vue";
 import DictSearch from "./components/Dict_search.vue";
+import ErrorBoundary from "../../ErrorBoundary.vue";
 const { errorMatcher } = ErrorStates;
-const DictResults = defineAsyncComponent(() => import("./Dict_results.vue"));
+const DictResults = defineAsyncComponent(() =>
+  import("./components/Dict_results.vue")
+);
 const DictInteract = defineAsyncComponent(() =>
   import("../Interactive/Dict_Interact.vue")
 );
-
-//define emitter.
 const emitter = inject("emitter");
 
-//import the fetch fucntion from request class.
+//import the fetch fn from request class.
 const { fetchWords } = Requests;
 
 onMounted(async () => {
   try {
     // useArray.value = await fetchWords();
-    //only call when runtime errr is fixed.
   } catch (err) {
     errorMatcher(503, errorState);
   }
 });
 
 //dynamic values.
-let clas = "mt-20";
+let klass = "mt-20";
 let useArray = ref([]);
-let HideArrow = ref(true);
+let useRecord = ref(null);
 let useResults = ref(null);
 let useInteract = ref(true);
 let useError = ref(false);
 let errorState = ref("");
 
-//functions.
+//functions to toggle and manipulate states.
 const handleView = () => {
   useResults.value = false;
   setTimeout(() => {
     useInteract.value = true;
   }, 800);
 };
+
+const matchWord = (input) => {
+  //seek to manage app crash, should useArray be undefined||null.
+  const result = useArray.value.find((obj) => obj.name === input);
+  if (!result || result === null) {
+    useError.value = true;
+    errorMatcher(404, errorState);
+    return;
+  }
+  useError.value = false;
+  useRecord.value = result;
+};
+
+//emit to listen for user-input event.
+emitter.on("user-input", (payload) => {
+  // console.log(payload);
+  matchWord(payload);
+});
 
 //emitter message is to actually to hide { Dict-interact }.
 emitter.on("hide-buttons", (payload) => {
@@ -99,7 +130,7 @@ emitter.on("hide-buttons", (payload) => {
 
 //emit to listen for error-events from dict_search component.
 emitter.on("enable-use-error", () => {
-  useError.value = !useError.value;
+  useError.value = true;
   errorMatcher(300, errorState);
 });
 emitter.on("disable-use-error", (payload) => {
@@ -109,6 +140,10 @@ emitter.on("submit-error", (payload) => {
   // errorMatcher(500, errorState)
   useError.value = !useError.value;
   errorState.value = payload;
+});
+
+onErrorCaptured((error, component, info) => {
+  console.log("An error occurred: \n", error, component, info);
 });
 </script>
 

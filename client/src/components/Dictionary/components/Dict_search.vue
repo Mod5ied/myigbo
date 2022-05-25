@@ -151,7 +151,7 @@ const handleSubmit = function () {
       //   emitter.emit("show-results", true); //goes to {search-res & Search}.
       emitter.emit("hide-buttons", false); //goes to {search-btns & dict-interact}.
       emitter.emit("disable-use-error", false);
-      emitter.emit("here-input", input.value);
+      emitter.emit("user-input", input.value);
       return;
     }
     return emitter.emit("enable-use-error");

@@ -3,23 +3,23 @@
   <Transition>
     <div v-if="useDefi" class="flex flex-col gap-5 select-none w-72 md:w-full">
       <div class="dict-cards" id="noun">
-        <p class="text-gray-400 dark:text-white">Noun</p>
+        <p class="text-gray-400 dark:text-white">{{ useRecord.genre }}</p>
         <ul class="flex flex-col gap-1 px-2 text-sm dark:text-slate-400">
           <!-- Here,loop & render with nums being incremented by result num -->
           <!-- See dummy.js for clue -->
-          <li>1. The female human</li>
+          <li>1. {{ useRecord.translation }}</li>
           <!-- Figure out how to filter for words like {man, animals,ets} 
               then apply the red-color and a link/function to those for a search.
         -->
-          <li>2. A description of a man's wife</li>
+          <li>2. {{}}</li>
         </ul>
       </div>
       <div class="dict-cards" id="verb">
         <p class="text-gray-400 dark:text-white">Adjectives</p>
 
         <ul class="flex flex-col gap-1 px-2 text-sm dark:text-slate-400">
-          <li>1. Woman of action</li>
-          <li>1. Woman-ism is the pillar of feminism</li>
+          <li>1. {{}}</li>
+          <li>1. {{}}</li>
         </ul>
       </div>
     </div>
@@ -36,19 +36,21 @@
           <!-- Here,loop & render with nums being incremented by result num -->
           <!-- See dummy.js for clue -->
           <li class="flex items-center justify-between gap-3">
-            1. Nwa-ami
+            1. lorem ipsum
             <span class="text-xs text-red-400">Ozuitem, Bende.</span>
             <!-- maybe make the span a link that takes to a history component that shows the 
               history of the current item and the people that speaks it.
           --></li>
           <li class="flex items-center justify-between gap-3">
-            2. Nwanya <span class="text-xs text-red-400"> Ebonyi. </span>
+            2. lorem ipsum dolor<span class="text-xs text-red-400">
+              Ebonyi.
+            </span>
           </li>
         </ul>
       </div>
     </div>
   </Transition>
-  <!-- antonymns. -->
+  <!-- antonyms. -->
   <Transition>
     <div
       v-if="useAntonyms"
@@ -59,8 +61,8 @@
         <ul class="flex flex-col gap-1 px-2 text-sm dark:text-slate-400">
           <!-- Here,loop & render with nums being incremented by result num -->
           <!-- See dummy.js for clue -->
-          <li>1. The female human</li>
-          <li>2. A description of a man's wife</li>
+          <li>1. lorem ipsum dolor sit am</li>
+          <li>2. lorem ipsum dolor sit am</li>
         </ul>
       </div>
     </div>
@@ -68,27 +70,27 @@
 </template>
 
 <script setup>
-import { inject, ref, watchEffect } from "vue";
+import { inject, ref } from "vue";
 
 //define the emitter.
 const emitter = inject("emitter");
-const props = {
-  useArray: {
-    type: Array,
+const props = defineProps({
+  useRecord: {
+    type: {},
   },
-};
+});
 
 //dynamic variables.
 let useDefi = ref(null);
 let useSynonyms = ref(null);
 let useAntonyms = ref(null);
-let useArray = props?.useArray;
+let useRecord = props?.useRecord;
 
 emitter.on("here-input", (pay) => {
   console.log(pay);
 });
 
-//emitt comes from {dict-results}.
+//emit comes from {dict-results}.
 emitter.on("alter-synonym", (payload) => {
   useDefi.value = !payload;
   useAntonyms.value = !payload;

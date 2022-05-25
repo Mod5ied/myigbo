@@ -23,8 +23,8 @@
       </span>
       <Search_card
         v-if="isSearching"
-        :useArray="useArray"
-        :userInput="userInput"
+        :useRecord="useRecord"
+        :userError="userError"
       />
     </div>
   </div>
@@ -33,30 +33,31 @@
 <script setup>
 import { ref, inject } from "vue";
 import Search_card from "./Search_card.vue";
+// import Search_card from "../components/Search_card";
 
 //define even-emitter.
 const emitter = inject("emitter");
 
 //registers props from {Search}.
 const props = defineProps({
-  useArray: {
-    type: Array,
+  useRecord: {
+    type: Object,
   },
-  userInput: String,
+  useError: Boolean,
 });
 
 //reactive states for nested components.
 let dynamicClass = "";
 let isSearching = ref(true);
-let useArray = props.useArray;
-let userInput = props.userInput;
+let useRecord = props.useRecord;
+let userError = props.useError;
 
 //emitter is received.
 emitter.on("hide-card", (payload) => {
   isSearching.value = payload;
 });
 emitter.on("show-card", (payload) => {
-  //Only if there exits a result, if empty dont show.
+  //Only if there exits a result, if empty don't show.
   isSearching.value = payload;
 });
 </script>

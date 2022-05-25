@@ -45,41 +45,39 @@
 
 <script setup>
 import { ref, watchEffect } from "vue";
-import { ErrorStates } from "../../scripts/ErrorScript";
+import { ErrorStates } from "../../../scripts/ErrorScript";
 const { errorMatcher } = ErrorStates;
 
 //registers props from {Search_result}.
 const props = defineProps({
-  userInput: String,
-  useArray: {
-    type: Array,
+  useRecord: {
+    type: Object,
   },
-  fnExec: String,
+  useError: Boolean,
 });
 
 //reactive template states.
-let userInput = props.userInput;
-let useArray = props.useArray;
-let useExec = props.fnExec;
-let userRecord = ref(null);
-let useError = ref(false); //👈 toggles the error-display template (to be created) || discard data in card, and replace with single div of - 'data not found'
+let userRecord = props.useRecord;
+let useError = props.useError; //👈 returns true or false if error occurred.
 let errorState = ref(""); // study how to suggest another word similar to user input with javascript);
 
 //fn to filter and return exact values.
-const findWord = (input) => {
-  //seek to manage app crash, should useArray be undefined||null.
-  const result = useArray.find((obj) => obj.name === input);
-  if (!result || result === null) {
-    useError.value = true;
-    errorMatcher(404, errorState);
-    return;
-  }
-  useError.value = false;
-  userRecord.value = result;
-};
+// const findWord = (input) => {
+//   //seek to manage app crash, should useArray be undefined||null.
+//   const result = useArray.find((obj) => obj.name === input);
+//   if (!result || result === null) {
+//     useError.value = true;
+//     errorMatcher(404, errorState);
+//     return;
+//   }
+//   useError.value = false;
+//   userRecord.value = result;
+// };
 
 // watchers -> to execute method.
 watchEffect(() => {
-  useExec = findWord(userInput);
+  useError === true
+    ? console.log("useError is true")
+    : console.log("useError is false");
 });
 </script>

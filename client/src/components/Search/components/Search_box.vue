@@ -152,14 +152,13 @@ emitter.on("revert-btns", (payload) => {
 const handleSubmit = function () {
   try {
     if (input.value.length >= 2) {
-      emitter.emit("find-word"); //goes to {search-card}.
       emitter.emit("use-input", input.value); //goes to {search-card}.
       emitter.emit("hide-buttons", false); //goes to {search-btns & dict-interact}.
       emitter.emit("show-results", true); //goes to {search-res & Search}.
     }
     return;
   } catch (err) {
-    console.error(err.message);
+    emitter.emit("submit-error", err.message);
   }
 };
 const hideResultComponent = () => {
