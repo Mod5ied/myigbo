@@ -79,7 +79,6 @@
   @apply w-3/5 p-2 mb-4 text-center border rounded-lg dark:text-emerald-500 dark:border-emerald-500 bg-emerald-500 text-slate-200 dark:bg-transparent;
 }
 
-/* Admin page, Add word dark-theme input styles */
 /* Admin page, Add quiz dark-theme input styles */
 .dark_inputs {
   @apply lowercase input-bar hover:bg-gray-100 hover:border-gray-300 focus:border-gray-300 dark:text-slate-400 dark:border-none dark:ring-1 dark:bg-slate-800 dark:hover:bg-slate-700;
@@ -94,4 +93,9 @@
 }
 .delete_btn {
   @apply p-2 text-base text-gray-700 transition duration-300 bg-transparent border-2 border-gray-100 rounded-md cursor-pointer dark:text-slate-300 w-44 dark:border-slate-700 md:font-semibold font-body hover:bg-gray-200 dark:hover:bg-slate-800;
+}
+
+/* Error card styling */
+.error-card {
+  @apply m-auto mt-20 border-2 border-red-700 dark:bg-slate-900 dict-cards;
 }

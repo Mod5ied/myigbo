@@ -6,17 +6,22 @@
       <DictSearch />
     </header>
     <main class="flex flex-col">
-      <div v-if="useError">
+      <div v-if="useError" class="error-card">
         <div>
-          <h3>{{ errorState }}</h3>
+          <h3 class="text-center text-slate-500 dark:text-slate-200">
+            {{ errorState }}
+          </h3>
         </div>
       </div>
       <Transition>
         <DictInteract v-if="useInteract" :dynamicClass="klass" />
       </Transition>
       <Transition>
-        <!--:passArray="useArray"  only pass when ure ready  -->
-        <DictResults v-if="useResults" :useRecord="useRecord" />
+        <DictResults
+          v-if="useResults"
+          :useRecord="useRecord"
+          :errorState="errorState"
+        />
       </Transition>
       <!-- <ErrorBoundary>
         <Transition>
@@ -55,7 +60,9 @@
 <script setup>
 import { Requests } from "../../scripts/Services";
 import { ErrorStates } from "../../scripts/ErrorScript";
-import ErrorBoundaryVue from "../../ErrorBoundary.vue";
+import DictSearch from "./components/Dict_search.vue";
+import DictResults from "./components/Dict_results.vue";
+import ErrorBoundary from "../../ErrorBoundary.vue";
 import {
   defineAsyncComponent,
   inject,
@@ -63,23 +70,19 @@ import {
   onMounted,
   onErrorCaptured,
 } from "vue";
-import DictSearch from "./components/Dict_search.vue";
-import ErrorBoundary from "../../ErrorBoundary.vue";
-const { errorMatcher } = ErrorStates;
-const DictResults = defineAsyncComponent(() =>
-  import("./components/Dict_results.vue")
-);
+// const DictResults = defineAsyncComponent(() =>
+//   import("./components/Dict_results.vue")
+// );
 const DictInteract = defineAsyncComponent(() =>
   import("../Interactive/Dict_Interact.vue")
 );
 const emitter = inject("emitter");
-
-//import the fetch fn from request class.
+const { errorMatcher } = ErrorStates;
 const { fetchWords } = Requests;
 
 onMounted(async () => {
   try {
-    // useArray.value = await fetchWords();
+    useArray.value = await fetchWords();
   } catch (err) {
     errorMatcher(503, errorState);
   }
@@ -88,10 +91,10 @@ onMounted(async () => {
 //dynamic values.
 let klass = "mt-20";
 let useArray = ref([]);
-let useRecord = ref(null);
-let useResults = ref(null);
+let useRecord = ref({});
+let useResults = ref(false);
 let useInteract = ref(true);
-let useError = ref(false);
+let useError = ref(true);
 let errorState = ref("");
 
 //functions to toggle and manipulate states.
@@ -103,15 +106,33 @@ const handleView = () => {
 };
 
 const matchWord = (input) => {
-  //seek to manage app crash, should useArray be undefined||null.
   const result = useArray.value.find((obj) => obj.name === input);
+  useRecord.value = result;
   if (!result || result === null) {
-    useError.value = true;
+    useInteract.value = false;
+    useResults.value = false;
+    // useError = true;
     errorMatcher(404, errorState);
     return;
   }
-  useError.value = false;
-  useRecord.value = result;
+  // try {
+  //   // useError.value = false;
+  // } catch (err) {
+  //   console.log(err.message);
+  //   // useError = false;
+  //   // errorState.value = err.message;
+  // }
+  // //seek to manage app crash, should useArray be undefined||null.
+  // const result = useArray.value.find((obj) => obj.name === input);
+  // if (!result || result === null) {
+  //   useInteract.value = false;
+  //   useResults.value = false;
+  //   useError = true;
+  //   errorMatcher(404, errorState);
+  //   return;
+  // }
+  // useError.value = false;
+  // useRecord.value = result;
 };
 
 //emit to listen for user-input event.
@@ -121,7 +142,7 @@ emitter.on("user-input", (payload) => {
 });
 
 //emitter message is to actually to hide { Dict-interact }.
-emitter.on("hide-buttons", (payload) => {
+emitter.on("hide-interact", (payload) => {
   useInteract.value = payload;
   setTimeout(() => {
     useResults.value = !payload;
@@ -129,17 +150,21 @@ emitter.on("hide-buttons", (payload) => {
 });
 
 //emit to listen for error-events from dict_search component.
-emitter.on("enable-use-error", () => {
-  useError.value = true;
+emitter.on("enable-use-error", (payload) => {
+  useResults.value = false;
+  useInteract.value = false;
+  useError.value = payload;
   errorMatcher(300, errorState);
 });
 emitter.on("disable-use-error", (payload) => {
   useError = payload;
 });
 emitter.on("submit-error", (payload) => {
-  // errorMatcher(500, errorState)
-  useError.value = !useError.value;
-  errorState.value = payload;
+  const [code, message] = payload;
+  //try and make it possible that errMatcher has a match of that error.
+  errorMatcher(code, errorState);
+  useInteract.value = false;
+  // useError.value = true;
 });
 
 onErrorCaptured((error, component, info) => {

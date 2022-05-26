@@ -144,19 +144,20 @@ emitter.on("revert-btns", (payload) => {
 
 //input 'fns()', emits many events across children components.
 const handleSubmit = function () {
+  // emitter.emit("enable-use-error", true);
+  // emitter.emit("user-input", input.value);
+  // emitter.emit("hide-interact", false); //goes to {Dict}.
+  // emitter.emit("disable-use-error", false);
   try {
     if (input.value.length >= 2) {
-      //   emitter.emit("find-word"); //goes to {search-card}.
-      //   emitter.emit("use-input", input.value); //goes to {search-card}.
-      //   emitter.emit("show-results", true); //goes to {search-res & Search}.
-      emitter.emit("hide-buttons", false); //goes to {search-btns & dict-interact}.
-      emitter.emit("disable-use-error", false);
       emitter.emit("user-input", input.value);
+      emitter.emit("hide-interact", false); //goes to {Dict}.
+      emitter.emit("disable-use-error", false);
       return;
     }
-    return emitter.emit("enable-use-error");
+    return emitter.emit("enable-use-error", true);
   } catch (err) {
-    emitter.emit("submit-error", err.message); // goes to {Dict-results}
+    emitter.emit("submit-error", [500, err.message]); // goes to {Dict-results}
   }
 };
 // const hideResultComponent = function () {

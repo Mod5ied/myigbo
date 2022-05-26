@@ -88,6 +88,9 @@ const arrayWords = [
   { name: "Human", translation: "mmadu", genre: "noun" },
 ];
 
-const result = arrayWords.find((arr) => arr.name === "Man");
+const matcher = () => {
+  const result = arrayWords.find((arr) => arr.name === "Man");
+  if (!result ? console.log("Its not found!") : console.log(result));
+};
 
-console.log(result);
+matcher();

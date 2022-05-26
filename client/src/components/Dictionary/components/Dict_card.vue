@@ -3,14 +3,9 @@
   <Transition>
     <div v-if="useDefi" class="flex flex-col gap-5 select-none w-72 md:w-full">
       <div class="dict-cards" id="noun">
-        <p class="text-gray-400 dark:text-white">{{ useRecord.genre }}</p>
+        <p class="text-gray-400 dark:text-white">Noun</p>
         <ul class="flex flex-col gap-1 px-2 text-sm dark:text-slate-400">
-          <!-- Here,loop & render with nums being incremented by result num -->
-          <!-- See dummy.js for clue -->
-          <li>1. {{ useRecord.translation }}</li>
-          <!-- Figure out how to filter for words like {man, animals,ets} 
-              then apply the red-color and a link/function to those for a search.
-        -->
+          <li>1. {{ props.useRecord.translation }}</li>
           <li>2. {{}}</li>
         </ul>
       </div>
@@ -36,7 +31,7 @@
           <!-- Here,loop & render with nums being incremented by result num -->
           <!-- See dummy.js for clue -->
           <li class="flex items-center justify-between gap-3">
-            1. lorem ipsum
+            1. {{ props.useRecord.translation }}
             <span class="text-xs text-red-400">Ozuitem, Bende.</span>
             <!-- maybe make the span a link that takes to a history component that shows the 
               history of the current item and the people that speaks it.
@@ -70,25 +65,26 @@
 </template>
 
 <script setup>
-import { inject, ref } from "vue";
+import { inject, ref, watchEffect } from "vue";
 
 //define the emitter.
 const emitter = inject("emitter");
 const props = defineProps({
   useRecord: {
-    type: {},
+    type: Object,
   },
+  // errorState: String,
 });
 
-//dynamic variables.
-let useDefi = ref(null);
+//dyna vars.
+let useDefi = ref(true);
 let useSynonyms = ref(null);
 let useAntonyms = ref(null);
-let useRecord = props?.useRecord;
 
-emitter.on("here-input", (pay) => {
-  console.log(pay);
-});
+// ⚠️ Not even destructuring solves this ⚠️
+// ⚠️ Apparently assigning props to ref values prevents realtime updates when
+//    ...source of props-data is updated ⚠️
+// let useRecord = ref(props.useRecord);
 
 //emit comes from {dict-results}.
 emitter.on("alter-synonym", (payload) => {
