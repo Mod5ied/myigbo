@@ -118,7 +118,7 @@ let notTyping = ref(true);
 let isTyping = ref(false);
 const useState = [false, true];
 let dictClass = props.DictClass;
-let placeholder = ref("Search dictionary by word");
+let placeholder = ref("Search dictionary");
 let searchClass = props.SearchClass;
 
 // watchers -> to alter reactive state.

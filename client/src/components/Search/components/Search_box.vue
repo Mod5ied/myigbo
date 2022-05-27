@@ -7,24 +7,6 @@
       @submit.prevent="handleSubmit"
       class="flex items-center justify-around w-full md:justify-start"
     >
-      <i v-if="isDictionary" class="search_box_nav">
-        <router-link :to="{ name: 'Search' }">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="w-5 h-5 md:w-5 md:h-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
-        </router-link>
-      </i>
       <span
         class="relative flex items-center justify-center w-4/5 md:right-5 md:m-auto md:w-2/5"
       >
@@ -33,8 +15,8 @@
           v-model.trim="input"
           type="text"
           :placeholder="placeholder"
-          :oninput="hideResultComponent"
         />
+        <!-- 👆 :oninput="hideResultComponent" -->
         <div
           id="input_icons"
           class="absolute flex items-center justify-between gap-5 right-10 sm:right-16 md:right-8"
@@ -109,7 +91,6 @@ let input = ref("");
 let placeholder = ref("Search by word");
 let notTyping = ref(true);
 let isTyping = ref(false);
-let isDictionary = props.HideArrow;
 let searchClass = props.SearchClass;
 let dictClass = props.DictClass;
 const useState = [false, true];
@@ -134,14 +115,13 @@ function hideCard() {
   emitter.emit("hide-card", useState);
 }
 function clearInputBox() {
-  input.value = null; // clears the input box.
+  input.value = ""; // clears the input box.
 }
 
-//emits to clear input.
-// emitter.on("clear-input", () => {
-//   //comes from {Search}
-//   // input.value = null;
-// });
+emitter.on("clear-input", () => {
+  //comes from {Search}
+  clearInputBox();
+});
 emitter.on("revert-btns", (payload) => {
   //comes from {search-btns}
   isTyping.value = payload[0];
@@ -153,17 +133,13 @@ const handleSubmit = function () {
   try {
     if (input.value.length >= 2) {
       emitter.emit("use-input", input.value); //goes to {search-card}.
-      emitter.emit("hide-buttons", false); //goes to {search-btns & dict-interact}.
+      emitter.emit("hide-buttons", false); //goes to {search-btns}.
       emitter.emit("show-results", true); //goes to {search-res & Search}.
+      return;
     }
-    return;
+    return emitter.emit("invalid-word", 300);
   } catch (err) {
-    emitter.emit("submit-error", err.message);
+    emitter.emit("submit-error", [500, err.message]);
   }
-};
-const hideResultComponent = () => {
-  emitter.emit("hide-results", false); //goes to {search-res & Search}.
-  isTyping.value = true;
-  notTyping.value = false;
 };
 </script>

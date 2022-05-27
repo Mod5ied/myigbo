@@ -9,19 +9,19 @@
     >
       <h4
         @click="handleSwitch('defi', true)"
-        class="text-lg font-semibold text-gray-400 transition-all dark:text-slate-400 dark:hover:text-indigo-700 focus:text-indigo-900 hover:duration-300 hover:text-indigo-900"
+        :class="useDefi ? 'tabs_active' : 'tabs'"
       >
         Definitions
       </h4>
       <h4
         @click="handleSwitch('synonyms', true)"
-        class="text-lg font-semibold text-gray-400 transition-all dark:text-slate-400 dark:hover:text-indigo-700 focus:text-indigo-900 hover:duration-300 hover:text-indigo-900"
+        :class="useSynonyms ? 'tabs_active' : 'tabs'"
       >
         Synonyms
       </h4>
       <h4
         @click="handleSwitch('antonyms', true)"
-        class="text-lg font-semibold text-gray-400 transition-all dark:text-slate-400 dark:hover:text-indigo-700 focus:text-indigo-900 hover:duration-300 hover:text-indigo-900"
+        :class="useAntonyms ? 'tabs_active' : 'tabs'"
       >
         Antonyms
       </h4>
@@ -44,32 +44,45 @@ const emitter = inject("emitter");
 const props = defineProps({
   useRecord: {
     type: Object,
-    // Object or array defaults must be returned from
-    // a factory function. The function receives the raw
-    // props received by the component as the argument.
-    // default(rawProps) {
-    //   return { message: 'hello' }
-    // }
+    /**  Object or array defaults must be returned from
+      a factory function. The function receives the raw
+      props received by the component as the argument.
+        default(rawProps) {
+          return { message: 'hello' }
+        } 
+    */
   },
 });
 
 //dynamic variable definitions.
-let DictClass = "w-80";
 let useRecord = ref(props.useRecord);
+let DictClass = "w-80";
+let useDefi = ref(true);
+let useSynonyms = ref(false);
+let useAntonyms = ref(false);
 
-//fn() emits an event based on the payload given.
+//fn() emits an event based on the payload given and alters dynamic states.
 function handleSwitch(payload, val) {
   //todo: handleSwitch should also take a value.
   switch (payload) {
     case "defi":
       //emitted events below goes to { dict-card }.
       emitter.emit("alter-defi", val);
+      useDefi.value = !useDefi.value;
+      useAntonyms.value = false;
+      useSynonyms.value = false;
       break;
     case "synonyms":
       emitter.emit("alter-synonym", val);
+      useSynonyms.value = !useSynonyms.value;
+      useDefi.value = false;
+      useAntonyms.value = false;
       break;
     case "antonyms":
       emitter.emit("alter-antonyms", val);
+      useAntonyms.value = !useAntonyms.value;
+      useDefi.value = false;
+      useSynonyms.value = false;
       break;
     default:
       break;

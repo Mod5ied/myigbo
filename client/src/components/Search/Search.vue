@@ -1,6 +1,6 @@
 <template>
   <div
-    class="h-screen overflow-x-hidden bg-gray-100 dark:bg-slate-900 font-body"
+    class="h-screen overflow-hidden overflow-x-hidden bg-gray-100 dark:bg-slate-900 font-body"
   >
     <header
       class="flex flex-row justify-between w-full px-3 py-5 list-none border-b dark:border-b-gray-800 md:px-5 md:py-4 dark:bg-slate-900 bg-gray-50"
@@ -107,12 +107,22 @@
         </Transition>
       </div>
       <Search_box :HideArrow="HideArrow" :SearchClass="SearchClass" />
+      <Transition>
+        <div v-if="useError" class="error-card">
+          <div>
+            <h3 class="text-center text-slate-500 dark:text-slate-200">
+              {{ errorState }}
+            </h3>
+          </div>
+        </div>
+      </Transition>
       <Search_history v-if="useHistory" />
       <Transition>
         <SearchResult
           v-if="hasResult"
           :useRecord="useRecord"
-          :useError="useError"
+          :passError="passError"
+          :passErrorCode="passErrorCode"
         />
       </Transition>
     </main>
@@ -135,9 +145,10 @@ import {
 import { Requests } from "../../scripts/Services";
 import image2 from "../../assets/Solutions_2.png";
 import Search_box from "./components/Search_box.vue";
-// import image1 from "../../assets/home.svg";
+import image1 from "../../assets/home.svg";
 import Search_buttons from "./components/Search_buttons.vue";
 import Search_history from "./components/Search_history.vue";
+import { ErrorStates } from "../../scripts/ErrorScript";
 const SearchResult = defineAsyncComponent(() =>
   import("./components/Search_result.vue")
 );
@@ -145,6 +156,7 @@ const SearchInteract = defineAsyncComponent(() =>
   import("../Interactive/Search_Interact.vue")
 );
 const { fetchWords } = Requests;
+const { errorMatcher } = ErrorStates;
 
 //dynamic arrays.
 // const images = ref([image1, image2]); //👈 should be used to loop through homepage images.
@@ -162,7 +174,7 @@ function arrDelay(arr, delegate, delay) {
   }, delay);
   return interval;
 }
-//homepage name is altered when comp is mounted.
+//homepage name is altered,and entire data is fetched, once comp is mounted.
 onMounted(async () => {
   arrDelay(array, (obj) => (name.value = obj), 6000);
   useArray.value = await fetchWords();
@@ -176,8 +188,10 @@ let useHistory = ref(true); //👈 to show the history tab.
 let useInteract = ref(false); //👈 to show the interact section.
 let HideArrow = ref(false); // 👈 to hide the search-box arrow.
 let useArray = ref([]); // 👈 to store the array that is fetched on mount.
-let useRecord = ref(null); // 👈 to be sent to search-result > search-card.
-let useError = ref(false); // 👈 to be sent to search-result > search-card.
+let useRecord = ref({}); // 👈 to be sent to search-result > search-card.
+let useError = ref(false); // 👈 to used to toggle the error display.
+let passError = ref(false); // 👈 to be sent to search-result.
+let passErrorCode = ref(0); // 👈 to be sent to search-result.
 let errorState = ref(""); // 👈 to be sent to search-result > search-card.
 
 //dark nd light mode states.
@@ -188,15 +202,13 @@ let lightState = ref(null);
 //reactive class states
 let SearchClass = "mt-10 md:mt-0";
 
-//reactive state for header drpdwn
+//reactive state for header drpdwn.
 let menu = ref(false);
 
-//emitter is initialized.
 const emitter = inject("emitter");
 
 //emitter to grab user input.
 emitter.on("use-input", (payload) => {
-  console.log(payload);
   matchWord(payload);
 });
 
@@ -217,13 +229,28 @@ emitter.on("hide-results", (payload) => {
 });
 
 //emit to catch error events.
-emitter.on("submit-error", (payload) => {});
+emitter.on("invalid-word", (payload) => {
+  useHistory.value = false;
+  errorMatcher(payload, errorState);
+  useError.value = true;
+  setTimeout(() => {
+    useError.value = false;
+  }, 1000);
+});
+emitter.on("submit-error", (payload) => {
+  useHistory.value = false;
+  errorMatcher(payload[0], errorState);
+  useError.value = true;
+  setTimeout(() => {
+    useError.value = false;
+  }, 1200);
+});
 
 //fns() for tweaking light and dark modes.
 const setDarkMode = () => {
   //emit a set-dark event to App.vue.
   emitter.emit("set-dark", "dark");
-  //hide the moon.
+  //hide the moon-toggle.
   darkState.value = false;
   lightState.value = true;
 };
@@ -248,13 +275,13 @@ const matchWord = (input) => {
   //seek to manage app crash, should useArray be undefined||null.
   const result = useArray.value.find((obj) => obj.name === input);
   if (!result || result === null) {
-    useError.value = true;
-    errorMatcher(404, errorState);
+    useRecord.value = {};
+    passError.value = true;
+    passErrorCode.value = 404;
     return;
   }
-  //⚠️⚠️ Error not being passed to card when user is not found ⚠️⚠️
-  useError.value = false; //to be sent as props to search-card too.
-  useRecord.value = result;
+  passError.value = false; //to be sent as props to search-result.
+  useRecord.value = result; //to be sent as props to search-result.`
 };
 
 //fns() to check for state in localStorage
@@ -264,7 +291,14 @@ function checkState() {
 currentState.value = checkState();
 
 onErrorCaptured((error, component, info) => {
-  console.log("An error occurred: \n", error, component, info);
+  console.log(
+    "An error occurred: \n",
+    error,
+    "At Component: ",
+    component,
+    "What happened:",
+    info
+  );
 });
 </script>
 

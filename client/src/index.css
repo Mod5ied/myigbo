@@ -71,6 +71,14 @@
   @apply flex items-center w-full gap-4 p-1 rounded-md text-slate-200 bg-slate-500 dark:bg-slate-800 hover:bg-gray-600 dark:hover:bg-slate-900;
 }
 
+/* Search-results scrollbar/tabs styling */
+.tabs {
+  @apply text-lg font-semibold text-gray-400 transition-all dark:text-slate-400 dark:hover:text-indigo-700 dark:focus:text-indigo-900 focus:text-indigo-900 hover:duration-300 hover:text-indigo-900;
+}
+.tabs_active {
+  @apply text-lg font-semibold text-indigo-900 transition-all dark:text-indigo-700 dark:hover:text-indigo-600 dark:focus:text-indigo-900 focus:text-indigo-900 hover:duration-300 hover:text-indigo-800;
+}
+
 /* Admin page, Sidebar spans */
 .side_span {
   @apply w-3/5 p-2 mb-4 text-center transition-all border rounded-lg dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:duration-300;
@@ -97,5 +105,5 @@
 
 /* Error card styling */
 .error-card {
-  @apply m-auto mt-20 border-2 border-red-700 dark:bg-slate-900 dict-cards;
+  @apply relative w-2/3 m-auto mt-20 text-sm border-2 border-red-700 bottom-20 md:bottom-24 dark:bg-slate-900 dict-cards;
 }

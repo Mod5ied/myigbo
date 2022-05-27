@@ -1,8 +1,11 @@
 <template>
   <div
-    class="flex flex-col justify-center w-full p-3 bg-cyan-600 rounded-md shadow-lg dark:bg-slate-700 md:w-1/3"
+    class="flex flex-col justify-center w-full p-3 rounded-md shadow-lg bg-cyan-600 dark:bg-slate-700 md:w-1/3"
   >
-    <div v-if="!useError">
+    <!-- <div v-if="useError" class="flex justify-center p-2 select-none">
+      <h3 class="text-slate-200 dark:text-slate-300">{{ errorState }}</h3>
+    </div> -->
+    <div>
       <span class="flex flex-row justify-between px-4 py-2">
         <h3 class="text-2xl font-bold text-gray-100 dark:text-slate-300">
           {{ userRecord.translation }}
@@ -37,47 +40,25 @@
         {{ userRecord.name }}
       </p>
     </div>
-    <div v-if="useError" class="p-2 flex justify-center select-none">
-      <h3 class="text-slate-200 dark:text-slate-300">{{ errorState }}</h3>
-    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, watchEffect } from "vue";
 import { ErrorStates } from "../../../scripts/ErrorScript";
-const { errorMatcher } = ErrorStates;
-
-//registers props from {Search_result}.
+// 👇 from {Search_result}.
 const props = defineProps({
   useRecord: {
     type: Object,
+    default() {
+      return {
+        name: "",
+        translation: "",
+        genre: "",
+      };
+    },
   },
-  useError: Boolean,
 });
 
 //reactive template states.
-let userRecord = props.useRecord;
-let useError = props.useError; //👈 returns true or false if error occurred.
-let errorState = ref(""); // study how to suggest another word similar to user input with javascript);
-
-//fn to filter and return exact values.
-// const findWord = (input) => {
-//   //seek to manage app crash, should useArray be undefined||null.
-//   const result = useArray.find((obj) => obj.name === input);
-//   if (!result || result === null) {
-//     useError.value = true;
-//     errorMatcher(404, errorState);
-//     return;
-//   }
-//   useError.value = false;
-//   userRecord.value = result;
-// };
-
-// watchers -> to execute method.
-watchEffect(() => {
-  useError === true
-    ? console.log("useError is true")
-    : console.log("useError is false");
-});
+let userRecord = props?.useRecord;
 </script>

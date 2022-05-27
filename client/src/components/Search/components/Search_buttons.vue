@@ -105,8 +105,8 @@ emitter.on("hide-buttons", (payload) => {
 const refreshState = () => {
   useExit.value = false;
   useDict.value = true;
-  emitter.emit("clear-input"); //goes to {Search-box}.
-  emitter.emit("clear-result", false); //goes to {Search-box} since its more direct.
-  emitter.emit("revert-btns", useState); //goes to {Search-box} input btns.
+  emitter.emit("clear-input"); //goes across to {Search-box}.
+  emitter.emit("clear-result", false); //goes up to {Search}.
+  emitter.emit("revert-btns", useState); //goes across to {Search-box} input btns.
 };
 </script>

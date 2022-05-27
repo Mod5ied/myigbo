@@ -6,58 +6,81 @@
     ></div>
     <div
       id="unblur"
-      class="absolute flex flex-col w-full gap-12 px-4 -mt-60 md:place-items-center md:-mt-60"
+      class="absolute flex flex-col w-full gap-12 px-4 -mt-64 md:place-items-center md:-mt-96"
     >
-      <span class="flex flex-col items-center gap-2 justify-centerst">
+      <span class="flex flex-col items-center justify-center gap-">
         <h2
-          class="text-2xl font-semibold text-cyan-600 dark:text-white select-none"
+          class="text-2xl font-semibold select-none text-cyan-600 dark:text-white"
         >
-          Word of the day
+          Practice More 📢
         </h2>
         <p
-          class="text-base font-medium text-center text-gray-500 dark:text-slate-400 md:w-4/5 select-none"
+          class="text-base font-medium text-center text-gray-500 select-none dark:text-slate-400 md:w-4/5"
         >
           Build your vocabulary with new words and definitions every day of the
-          week
+          week with our interactive practice sessions!
         </p>
       </span>
-      <Search_card
-        v-if="isSearching"
-        :useRecord="useRecord"
-        :userError="userError"
-      />
+      <!-- 📢 📢 maybe use a transition here -->
+      <div v-if="useError" class="error-card">
+        <div>
+          <h3 class="text-center text-slate-500 dark:text-slate-200">
+            {{ errorState }}
+          </h3>
+        </div>
+      </div>
+      <Search_card v-else :useRecord="useRecord" />
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, inject } from "vue";
+import { ref, inject, onMounted } from "vue";
+import { ErrorStates } from "../../../scripts/ErrorScript";
 import Search_card from "./Search_card.vue";
-// import Search_card from "../components/Search_card";
+const { errorMatcher } = ErrorStates;
 
-//define even-emitter.
-const emitter = inject("emitter");
-
-//registers props from {Search}.
 const props = defineProps({
   useRecord: {
     type: Object,
+    default() {
+      return {
+        name: "",
+        translation: "",
+        genre: "",
+      };
+    },
   },
-  useError: Boolean,
+  passError: {
+    type: Boolean,
+    default: false,
+  },
+  passErrorCode: {
+    type: Number,
+    default: 0,
+  },
 });
 
 //reactive states for nested components.
-let dynamicClass = "";
-let isSearching = ref(true);
-let useRecord = props.useRecord;
-let userError = props.useError;
+let useError = props?.passError;
+let errorState = ref("Error occurred");
+let useRecord = props?.useRecord;
 
-//emitter is received.
+const emitter = inject("emitter");
+
+//emit from {Search-box}.
 emitter.on("hide-card", (payload) => {
   isSearching.value = payload;
 });
-emitter.on("show-card", (payload) => {
-  //Only if there exits a result, if empty don't show.
-  isSearching.value = payload;
+
+const handleError = () => {
+  if (useError === true) {
+    errorMatcher(props.passErrorCode, errorState);
+    return;
+  }
+};
+
+onMounted(() => {
+  handleError();
 });
 </script>
