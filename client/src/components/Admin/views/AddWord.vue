@@ -1,5 +1,23 @@
 <template>
-  <div class="flex w-1/2 h-full p-4 mr-40">
+  <div
+    class="flex flex-col items-center w-1/2 h-full gap-6 p-4 mr-40 font-body"
+  >
+    <span
+      class="flex justify-between w-3/4 overflow-hidden bg-blue-300 rounded-md mt-14"
+    >
+      <button
+        @click="formsToggle('showGenre')"
+        class="w-1/2 px-6 text-sm font-bold text-gray-100 bg-blue-500"
+      >
+        New Translation
+      </button>
+      <button
+        @click="formsToggle('showTrans')"
+        class="w-1/2 p-2 text-sm font-bold text-gray-50"
+      >
+        New Dictionary Record
+      </button>
+    </span>
     <form
       @submit.prevent="submitWord"
       class="flex flex-col justify-around w-full gap-3 p-6 border rounded-lg bg-gray-50 dark:bg-slate-900 dark:border-slate-700 h-3/4"

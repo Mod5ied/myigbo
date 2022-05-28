@@ -81,10 +81,13 @@
 
 /* Admin page, Sidebar spans */
 .side_span {
-  @apply w-3/5 p-2 mb-4 text-center transition-all border rounded-lg dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:duration-300;
+  @apply flex items-center justify-around gap-1 w-3/5 p-2 mb-4 text-center transition-all border rounded-lg dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:duration-300;
 }
 .side_span_active {
-  @apply w-3/5 p-2 mb-4 text-center border rounded-lg dark:text-emerald-500 dark:border-emerald-500 bg-emerald-500 text-slate-200 dark:bg-transparent;
+  @apply flex items-center justify-around gap-1 w-3/5 p-2 mb-4 text-center border rounded-lg dark:border-emerald-500 bg-emerald-500 text-slate-200 dark:bg-transparent;
+}
+.side_config {
+  @apply flex items-center justify-around text-xs gap-1;
 }
 
 /* Admin page, Add quiz dark-theme input styles */
