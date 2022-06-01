@@ -57,7 +57,7 @@ class Requests {
   };
 
   /**
-   * @param {string} ok @param {string} message @param {Function} ret @param {string} load
+   * @param {string} ok @param {string} message @param {string} load
    * @param {string} fail @param {string} name
    * @param {string} genre @param {string} translation
    */
@@ -68,8 +68,7 @@ class Requests {
     ok,
     name,
     translation,
-    genre,
-    router
+    genre
   ) => {
     try {
       fail.value = false;
@@ -82,8 +81,7 @@ class Requests {
           state
             ? ((load.value = false), (ok.value = true))
             : ((load.value = false), (ok.value = false))
-        )
-          Utilities.useReload(ok, state, 2000, router);
+        );
       }, 2000);
     } catch (err) {
       if (
@@ -97,6 +95,7 @@ class Requests {
         });
     }
   };
+
   static addNewQuiz = async (
     fail,
     load,
@@ -104,8 +103,8 @@ class Requests {
     question,
     right_answer,
     wrong_answer1,
-    wrong_answer2,
-    router
+    wrong_answer2
+    // router
   ) => {
     try {
       fail.value = false;
@@ -123,8 +122,7 @@ class Requests {
           state
             ? ((load.value = false), (ok.value = true))
             : ((load.value = false), (ok.value = false))
-        )
-          Utilities.useReload(ok, state, 2000, router);
+        );
       }, 2000);
     } catch (err) {
       if (
@@ -149,8 +147,8 @@ class Requests {
     del_con,
     message,
     ok,
-    unref,
-    router
+    unref
+    // router
   ) => {
     try {
       fail.value = false;
@@ -163,7 +161,7 @@ class Requests {
             ? ((load.value = false), (ok.value = true))
             : ((load.value = false), (ok.value = false))
         );
-        Utilities.useReload(ok, state, 2000, router);
+        // Utilities.useReload(ok, state, 2000, router);
       }, 2000);
     } catch (err) {
       if (
@@ -176,9 +174,9 @@ class Requests {
   };
   /**
    * @param {string} ok @param {string} message  @param {string} load
-   * @param {Function}use @param {string} nom @param {string} genre @param {string} fail
+   * @param {string} nom @param {string} genre @param {string} fail
    */
-  static patchPost = async (fail, ok, load, message, nom, genre, router) => {
+  static patchPost = async (fail, ok, load, message, nom, genre) => {
     try {
       fail.value = false;
       load.value = true;
@@ -191,7 +189,6 @@ class Requests {
             ? ((load.value = false), (ok.value = true))
             : ((load.value = false), (ok.value = false))
         );
-        Utilities.useReload(ok, state, 2000, router);
       }, 2000);
     } catch (err) {
       if (
@@ -201,6 +198,7 @@ class Requests {
       );
     }
   };
+  //!! TO BE Deprecated pre-production!
   static useRefreshStore = (all, Router) => {
     all.length = 0;
     Utilities.useReload(all, true, 1000, Router);
@@ -220,31 +218,9 @@ class Utilities {
     };
     return newObj;
   };
-  // /**
-  //  * @returns A reactive String
-  //  * @param {string} load @param {string} state @param {Function} get @param {string} fail
-  //  */
-  // static returnState = async (load, state, fail) => {
-  //   let response;
-  //   load = true;
-  //   fail = false;
-  //   setInterval(async () => {
-  //     try {
-  //       state = await getState();
-  //       load = false;
-  //     } catch (err) {
-  //       load = false;
-  //       fail = true;
-  //       console.error({
-  //         message: `Failed to fetch server-state: ${err.message}`,
-  //       });
-  //     }
-  //   }, 10000);
-  //   response = state;
-  //   return response;
-  // };
 
   /** @param {string} data  */
+  //!! TO BE Deprecated pre-production!
   static returnSwitch = async (data, l_load, l_loaded, c_load, c_loaded) => {
     l_load = data !== "local" ? false : true;
     c_load = data !== "cloud" ? false : true;
@@ -260,6 +236,8 @@ class Utilities {
       });
     }
   };
+
+  //!! TO BE Deprecated pre-production!
   /**
    * @param {string} key @param {boolean} value
    *  @param {number} time @param {Function} router
@@ -272,6 +250,7 @@ class Utilities {
   };
 }
 
+//todo: Get rid of all console-logs and send to logger instead and also to client.
 class OfflineStorage {
   /**
    * @description makes a  request to Indexed Storage.
@@ -384,23 +363,25 @@ class OfflineStorage {
         details: err,
       });
     }
-    console.log(response);
     return response ?? false;
   };
   static pushToCloud = async () => {
     let response;
     let payload;
-    const onlineState = await isOnline();
+    const onlineState = await getState();
     try {
-      onlineState
-        ? ((payload = await get("offlineData")),
-          (response = await batchUpload(payload)),
-          await del("offlineData"))
-        : console.log({ message: `No internet connection` });
+      if (
+        onlineState === true
+          ? ((payload = await get("offlineData")),
+            (response = await batchUpload(payload)),
+            await del("offlineData"))
+          : console.log({ message: `No internet connection to sync data` })
+      );
     } catch (err) {
+      //todo: /* use a logger here instead, and display error to user. */
       console.error({
         message: `Error occurred while pushing to cloud`,
-        details: err.message,
+        details: `${err.message}`,
       });
     }
     return response ?? false;

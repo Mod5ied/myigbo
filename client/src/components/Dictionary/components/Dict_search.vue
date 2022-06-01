@@ -105,7 +105,7 @@ import { inject, ref, watchEffect } from "vue";
 
 //event bus initialized.
 const emitter = inject("emitter");
-//props for rendering component state.
+
 const props = defineProps({
   SearchClass: String,
   HideArrow: Boolean,
@@ -144,10 +144,6 @@ emitter.on("revert-btns", (payload) => {
 
 //input 'fns()', emits many events across children components.
 const handleSubmit = function () {
-  // emitter.emit("enable-use-error", true);
-  // emitter.emit("user-input", input.value);
-  // emitter.emit("hide-interact", false); //goes to {Dict}.
-  // emitter.emit("disable-use-error", false);
   try {
     if (input.value.length >= 2) {
       emitter.emit("user-input", input.value);
@@ -155,14 +151,10 @@ const handleSubmit = function () {
       emitter.emit("disable-use-error", false);
       return;
     }
-    return emitter.emit("enable-use-error", true);
+    emitter.emit("enable-use-error", true);
+    return;
   } catch (err) {
     emitter.emit("submit-error", [500, err.message]); // goes to {Dict-results}
   }
 };
-// const hideResultComponent = function () {
-//   emitter.emit("hide-results", false); //goes to {search-res & Search}.
-//   isTyping.value = true;
-//   notTyping.value = false;
-// };
 </script>

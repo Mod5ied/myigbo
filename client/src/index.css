@@ -81,13 +81,13 @@
 
 /* Admin page, Sidebar spans */
 .side_span {
-  @apply flex items-center justify-around gap-1 w-3/5 p-2 mb-4 text-center transition-all border rounded-lg dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:duration-300;
+  @apply flex items-center justify-around w-3/5 gap-1 p-2 mb-4 text-center transition-all border rounded-lg hover:bg-slate-200 dark:bg-transparent dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:duration-300;
 }
 .side_span_active {
-  @apply flex items-center justify-around gap-1 w-3/5 p-2 mb-4 text-center border rounded-lg dark:border-emerald-500 bg-emerald-500 text-slate-200 dark:bg-transparent;
+  @apply flex items-center justify-around w-3/5 gap-1 p-2 mb-4 text-center border rounded-lg bg-slate-200 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300 border-slate-300 text-slate-600 ;
 }
 .side_config {
-  @apply flex items-center justify-around text-xs gap-1;
+  @apply flex items-center justify-around gap-1 text-xs;
 }
 
 /* Admin page, Add quiz dark-theme input styles */
@@ -108,5 +108,8 @@
 
 /* Error card styling */
 .error-card {
-  @apply relative w-2/3 m-auto mt-20 text-sm border-2 border-red-700 bottom-20 md:bottom-24 dark:bg-slate-900 dict-cards;
+  @apply relative w-2/3 m-auto mt-20 text-sm border-2 border-red-600 bottom-20 md:bottom-24 dark:bg-slate-900 dict-cards;
+}
+.dict-error-card {
+  @apply relative w-2/3 m-auto mt-20 text-sm border-2 border-red-500 bottom-16 md:bottom-16 dark:bg-slate-900 dict-cards;
 }

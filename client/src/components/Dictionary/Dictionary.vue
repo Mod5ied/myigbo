@@ -6,22 +6,20 @@
       <DictSearch />
     </header>
     <main class="flex flex-col">
-      <div v-if="useError" class="error-card">
-        <div>
-          <h3 class="text-center text-slate-500 dark:text-slate-200">
-            {{ errorState }}
-          </h3>
-        </div>
-      </div>
       <Transition>
-        <DictInteract v-if="useInteract" :dynamicClass="klass" />
+        <div v-if="errorValue" class="dict-error-card">
+          <div>
+            <h3 class="text-center text-slate-500 dark:text-slate-200">
+              {{ errorState }}
+            </h3>
+          </div>
+        </div>
       </Transition>
       <Transition>
-        <DictResults
-          v-if="useResults"
-          :useRecord="useRecord"
-          :errorState="errorState"
-        />
+        <div v-if="hasResults">
+          <DictInteract v-if="useInteract" :dynamicClass="klass" />
+          <DictResults v-if="useResults" :useRecord="useRecord" />
+        </div>
       </Transition>
       <!-- <ErrorBoundary>
         <Transition>
@@ -61,8 +59,7 @@
 import { Requests } from "../../scripts/Services";
 import { ErrorStates } from "../../scripts/ErrorScript";
 import DictSearch from "./components/Dict_search.vue";
-import DictResults from "./components/Dict_results.vue";
-import ErrorBoundary from "../../ErrorBoundary.vue";
+// import ErrorBoundary from "../../ErrorBoundary.vue";
 import {
   defineAsyncComponent,
   inject,
@@ -70,9 +67,9 @@ import {
   onMounted,
   onErrorCaptured,
 } from "vue";
-// const DictResults = defineAsyncComponent(() =>
-//   import("./components/Dict_results.vue")
-// );
+const DictResults = defineAsyncComponent(() =>
+  import("./components/Dict_results.vue")
+);
 const DictInteract = defineAsyncComponent(() =>
   import("../Interactive/Dict_Interact.vue")
 );
@@ -85,6 +82,7 @@ onMounted(async () => {
     useArray.value = await fetchWords();
   } catch (err) {
     errorMatcher(503, errorState);
+    /* use a special notification handler here instead */
   }
 });
 
@@ -92,10 +90,12 @@ onMounted(async () => {
 let klass = "mt-20";
 let useArray = ref([]);
 let useRecord = ref({});
+let hasResults = ref(true);
 let useResults = ref(false);
 let useInteract = ref(true);
-let useError = ref(true);
+let useError = ref(false);
 let errorState = ref("");
+let errorValue = ref(null);
 
 //functions to toggle and manipulate states.
 const handleView = () => {
@@ -107,37 +107,24 @@ const handleView = () => {
 
 const matchWord = (input) => {
   const result = useArray.value.find((obj) => obj.name === input);
-  useRecord.value = result;
   if (!result || result === null) {
-    useInteract.value = false;
-    useResults.value = false;
-    // useError = true;
-    errorMatcher(404, errorState);
+    useRecord.value = {};
+    hasResults.value = false;
+    setTimeout(() => {
+      errorMatcher(404, errorState);
+      errorValue.value = true;
+    }, 700);
     return;
   }
-  // try {
-  //   // useError.value = false;
-  // } catch (err) {
-  //   console.log(err.message);
-  //   // useError = false;
-  //   // errorState.value = err.message;
-  // }
-  // //seek to manage app crash, should useArray be undefined||null.
-  // const result = useArray.value.find((obj) => obj.name === input);
-  // if (!result || result === null) {
-  //   useInteract.value = false;
-  //   useResults.value = false;
-  //   useError = true;
-  //   errorMatcher(404, errorState);
-  //   return;
-  // }
-  // useError.value = false;
-  // useRecord.value = result;
+  errorValue.value = false;
+  useRecord.value = result;
+  setTimeout(() => {
+    hasResults.value = true;
+  }, 700);
 };
 
 //emit to listen for user-input event.
 emitter.on("user-input", (payload) => {
-  // console.log(payload);
   matchWord(payload);
 });
 
@@ -146,29 +133,34 @@ emitter.on("hide-interact", (payload) => {
   useInteract.value = payload;
   setTimeout(() => {
     useResults.value = !payload;
-  }, 800);
+  }, 700);
 });
 
 //emit to listen for error-events from dict_search component.
 emitter.on("enable-use-error", (payload) => {
-  useResults.value = false;
-  useInteract.value = false;
-  useError.value = payload;
   errorMatcher(300, errorState);
+  errorValue.value = payload;
 });
 emitter.on("disable-use-error", (payload) => {
-  useError = payload;
+  useError.value = payload;
 });
 emitter.on("submit-error", (payload) => {
   const [code, message] = payload;
   //try and make it possible that errMatcher has a match of that error.
   errorMatcher(code, errorState);
   useInteract.value = false;
-  // useError.value = true;
+  errorValue.value = true;
 });
 
 onErrorCaptured((error, component, info) => {
-  console.log("An error occurred: \n", error, component, info);
+  console.log(
+    "An error occurred: \n",
+    error,
+    "At component:",
+    component,
+    "What happened:",
+    info
+  );
 });
 </script>
 
@@ -181,5 +173,13 @@ onErrorCaptured((error, component, info) => {
 .scrollable::-webkit-scrollbar {
   width: 0;
   height: 0;
+}
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.6s ease;
+}
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
 }
 </style>

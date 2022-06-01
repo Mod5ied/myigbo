@@ -10,7 +10,7 @@
       Add to library
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        class="h-5 w-5 text-blue-500"
+        class="w-5 h-5 text-blue-500"
         viewBox="0 0 20 20"
         fill="currentColor"
       >
@@ -27,7 +27,7 @@
       Update a word
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        class="h-5 w-5 text-emerald-500"
+        class="w-5 h-5 text-emerald-500"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
@@ -48,7 +48,7 @@
       Delete a word
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        class="h-5 w-5 text-red-500"
+        class="w-5 h-5 text-red-500"
         viewBox="0 0 20 20"
         fill="currentColor"
       >
@@ -67,7 +67,7 @@
       View library
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        class="h-5 w-5 text-blue-500"
+        class="w-5 h-5 text-blue-500"
         viewBox="0 0 20 20"
         fill="currentColor"
       >
@@ -84,7 +84,7 @@
       Add a quiz
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        class="h-5 w-5 text-blue-500"
+        class="w-5 h-5 text-blue-500"
         viewBox="0 0 20 20"
         fill="currentColor"
       >
@@ -97,7 +97,7 @@
       <button @click="emergency = !emergency">Emergency config</button>
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        class="h-5 w-5 text-emerald-500"
+        class="w-5 h-5 text-emerald-500"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
@@ -115,13 +115,13 @@
         />
       </svg>
       <div
-        class="absolute flex gap-4 p-2 left-4 bottom-5 border"
+        class="absolute flex gap-4 p-2 border left-4 bottom-5"
         v-if="emergency"
       >
         <span class="side_config">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-4 w-4 text-yellow-400"
+            class="w-4 h-4 text-yellow-400"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -140,7 +140,7 @@
         <span class="side_config">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-4 w-4 text-yellow-400"
+            class="w-4 h-4 text-yellow-400"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -153,7 +153,7 @@
         <span class="side_config">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-4 w-4 text-red-500"
+            class="w-4 h-4 text-red-500"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"

@@ -1,11 +1,11 @@
 "use strict";
+import axios from "axios";
 const url = `http://localhost:5000/api/v1/`;
 const url2 = `http://localhost:5000/api/v1/get/`;
 const url3 = `http://localhost:5000/api/v1/update/`;
 const url4 = `http://localhost:5000/api/v1/delete/`;
-import axios from "axios";
 
-class PostProxy {
+export class PostProxy {
   static getPosts = async () => {
     return new Promise(async (resolve, reject) => {
       try {
@@ -90,6 +90,7 @@ class PostProxy {
       }
     });
   };
+  //! sends data in its request body rather than the params object.
   static updatePost = async (name, data) => {
     return new Promise(async (resolve, reject) => {
       try {
@@ -103,7 +104,7 @@ class PostProxy {
   };
 }
 
-class StateProxy {
+export class StateProxy {
   //saves offline data
   /** @param {string} data @returns A promise that resolves with boolean */
   static useSwitch = async (data) => {
@@ -130,5 +131,3 @@ class StateProxy {
     });
   };
 }
-
-export { PostProxy, StateProxy };

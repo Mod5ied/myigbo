@@ -65,26 +65,24 @@
 </template>
 
 <script setup>
-import { inject, ref, watchEffect } from "vue";
+import { inject, ref } from "vue";
 
 //define the emitter.
 const emitter = inject("emitter");
 const props = defineProps({
   useRecord: {
     type: Object,
+    default() {
+      return { name: "", translation: "", genre: "" };
+    },
   },
   // errorState: String,
 });
 
-//dyna vars.
+//dynamic vars.
 let useDefi = ref(true);
 let useSynonyms = ref(null);
 let useAntonyms = ref(null);
-
-// ⚠️ Not even destructuring solves this ⚠️
-// ⚠️ Apparently assigning props to ref values prevents realtime updates when
-//    ...source of props-data is updated ⚠️
-// let useRecord = ref(props.useRecord);
 
 //emit comes from {dict-results}.
 emitter.on("alter-synonym", (payload) => {

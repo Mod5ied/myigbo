@@ -34,28 +34,22 @@
 </template>
 
 <script setup>
-import { inject, ref } from "vue";
-import DictCard from "../components/Dict_card.vue";
-// const DictCard = defineAsyncComponent(() =>
-//   import("../components/Dict_card.vue")
-// );
+import { defineAsyncComponent, inject, ref } from "vue";
+const DictCard = defineAsyncComponent(() =>
+  import("../components/Dict_card.vue")
+);
 const emitter = inject("emitter");
 
 const props = defineProps({
   useRecord: {
     type: Object,
-    /**  Object or array defaults must be returned from
-      a factory function. The function receives the raw
-      props received by the component as the argument.
-        default(rawProps) {
-          return { message: 'hello' }
-        } 
-    */
+    default() {
+      return { name: "", translation: "", genre: "" };
+    },
   },
 });
 
 //dynamic variable definitions.
-let useRecord = ref(props.useRecord);
 let DictClass = "w-80";
 let useDefi = ref(true);
 let useSynonyms = ref(false);

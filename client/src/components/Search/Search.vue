@@ -257,7 +257,7 @@ const setDarkMode = () => {
 const setLightMode = () => {
   //emit a set-light event to App.vue.
   emitter.emit("set-light", "light");
-  //hide the sun.
+  //hide the light-icon.
   lightState.value = false;
   darkState.value = true;
 };

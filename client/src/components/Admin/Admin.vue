@@ -14,6 +14,7 @@
         <DeleteWord v-if="useClear" />
         <UpdateWord v-if="useUpdate" />
         <PeekWords v-if="usePeek" />
+        <!-- <img v-else src="../../assets/home.svg" class="w-1/2" alt=""> -->
       </main>
     </div>
   </div>
@@ -99,8 +100,6 @@ emitter.on("peekWords", (payload) => {
 //fetch data from idb on component mount.
 onMounted(async () => {
   // await pushToCloud();
-  // const p = await isOnline();
-  // console.log(p);
 });
 
 //! to be deprecated in production.
