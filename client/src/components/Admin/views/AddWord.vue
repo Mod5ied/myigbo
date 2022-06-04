@@ -15,7 +15,7 @@
         @click="formsToggle('showDict')"
         class="w-1/2 p-2 text-sm font-bold text-gray-50"
       >
-        New Record
+        Dictionary
       </button>
     </span>
     <!-- forms below 👇 -->
