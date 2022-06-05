@@ -15,6 +15,8 @@
           v-model.trim="input"
           type="text"
           :placeholder="placeholder"
+          @focusin="hideSearchButton"
+          @focusout="showSearchButton"
         />
         <!-- 👆 :oninput="hideResultComponent" -->
         <div
@@ -88,7 +90,7 @@ import { inject, ref, watchEffect } from "vue";
 
 //reactive input data.
 let input = ref("");
-let placeholder = ref("Search by word");
+let placeholder = ref("Search for word");
 let notTyping = ref(true);
 let isTyping = ref(false);
 let searchClass = props.SearchClass;
@@ -142,4 +144,21 @@ const handleSubmit = function () {
     emitter.emit("submit-error", [500, err.message]);
   }
 };
+
+const hideSearchButton = () => {
+  emitter.emit("hide-search-button", false);
+};
+const showSearchButton = () => {
+  emitter.emit("show-search-button", true);
+};
 </script>
+<style scoped>
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.8s ease;
+}
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
+</style>

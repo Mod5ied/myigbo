@@ -45,15 +45,16 @@ class Requests {
   };
 
   static fetchWords = async () => {
-    let allWords;
+    let response;
     try {
       const store = await getPosts();
       let { state, data } = store;
-      allWords = data;
+      response = data;
     } catch (err) {
-      console.error({ message: `Error while getting posts: ${err.state}` });
+      throw Error('Error while getting posts')
+      /* can also log here */
     }
-    return allWords;
+    return response;
   };
 
   /**

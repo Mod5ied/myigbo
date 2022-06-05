@@ -9,6 +9,15 @@
         <Sidebar />
       </aside>
       <main class="flex justify-center w-4/5">
+        <Transition>
+          <div v-if="useError" class="error-card">
+            <div>
+              <h3 class="text-center text-slate-500 dark:text-slate-200">
+                {{ errorState }}
+              </h3>
+            </div>
+          </div>
+        </Transition>
         <AddWord v-if="useAdd" />
         <AddQuiz v-if="useQuiz" />
         <DeleteWord v-if="useClear" />

@@ -108,8 +108,18 @@
 
 /* Error card styling */
 .error-card {
-  @apply relative w-2/3 m-auto mt-20 text-sm border-2 border-red-600 bottom-20 md:bottom-24 dark:bg-slate-900 dict-cards;
+  @apply relative w-3/4 m-auto mt-20 text-sm border-2 border-red-600 bottom-20 md:bottom-24 dark:bg-slate-900 dict-cards;
 }
 .dict-error-card {
   @apply relative w-2/3 m-auto mt-20 text-sm border-2 border-red-500 bottom-16 md:bottom-16 dark:bg-slate-900 dict-cards;
+}
+
+/* transition */
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.8s ease;
+}
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
 }

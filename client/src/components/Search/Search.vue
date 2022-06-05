@@ -116,7 +116,8 @@
           </div>
         </div>
       </Transition>
-      <Search_history v-if="useHistory" />
+      <!-- Would be toggled from the searchBox component instead. -->
+      <!-- <Search_history v-if="useHistory" /> -->
       <Transition>
         <SearchResult
           v-if="hasResult"
@@ -127,9 +128,9 @@
       </Transition>
     </main>
     <footer>
-      <div>
+      <Transition>
         <Search_buttons />
-      </div>
+      </Transition>
     </footer>
   </div>
 </template>
@@ -177,7 +178,8 @@ function arrDelay(arr, delegate, delay) {
 //homepage name is altered,and entire data is fetched, once comp is mounted.
 onMounted(async () => {
   arrDelay(array, (obj) => (name.value = obj), 6000);
-  useArray.value = await fetchWords();
+  // useArray.value = await fetchWords();
+  await fetchRecords();
 });
 
 //reactive states for all mini components
@@ -290,6 +292,18 @@ function checkState() {
 }
 currentState.value = checkState();
 
+async function fetchRecords() {
+  try {
+    useArray.value = await fetchWords();
+  } catch (err) {
+    useError.value = true;
+    errorMatcher(503, errorState);
+    setTimeout(() => {
+      useError.value = false;
+    }, 2000);
+  }
+}
+
 onErrorCaptured((error, component, info) => {
   console.log(
     "An error occurred: \n",
@@ -301,14 +315,3 @@ onErrorCaptured((error, component, info) => {
   );
 });
 </script>
-
-<style scoped>
-.v-enter-active,
-.v-leave-active {
-  transition: opacity 0.8s ease;
-}
-.v-enter-from,
-.v-leave-to {
-  opacity: 0;
-}
-</style>

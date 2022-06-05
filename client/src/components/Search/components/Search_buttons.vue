@@ -1,6 +1,6 @@
 <template>
   <div
-    @hide-buttons="hideButtons()"
+    v-if="useButtons"
     class="fixed flex flex-row justify-center w-full gap-10 px-5 py-2 bottom-4 md:bottom-0 md:gap-20"
   >
     <!-- Should grab data and search and give its dictionary when btn is clicked -->
@@ -90,6 +90,7 @@ let useDict = ref(true);
 let useExit = ref(false);
 let useTrans = ref(true);
 let useSpeaker = ref(false);
+let useButtons = ref(true);
 const useState = [false, true];
 
 //event bus initialized.
@@ -99,6 +100,12 @@ emitter.on("hide-buttons", (payload) => {
   useSpeaker.value = payload[0];
   useDict.value = payload[0];
   useExit.value = true;
+});
+emitter.on("hide-search-button", (payload) => {
+  useButtons.value = payload;
+});
+emitter.on("show-search-button", (payload) => {
+  useButtons.value = payload;
 });
 
 //refresh 'fn'.
