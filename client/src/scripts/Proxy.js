@@ -1,15 +1,18 @@
 "use strict";
 import axios from "axios";
-const url = `http://localhost:5000/api/v1/`;
-const url2 = `http://localhost:5000/api/v1/get/`;
-const url3 = `http://localhost:5000/api/v1/update/`;
-const url4 = `http://localhost:5000/api/v1/delete/`;
+const url1 = `http://localhost:5000/api/v1/`;
+const url2 = `http://localhost:5000/api/v1/quiz/`;
+const url3 = `http://localhost:5000/api/v1/get/`;
+const url4 = `http://localhost:5000/api/v1/post/`;
+const url5 = `http://localhost:5000/api/v1/post/batch/`;
+const url6 = `http://localhost:5000/api/v1/update/`;
+const url7 = `http://localhost:5000/api/v1/delete/`;
 
 export class PostProxy {
   static getPosts = async () => {
     return new Promise(async (resolve, reject) => {
       try {
-        const res = await axios.get(`${url}allWords`);
+        const res = await axios.get(`${url1}allWords`);
         const results = await res.data;
         resolve(results);
         if (results.state == false) {
@@ -26,7 +29,7 @@ export class PostProxy {
   static getQuiz = async (quiz) => {
     return new Promise(async (resolve, reject) => {
       try {
-        const res = await axios.get(`${url}${quiz}`);
+        const res = await axios.get(`${url2}${quiz}`);
         const results = await res.data;
         resolve(results);
         if (results.state == false) {
@@ -37,10 +40,13 @@ export class PostProxy {
       }
     });
   };
-  static createPosts = async (data) => {
+  /**
+   *@params {data}, @constant {word or dict}.
+   */
+  static createPosts = async (data, constant) => {
     return new Promise(async (resolve, reject) => {
       try {
-        const res = await axios.post(`${url}post`, {
+        const res = await axios.post(`${url4}${constant}`, {
           name: data.name,
           translation: data.translation,
           genre: data.genre,
@@ -52,10 +58,13 @@ export class PostProxy {
       }
     });
   };
-  static createQuiz = async (data) => {
+  /**
+   *@params {data}, @constant {word or dict}.
+   */
+  static createQuiz = async (data, constant) => {
     return new Promise(async (resolve, reject) => {
       try {
-        const res = await axios.post(`${url}post/quiz`, {
+        const res = await axios.post(`${url4}quiz/${constant}`, {
           question: data.question,
           answerRight: data.right_answer,
           answerWrong1: data.wrong_answer1,
@@ -68,10 +77,10 @@ export class PostProxy {
       }
     });
   };
-  static batchUpload = async (data) => {
+  static batchUpload = async (data, constant) => {
     return new Promise(async (resolve, reject) => {
       try {
-        const res = await axios.post(`${url}/post/batch`, data);
+        const res = await axios.post(`${url5}${constant}`, data);
         const results = await res.data;
         resolve(results);
       } catch (err) {
@@ -79,10 +88,22 @@ export class PostProxy {
       }
     });
   };
-  static deleteOnePost = async (data) => {
+  // static batchUploadQuiz = async (data, constant) => {
+  //   return new Promise(async (resolve, reject) => {
+  //     try {
+  //       const res = await axios.post(`${url5}${constant}`, data);
+  //       const results = await res.data;
+  //       resolve(results);
+  //     } catch (err) {
+  //       reject(err?.response?.data);
+  //     }
+  //   });
+  // };
+  static deleteOnePost = async (constant) => {
+    //constant's form 👉 "category/name"
     return new Promise(async (resolve, reject) => {
       try {
-        const res = await axios.delete(`${url4}${data}`);
+        const res = await axios.delete(`${url7}${constant}`);
         const results = await res.data;
         resolve(results);
       } catch (err) {
@@ -94,7 +115,10 @@ export class PostProxy {
   static updatePost = async (name, data) => {
     return new Promise(async (resolve, reject) => {
       try {
-        const res = await axios.patch(`${url3}${name}`, { genre: data });
+        const res = await axios.patch(`${url6}${name}`, {
+          translation: data.translation,
+          genre: data.genre,
+        });
         const results = await res.data;
         resolve(results);
       } catch (err) {
@@ -105,28 +129,15 @@ export class PostProxy {
 }
 
 export class StateProxy {
-  //saves offline data
-  /** @param {string} data @returns A promise that resolves with boolean */
-  static useSwitch = async (data) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const res = await axios.get(`${url2}${data}`);
-        const results = await res.data;
-        resolve(results);
-      } catch (err) {
-        reject(err);
-      }
-    });
-  };
   /** @returns A boolean of App state */
   static getState = async () => {
     return new Promise(async (resolve, reject) => {
       try {
-        const res = await axios.get(`${url2}state`);
+        const res = await axios.get(`${url3}state`);
         const results = await res.data;
         resolve(results);
       } catch (err) {
-        reject(err);
+        reject(err.message);
       }
     });
   };
