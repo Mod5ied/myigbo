@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col items-center w-1/2 h-full gap-6 p-4 mr-40">
+  <div class="flex flex-col items-center w-full md:w-1/2 h-full gap-6 p-4 md:mr-40">
     <div class="delete_body">
       <h2 class="delete_btn" @click="useDelete = !useDelete">
         Delete a Word Here:
@@ -11,9 +11,9 @@
         v-if="useDelete"
       >
         <span
-          class="flex flex-row items-center justify-around w-full gap-2 text-gray-800 dark:text-slate-200 font-body"
+          class="flex flex-col md:flex-row items-center md:justify-around w-full p-2 gap-2 text-gray-800 dark:text-slate-200 font-body"
         >
-          <label for="deleteConst">Enter word:</label>
+          <label for="deleteConst" class="text-lg md:text-base">Enter word:</label>
           <input
             type="text"
             placeholder="English words only!"

@@ -1,19 +1,19 @@
 <template>
   <div
-    class="flex flex-col items-center w-1/2 h-full gap-6 p-4 mr-40 font-body"
+    class="flex flex-col items-center w-full md:w-1/2 h-full gap-6 p-4 md:mr-40 font-body"
   >
     <span
-      class="flex justify-between w-3/5 overflow-hidden bg-blue-300 rounded-md mt-14"
+      class="flex justify-between w-full md:w-3/5 overflow-hidden bg-blue-300 rounded-md mt-14"
     >
       <button
         @click="formsToggle('showSearch')"
-        class="w-1/2 px-6 text-sm font-bold text-gray-100 bg-blue-500"
+        class="w-1/2 px-6 font-bold text-gray-100 bg-blue-500"
       >
         Search Quiz
       </button>
       <button
         @click="formsToggle('showDict')"
-        class="w-1/2 p-2 text-sm font-bold text-gray-50"
+        class="w-1/2 p-2 font-bold text-gray-50"
       >
         Dictionary Quiz
       </button>
@@ -21,13 +21,13 @@
     <!-- searchQuiz form 👇 -->
     <form
       @submit.prevent="submitQuiz('search')"
-      class="flex flex-col justify-around w-full gap-3 p-6 border rounded-lg bg-gray-50 dark:bg-slate-900 dark:border-slate-700 h-1/2"
+      class="flex flex-col justify-around w-full gap-3 p-6 border rounded-lg bg-gray-50 dark:bg-slate-900 dark:border-slate-700 h-3/4"
       v-if="useSearch"
     >
       <div
-        class="flex flex-row items-center justify-between p-2 text-gray-800 dark:text-slate-200 font-body"
+        class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-2 text-gray-800 dark:text-slate-200 font-body"
       >
-        <label for="english">Quiz question</label>
+        <label for="english" class="px-2 text-lg">Quiz question</label>
         <input
           type="text"
           id="english"
@@ -39,9 +39,9 @@
         />
       </div>
       <div
-        class="flex flex-row items-center justify-between p-2 text-gray-800 dark:text-slate-200 font-body"
+        class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-2 text-gray-800 dark:text-slate-200 font-body"
       >
-        <label for="igbo"> Right answer </label>
+        <label for="igbo" class="px-2 text-lg"> Right answer </label>
         <input
           type="text"
           id="igbo"
@@ -53,9 +53,9 @@
         />
       </div>
       <div
-        class="flex flex-row items-center justify-between p-2 text-gray-800 dark:text-slate-200 font-body"
+        class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-2 text-gray-800 dark:text-slate-200 font-body"
       >
-        <label for="igbo"> Wrong answer </label>
+        <label for="igbo" class="px-2 text-lg"> Wrong answer </label>
         <input
           type="text"
           id="igbo"
@@ -127,11 +127,11 @@
     <!-- dictionaryQuiz form 👇 -->
     <form
       @submit.prevent="submitQuiz('dict')"
-      class="flex flex-col justify-around w-full gap-3 p-6 border rounded-lg bg-gray-50 h-3/4 dark:bg-slate-900 dark:border-slate-600"
+      class="flex flex-col justify-around w-full gap-3 p-6 border rounded-lg bg-gray-50 h-4/5 md:h-3/4 dark:bg-slate-900 dark:border-slate-600"
       v-if="useDict"
     >
       <div
-        class="flex flex-row items-center justify-between p-2 text-gray-800 dark:text-slate-200 font-body"
+        class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-2 text-gray-800 dark:text-slate-200 font-body"
       >
         <label for="english">Quiz question</label>
         <input
@@ -145,7 +145,7 @@
         />
       </div>
       <div
-        class="flex flex-row items-center justify-between p-2 text-gray-800 dark:text-slate-200 font-body"
+        class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-2 text-gray-800 dark:text-slate-200 font-body"
       >
         <label for="igbo"> Right answer </label>
         <input
@@ -159,7 +159,7 @@
         />
       </div>
       <div
-        class="flex flex-row items-center justify-between p-2 text-gray-800 dark:text-slate-200 font-body"
+        class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-2 text-gray-800 dark:text-slate-200 font-body"
       >
         <label for="igbo"> Wrong answer1 </label>
         <input
@@ -173,7 +173,7 @@
         />
       </div>
       <div
-        class="flex flex-row items-center justify-between p-2 text-gray-800 dark:text-slate-200 font-body"
+        class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-2 text-gray-800 dark:text-slate-200 font-body"
       >
         <label for="igbo"> Wrong answer2 </label>
         <input

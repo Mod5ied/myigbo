@@ -1,19 +1,19 @@
 <template>
   <div
-    class="flex flex-col items-center w-1/2 h-full gap-6 p-4 mr-40 font-body"
+    class="flex flex-col items-center w-full md:w-1/2 h-full gap-6 p-4 md:mr-40 font-body"
   >
     <span
-      class="flex justify-between w-3/4 overflow-hidden bg-blue-300 rounded-md mt-14"
+      class="flex justify-between w-full md:w-3/4 overflow-hidden bg-blue-300 rounded-md mt-14"
     >
       <button
         @click="formsToggle('showGenre')"
-        class="w-1/2 px-6 text-sm font-bold text-gray-100 bg-blue-500"
+        class="w-1/2 px-6 font-bold text-gray-100 bg-blue-500"
       >
         Update genre
       </button>
       <button
         @click="formsToggle('showTrans')"
-        class="w-1/2 p-2 text-sm font-bold text-gray-50"
+        class="w-1/2 p-2 font-bold text-gray-50"
       >
         Update translations
       </button>
@@ -27,8 +27,8 @@
       <div
         class="flex flex-col justify-start w-full gap-6 text-gray-800 dark:text-slate-200 font-body"
       >
-        <span class="flex flex-row items-center justify-between gap-4 p-2">
-          <label for="patchName">Enter the word</label>
+        <span class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-2">
+          <label for="patchName" class="px-2 text-lg">Enter the word</label>
           <input
             type="text"
             placeholder="English word only!"
@@ -37,8 +37,8 @@
             class="dark_inputs"
           />
         </span>
-        <span class="flex flex-row items-center justify-between gap-4 p-2">
-          <label for="patchGenre">New Genre</label>
+        <span class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-2">
+          <label for="patchGenre" class="px-2 text-lg">New Genre</label>
           <input
             type="text"
             placeholder="e.g: Medicals(Noun)"
@@ -116,8 +116,8 @@
       <div
         class="flex flex-col justify-start w-full gap-6 text-gray-800 dark:text-slate-200 font-body"
       >
-        <span class="flex flex-row items-center justify-between gap-4 p-2">
-          <label for="patchName">Enter the word</label>
+        <span class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-2">
+          <label for="patchName" class="px-2 text-lg">Enter the word</label>
           <input
             type="text"
             placeholder="English word only!"
@@ -127,8 +127,8 @@
           />
         </span>
 
-        <span class="flex flex-row items-center justify-between gap-4 p-2">
-          <label for="patchGenre">New Definition</label>
+        <span class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-2">
+          <label for="patchGenre" class="px-2 text-lg">New Definition</label>
           <input
             type="text"
             placeholder="New Definition here"

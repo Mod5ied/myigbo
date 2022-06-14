@@ -1,13 +1,13 @@
 <template>
   <div
-    class="flex flex-col items-center justify-start w-full h-full gap-8 py-16 border-r dark:border-r-slate-800 bg-gray-50 dark:bg-slate-900 font-body"
+    class="bottom_bar"
   >
     <button
       @click="dispatch(Dispatch.add, true)"
       :to="{ name: 'AddWord' }"
       :class="useAdd ? 'side_span_active' : 'side_span'"
     >
-      Add to library
+      <p class="bottom_bar_text">Add to library</p>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         class="w-5 h-5 text-blue-500"
@@ -24,7 +24,7 @@
       :to="{ name: 'UpdateWord' }"
       :class="useUpdate ? 'side_span_active' : 'side_span'"
     >
-      Update a word
+      <p class="bottom_bar_text">Update a word</p>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         class="w-5 h-5 text-emerald-500"
@@ -45,7 +45,7 @@
       :to="{ name: 'DeleteWord' }"
       :class="useDelete ? 'side_span_active' : 'side_span'"
     >
-      Delete a word
+      <p class="bottom_bar_text">Delete a word</p>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         class="w-5 h-5 text-red-500"
@@ -62,9 +62,9 @@
     <button
       @click="dispatch(Dispatch.peek, true)"
       :to="{ name: 'PeekWords' }"
-      :class="usePeek ? 'side_span_active' : 'side_span'"
+      :class="usePeek ? 'bottom_bar_active' : 'bottom_bar_inactive'"
     >
-      View library
+      <p class="bottom_bar_text">View library</p>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         class="w-5 h-5 text-blue-500"
@@ -81,7 +81,7 @@
       :to="{ name: 'AddQuiz' }"
       :class="useQuiz ? 'side_span_active' : 'side_span'"
     >
-      Add a quiz
+      <p class="bottom_bar_text">Add a quiz</p>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         class="w-5 h-5 text-blue-500"
@@ -93,8 +93,8 @@
         />
       </svg>
     </button>
-    <span class="side_span">
-      <button @click="emergency = !emergency">Emergency config</button>
+    <span class="side_span" @click="emergency = !emergency">
+      <button class="bottom_bar_text" >Emergency config</button>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         class="w-5 h-5 text-emerald-500"
@@ -246,20 +246,4 @@ const dispatch = (action, state) => {
   }
 };
 </script>
-<style scoped>
-.btnAdd {
-  background: v-bind(useAdd);
-}
-.btnQuiz {
-  background: v-bind(useQuiz);
-}
-.btnDel {
-  background: v-bind(useDel);
-}
-.btnUpdate {
-  background: v-bind(useUpdate);
-}
-.btnPeek {
-  background: v-bind(usePeek);
-}
-</style>
+<style scoped></style>

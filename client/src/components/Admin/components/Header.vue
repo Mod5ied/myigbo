@@ -1,28 +1,28 @@
 <template>
   <header
-    class="flex flex-row items-center justify-between w-full px-12 border-b border-gray-200 h-14 dark:border dark:border-slate-800 bg-gray-50 dark:bg-slate-900 font-body"
+    class="flex flex-row items-center justify-between w-full px-6 md:px-12 border-b border-gray-200 h-14 dark:border dark:border-slate-800 bg-gray-50 dark:bg-slate-900 font-body"
   >
     <section id="left">
       <h1 class="text-lg font-semibold dark:text-slate-300">
         IgboTrans Library
       </h1>
     </section>
-    <div id="right" class="flex items-center justify-between w-1/3 h-full">
-      <section
-        class="flex items-center h-full gap-10 px-1 text-sm dark:text-slate-300"
+    <div
+      id="right"
+      class="admin_header_right"
+    >
+      <router-link class="search-links" :to="{ name: 'Search' }"
+        >Home</router-link
       >
-        <router-link class="search-links" :to="{ name: 'Search' }"
-          >Home</router-link
-        >
-        <router-link class="search-links" to="">About</router-link>
-        <router-link class="search-links" to="">*Future</router-link>
-      </section>
-      <section class="flex items-center h-full">
+      <router-link class="search-links" :to="{ name: 'Dictionary' }"
+        >Dictionary</router-link
+      >
+      <router-link class="search-links" to="">About</router-link>
+      <!-- <section class="flex items-center h-full">
         <span
           class="flex flex-row justify-around gap-1 px-2 text-sm text-gray-600 cursor-pointer dark:text-slate-300 font-body"
         >
           <p>Server-status</p>
-          <!-- success with server -->
           <i
             class="flex items-center"
             :class="serverState ? ok_class : fail_class"
@@ -43,7 +43,6 @@
               />
             </svg>
           </i>
-          <!-- failed state -->
           <i class="flex items-center" v-if="fail_server">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -60,7 +59,7 @@
             </svg>
           </i>
         </span>
-      </section>
+      </section> -->
     </div>
   </header>
 </template>

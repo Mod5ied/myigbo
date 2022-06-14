@@ -4,11 +4,11 @@
     class="flex flex-col items-center justify-start overflow-x-hidden bg-gray-100 select-none dark:bg-slate-800"
   >
     <Header1 />
-    <div class="flex w-full h-screen" id="main">
-      <aside class="w-1/5">
-        <Sidebar />
+    <div class="flex w-screen h-screen" id="main">
+      <aside class="md:w-1/5 hidden md:flex">
+        <Sidebar  />
       </aside>
-      <main class="flex justify-center w-4/5">
+      <main class="flex justify-center overflow-x-hidden w-full">
         <Transition>
           <div v-if="useError" class="error-card">
             <div>
@@ -26,6 +26,7 @@
         <!-- <img v-else src="../../assets/home.svg" class="w-1/2" alt=""> -->
       </main>
     </div>
+    <Sidebar class="md:hidden" />
   </div>
 </template>
 <script setup>
@@ -63,6 +64,7 @@ let useClear = ref(false);
 let useUpdate = ref(false);
 let useQuiz = ref(false);
 let usePeek = ref(false);
+let useError = ref(false);
 
 //emitter listener for toggles.
 emitter.on("addWord", (payload) => {

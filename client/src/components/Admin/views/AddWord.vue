@@ -1,19 +1,19 @@
 <template>
   <div
-    class="flex flex-col items-center w-1/2 h-full gap-6 p-4 mr-40 font-body"
+    class="flex flex-col items-center w-full md:w-1/2 h-full gap-6 p-4 mr-0 md:mr-40 font-body"
   >
     <span
-      class="flex justify-between w-3/4 overflow-hidden bg-blue-300 rounded-md mt-14"
+      class="flex justify-between w-full md:w-3/4 overflow-hidden bg-blue-300 rounded-md mt-14"
     >
       <button
         @click="formsToggle('showTrans')"
-        class="w-1/2 px-6 text-sm font-bold text-gray-100 bg-blue-500"
+        class="w-1/2 px-6 font-bold text-gray-100 bg-blue-500"
       >
         Translations
       </button>
       <button
         @click="formsToggle('showDict')"
-        class="w-1/2 p-2 text-sm font-bold text-gray-50"
+        class="w-1/2 p-2 font-bold text-gray-50"
       >
         Dictionary
       </button>
@@ -25,9 +25,9 @@
       class="flex flex-col justify-around w-full gap-3 p-6 border rounded-lg bg-gray-50 dark:bg-slate-900 dark:border-slate-700 h-3/4"
     >
       <div
-        class="flex flex-row items-center justify-between gap-4 p-2 text-gray-800 dark:text-slate-200 font-body"
+        class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-2 text-gray-800 dark:text-slate-200 font-body"
       >
-        <label for="english">English Word</label>
+        <label for="english" class="px-2 text-lg">English Word</label>
         <input
           type="text"
           id="english"
@@ -39,9 +39,9 @@
         />
       </div>
       <div
-        class="flex flex-row items-center justify-between gap-4 p-2 text-gray-800 dark:text-slate-200 font-body"
+        class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-2 text-gray-800 dark:text-slate-200 font-body"
       >
-        <label for="igbo">Igbo Translation</label>
+        <label for="igbo" class="px-2 text-lg">Igbo Translation</label>
         <input
           type="text"
           id="igbo"
@@ -53,9 +53,9 @@
         />
       </div>
       <div
-        class="flex flex-row items-center justify-between gap-4 p-2 text-gray-800 dark:text-slate-200 font-body"
+        class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-2 text-gray-800 dark:text-slate-200 font-body"
       >
-        <label for="igbo">Word Genre</label>
+        <label for="igbo" class="px-2 text-lg">Word Genre</label>
         <input
           type="text"
           id="genre"
@@ -126,15 +126,17 @@
         </button>
       </span>
     </form>
+
+
     <form
       v-if="useDict"
       @submit.prevent="submitDict"
       class="flex flex-col justify-around w-full gap-3 p-6 border rounded-lg bg-gray-50 dark:bg-slate-900 dark:border-slate-700 h-3/4"
     >
       <div
-        class="flex flex-row items-center justify-between gap-4 p-2 text-gray-800 dark:text-slate-200 font-body"
+        class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-2 text-gray-800 dark:text-slate-200 font-body"
       >
-        <label for="english">English Word</label>
+        <label for="english" class="px-2 text-lg">English Word</label>
         <input
           type="text"
           id="english"
@@ -146,9 +148,9 @@
         />
       </div>
       <div
-        class="flex flex-row items-center justify-between gap-4 p-2 text-gray-800 dark:text-slate-200 font-body"
+        class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-2 text-gray-800 dark:text-slate-200 font-body"
       >
-        <label for="igbo">Igbo Translation</label>
+        <label for="igbo" class="px-2 text-lg">Igbo Translation</label>
         <input
           type="text"
           id="igbo"
@@ -160,9 +162,9 @@
         />
       </div>
       <div
-        class="flex flex-row items-center justify-between gap-4 p-2 text-gray-800 dark:text-slate-200 font-body"
+        class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-2 text-gray-800 dark:text-slate-200 font-body"
       >
-        <label for="igbo">Word Genre</label>
+        <label for="igbo" class="px-2 text-lg">Word Genre</label>
         <input
           type="text"
           id="genre"
@@ -174,9 +176,9 @@
         />
       </div>
       <div
-        class="flex flex-row items-center justify-between gap-4 p-2 text-gray-800 dark:text-slate-200 font-body"
+        class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-2 text-gray-800 dark:text-slate-200 font-body"
       >
-        <label for="igbo">Definitions</label>
+        <label for="igbo" class="px-2 text-lg">Definitions</label>
         <textarea
           type="text"
           id="igbo"
@@ -184,8 +186,7 @@
           placeholder="enter definitions and bits of history."
           required
           v-model.trim="definitions"
-          class="dark_inputs"
-        />
+          class="dark_inputs"></textarea>
       </div>
       <!-- submitting section -->
       <span class="flex flex-row items-center gap-2 p-2 text-right">

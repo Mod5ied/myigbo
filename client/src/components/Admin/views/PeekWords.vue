@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex flex-col items-center w-3/5 h-full gap-6 p-4 mr-40 font-body"
+    class="flex flex-col items-center w-full md:w-3/5 h-full gap-6 p-4 mr-40 font-body"
   >
     <span
       class="flex justify-between w-3/5 mt-12 overflow-hidden rounded-md bg-slate-300"
