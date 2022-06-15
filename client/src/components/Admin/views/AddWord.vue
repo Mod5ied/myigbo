@@ -1,9 +1,9 @@
 <template>
   <div
-    class="flex flex-col items-center w-full md:w-1/2 h-full gap-6 p-4 mr-0 md:mr-40 font-body"
+    class="flex flex-col items-center w-full h-full gap-6 p-4 mr-0 md:w-1/2 md:mr-40 font-body"
   >
     <span
-      class="flex justify-between w-full md:w-3/4 overflow-hidden bg-blue-300 rounded-md mt-14"
+      class="flex justify-between w-full overflow-hidden text-sm bg-blue-300 rounded-md md:w-3/4 mt-14"
     >
       <button
         @click="formsToggle('showTrans')"
@@ -25,7 +25,7 @@
       class="flex flex-col justify-around w-full gap-3 p-6 border rounded-lg bg-gray-50 dark:bg-slate-900 dark:border-slate-700 h-3/4"
     >
       <div
-        class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-2 text-gray-800 dark:text-slate-200 font-body"
+        class="flex flex-col justify-between gap-4 p-2 text-gray-800 md:flex-row md:items-center dark:text-slate-200 font-body"
       >
         <label for="english" class="px-2 text-lg">English Word</label>
         <input
@@ -39,7 +39,7 @@
         />
       </div>
       <div
-        class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-2 text-gray-800 dark:text-slate-200 font-body"
+        class="flex flex-col justify-between gap-4 p-2 text-gray-800 md:flex-row md:items-center dark:text-slate-200 font-body"
       >
         <label for="igbo" class="px-2 text-lg">Igbo Translation</label>
         <input
@@ -53,7 +53,7 @@
         />
       </div>
       <div
-        class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-2 text-gray-800 dark:text-slate-200 font-body"
+        class="flex flex-col justify-between gap-4 p-2 text-gray-800 md:flex-row md:items-center dark:text-slate-200 font-body"
       >
         <label for="igbo" class="px-2 text-lg">Word Genre</label>
         <input
@@ -127,14 +127,13 @@
       </span>
     </form>
 
-
     <form
       v-if="useDict"
       @submit.prevent="submitDict"
       class="flex flex-col justify-around w-full gap-3 p-6 border rounded-lg bg-gray-50 dark:bg-slate-900 dark:border-slate-700 h-3/4"
     >
       <div
-        class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-2 text-gray-800 dark:text-slate-200 font-body"
+        class="flex flex-col justify-between gap-4 p-2 text-gray-800 md:flex-row md:items-center dark:text-slate-200 font-body"
       >
         <label for="english" class="px-2 text-lg">English Word</label>
         <input
@@ -148,7 +147,7 @@
         />
       </div>
       <div
-        class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-2 text-gray-800 dark:text-slate-200 font-body"
+        class="flex flex-col justify-between gap-4 p-2 text-gray-800 md:flex-row md:items-center dark:text-slate-200 font-body"
       >
         <label for="igbo" class="px-2 text-lg">Igbo Translation</label>
         <input
@@ -162,7 +161,7 @@
         />
       </div>
       <div
-        class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-2 text-gray-800 dark:text-slate-200 font-body"
+        class="flex flex-col justify-between gap-4 p-2 text-gray-800 md:flex-row md:items-center dark:text-slate-200 font-body"
       >
         <label for="igbo" class="px-2 text-lg">Word Genre</label>
         <input
@@ -176,7 +175,7 @@
         />
       </div>
       <div
-        class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-2 text-gray-800 dark:text-slate-200 font-body"
+        class="flex flex-col justify-between gap-4 p-2 text-gray-800 md:flex-row md:items-center dark:text-slate-200 font-body"
       >
         <label for="igbo" class="px-2 text-lg">Definitions</label>
         <textarea
@@ -186,7 +185,8 @@
           placeholder="enter definitions and bits of history."
           required
           v-model.trim="definitions"
-          class="dark_inputs"></textarea>
+          class="dark_inputs"
+        ></textarea>
       </div>
       <!-- submitting section -->
       <span class="flex flex-row items-center gap-2 p-2 text-right">
@@ -275,6 +275,8 @@ let translation = ref("");
 let definitions = ref("");
 let useDict = ref(false);
 let useTrans = ref(false);
+let word = "word"
+let dict = "dict"
 
 //watcher to smallint user-input
 watchEffect(() => {
@@ -297,7 +299,7 @@ async function submitWord() {
             name.value,
             translation.value,
             genre.value,
-            Router
+            word
           )
         : await handleOffline(name.value, translation.value, genre.value)
     );

@@ -9,7 +9,7 @@ const url6 = `http://localhost:5000/api/v1/update/`;
 const url7 = `http://localhost:5000/api/v1/delete/`;
 
 export class PostProxy {
-  static getPosts = async () => {
+  static getWords = async () => {
     return new Promise(async (resolve, reject) => {
       try {
         const res = await axios.get(`${url1}allWords`);
@@ -17,9 +17,21 @@ export class PostProxy {
         resolve(results);
         if (results.state == false) {
           throw new Error(results.state);
+          //! better hope this is really doing something...
         }
       } catch (err) {
-        reject(err);
+        reject(err.message);
+      }
+    });
+  };
+  static getDicts = async () => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const res = await axios.get(`${url1}allRecords`);
+        const results = await res.data;
+        resolve(results);
+      } catch (err) {
+        reject(err.message);
       }
     });
   };

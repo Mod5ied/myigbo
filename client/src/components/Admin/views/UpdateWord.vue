@@ -1,9 +1,9 @@
 <template>
   <div
-    class="flex flex-col items-center w-full md:w-1/2 h-full gap-6 p-4 md:mr-40 font-body"
+    class="flex flex-col items-center w-full h-full gap-6 p-4 md:w-1/2 md:mr-40 font-body"
   >
     <span
-      class="flex justify-between w-full md:w-3/4 overflow-hidden bg-blue-300 rounded-md mt-14"
+      class="flex justify-between w-full overflow-hidden text-sm bg-blue-300 rounded-md md:w-3/4 mt-14"
     >
       <button
         @click="formsToggle('showGenre')"
@@ -27,7 +27,7 @@
       <div
         class="flex flex-col justify-start w-full gap-6 text-gray-800 dark:text-slate-200 font-body"
       >
-        <span class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-2">
+        <span class="flex flex-col justify-between gap-4 p-2 md:flex-row md:items-center">
           <label for="patchName" class="px-2 text-lg">Enter the word</label>
           <input
             type="text"
@@ -37,7 +37,7 @@
             class="dark_inputs"
           />
         </span>
-        <span class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-2">
+        <span class="flex flex-col justify-between gap-4 p-2 md:flex-row md:items-center">
           <label for="patchGenre" class="px-2 text-lg">New Genre</label>
           <input
             type="text"
@@ -116,7 +116,7 @@
       <div
         class="flex flex-col justify-start w-full gap-6 text-gray-800 dark:text-slate-200 font-body"
       >
-        <span class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-2">
+        <span class="flex flex-col justify-between gap-4 p-2 md:flex-row md:items-center">
           <label for="patchName" class="px-2 text-lg">Enter the word</label>
           <input
             type="text"
@@ -127,7 +127,7 @@
           />
         </span>
 
-        <span class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-2">
+        <span class="flex flex-col justify-between gap-4 p-2 md:flex-row md:items-center">
           <label for="patchGenre" class="px-2 text-lg">New Definition</label>
           <input
             type="text"

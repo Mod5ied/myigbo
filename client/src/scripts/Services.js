@@ -4,7 +4,8 @@ import { PostProxy, StateProxy } from "./Proxy.js";
 import { get, set, del } from "idb-keyval";
 const { getState, useSwitch } = StateProxy;
 const {
-  getPosts,
+  getWords,
+  getDicts,
   createPosts,
   createQuiz,
   batchUpload,
@@ -24,7 +25,7 @@ class Requests {
       serve.value = true;
 
       setTimeout(async () => {
-        store.value = await getPosts();
+        store.value = await getWords();
         let { state, data } = store.value;
         post_data = data;
         if (
@@ -39,6 +40,7 @@ class Requests {
           ? ((serve.value = false), (fail.value = true))
           : (fail.value = false)
       );
+      //! get this console outta here ASAP!
       console.error({ message: `Error while getting posts: ${err.state}` });
     }
     return post_data;
@@ -47,14 +49,24 @@ class Requests {
   static fetchWords = async () => {
     let response;
     try {
-      const store = await getPosts();
+      const store = await getWords();
       let { state, data } = store;
       response = data;
     } catch (err) {
-      throw Error('Error while getting posts')
+      throw Error("Error while getting words");
       /* can also log here */
     }
     return response;
+  };
+
+  static fetchDictionary = async () => {
+    let response;
+    try {
+      const store = await getDicts();
+      let { state, data } = store;
+    } catch (err) {
+      throw Error("Error while getting dictionary records");
+    }
   };
 
   /**
@@ -69,13 +81,14 @@ class Requests {
     ok,
     name,
     translation,
-    genre
+    genre,
+    constant
   ) => {
     try {
       fail.value = false;
       load.value = true;
       const newObj = Utilities.returnObject(name, translation, genre);
-      message.value = await createPosts(newObj);
+      message.value = await createPosts(newObj, constant);
       const { state, data } = message.value;
       setTimeout(async () => {
         if (
@@ -148,13 +161,11 @@ class Requests {
     del_con,
     message,
     ok,
-    unref
-    // router
   ) => {
     try {
       fail.value = false;
       load.value = true;
-      message.value = await deleteOnePost(unref(del_con.value));
+      message.value = await deleteOnePost(del_con.value);
       const { state, data } = message.value;
       setTimeout(async () => {
         if (
@@ -162,7 +173,6 @@ class Requests {
             ? ((load.value = false), (ok.value = true))
             : ((load.value = false), (ok.value = false))
         );
-        // Utilities.useReload(ok, state, 2000, router);
       }, 2000);
     } catch (err) {
       if (

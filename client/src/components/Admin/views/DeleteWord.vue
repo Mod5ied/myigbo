@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col items-center w-full md:w-1/2 h-full gap-6 p-4 md:mr-40">
+  <div class="flex flex-col items-center w-full h-full gap-6 p-4 md:w-1/2 md:mr-40">
     <div class="delete_body">
       <h2 class="delete_btn" @click="useDelete = !useDelete">
         Delete a Word Here:
@@ -7,11 +7,11 @@
       <!-- Form here -->
       <form
         @submit.prevent="removeWord"
-        class="flex flex-col w-full gap-8 mb-5 h-1/4"
+        class="flex flex-col w-full gap-8 mb-5 md:h-1/4"
         v-if="useDelete"
       >
         <span
-          class="flex flex-col md:flex-row items-center md:justify-around w-full p-2 gap-2 text-gray-800 dark:text-slate-200 font-body"
+          class="flex flex-col items-center w-full gap-2 p-2 text-gray-800 md:flex-row md:justify-around dark:text-slate-200 font-body"
         >
           <label for="deleteConst" class="text-lg md:text-base">Enter word:</label>
           <input
@@ -117,8 +117,6 @@ const removeWord = async () => {
     deleteConst,
     errMessage,
     ok_delete,
-    unref,
-    Router
   );
 };
 </script>
