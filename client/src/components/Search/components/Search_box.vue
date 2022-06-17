@@ -27,6 +27,7 @@
           <i
             @click="handleSubmit"
             class="flex items-center text-gray-400 hover:text-gray-600"
+            title="Search"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -44,6 +45,26 @@
           <i
             class="flex items-center text-gray-400 hover:text-gray-600"
             v-if="notTyping"
+            title="History"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-5 h-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          </i>
+          <i
+            class="flex items-center text-gray-400 hover:text-gray-600"
+            v-if="isTyping"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

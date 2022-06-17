@@ -1,19 +1,22 @@
 <template>
-  <div class="flex flex-col items-center w-full h-full gap-6 p-4 md:w-1/2 md:mr-40">
+  <div
+    class="flex flex-col items-center w-full h-full gap-1 p-4 md:w-1/2 md:mr-40"
+  >
     <div class="delete_body">
       <h2 class="delete_btn" @click="useDelete = !useDelete">
         Delete a Word Here:
       </h2>
-      <!-- Form here -->
       <form
         @submit.prevent="removeWord"
-        class="flex flex-col w-full gap-8 mb-5 md:h-1/4"
+        class="flex flex-col w-full gap-3 mb-5 h-1/2"
         v-if="useDelete"
       >
         <span
           class="flex flex-col items-center w-full gap-2 p-2 text-gray-800 md:flex-row md:justify-around dark:text-slate-200 font-body"
         >
-          <label for="deleteConst" class="text-lg md:text-base">Enter word:</label>
+          <label for="deleteConst" class="text-sm md:text-base"
+            >Enter word:</label
+          >
           <input
             type="text"
             placeholder="English words only!"
@@ -30,7 +33,7 @@
               <!-- success state -->
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="w-5 h-5"
+                class="w-4 h-4 md:w-5"
                 viewBox="0 0 20 20"
                 fill="currentColor"
                 :class="ok_class"
@@ -78,27 +81,28 @@
             </i>
           </button>
         </span>
+        <span class="mx-auto" v-if="useError">
+          <p class="text-sm text-red-400">{{ errMessage }}</p>
+        </span>
       </form>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, unref, watchEffect } from "vue";
+import { ref, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 import { Requests } from "../../../scripts/Services";
 const { deletePost } = Requests;
-const Router = useRouter();
 
 //show states.
 let useDelete = ref(false);
 
-//input states.
-let deleteConst = ref("");
-
-//submit states.
+//input & submit states.
+let deleteConst = ref("word/");
 let loading = ref(false);
 let errMessage = ref("");
+let useError = ref(true);
 let ok_delete = ref(false);
 let fail_delete = ref(false);
 const ok_class = ref("text-green-600");
@@ -111,12 +115,10 @@ watchEffect(() => {
 
 //delete function.
 const removeWord = async () => {
-  await deletePost(
-    fail_delete,
-    loading,
-    deleteConst,
-    errMessage,
-    ok_delete,
-  );
+  try {
+    await deletePost(fail_delete, loading, deleteConst, errMessage, ok_delete)
+  } catch (err) {
+    useError = true;
+  }
 };
 </script>

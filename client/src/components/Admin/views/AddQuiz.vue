@@ -1,9 +1,9 @@
 <template>
   <div
-    class="flex flex-col items-center w-full md:w-1/2 h-full gap-6 p-4 md:mr-40 font-body"
+    class="flex flex-col items-center w-full h-full gap-6 p-4 md:w-1/2 md:mr-40 font-body"
   >
     <span
-      class="flex justify-between w-full md:w-3/5 overflow-hidden bg-blue-300 rounded-md mt-14"
+      class="flex justify-between w-full overflow-hidden text-sm bg-blue-300 rounded-md md:w-3/4 mt-14"
     >
       <button
         @click="formsToggle('showSearch')"
@@ -25,7 +25,7 @@
       v-if="useSearch"
     >
       <div
-        class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-2 text-gray-800 dark:text-slate-200 font-body"
+        class="flex flex-col justify-between gap-4 p-2 text-gray-800 md:flex-row md:items-center dark:text-slate-200 font-body"
       >
         <label for="english" class="px-2 text-lg">Quiz question</label>
         <input
@@ -39,7 +39,7 @@
         />
       </div>
       <div
-        class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-2 text-gray-800 dark:text-slate-200 font-body"
+        class="flex flex-col justify-between gap-4 p-2 text-gray-800 md:flex-row md:items-center dark:text-slate-200 font-body"
       >
         <label for="igbo" class="px-2 text-lg"> Right answer </label>
         <input
@@ -53,7 +53,7 @@
         />
       </div>
       <div
-        class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-2 text-gray-800 dark:text-slate-200 font-body"
+        class="flex flex-col justify-between gap-4 p-2 text-gray-800 md:flex-row md:items-center dark:text-slate-200 font-body"
       >
         <label for="igbo" class="px-2 text-lg"> Wrong answer </label>
         <input
@@ -131,7 +131,7 @@
       v-if="useDict"
     >
       <div
-        class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-2 text-gray-800 dark:text-slate-200 font-body"
+        class="flex flex-col justify-between gap-4 p-2 text-gray-800 md:flex-row md:items-center dark:text-slate-200 font-body"
       >
         <label for="english">Quiz question</label>
         <input
@@ -145,7 +145,7 @@
         />
       </div>
       <div
-        class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-2 text-gray-800 dark:text-slate-200 font-body"
+        class="flex flex-col justify-between gap-4 p-2 text-gray-800 md:flex-row md:items-center dark:text-slate-200 font-body"
       >
         <label for="igbo"> Right answer </label>
         <input
@@ -159,7 +159,7 @@
         />
       </div>
       <div
-        class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-2 text-gray-800 dark:text-slate-200 font-body"
+        class="flex flex-col justify-between gap-4 p-2 text-gray-800 md:flex-row md:items-center dark:text-slate-200 font-body"
       >
         <label for="igbo"> Wrong answer1 </label>
         <input
@@ -173,7 +173,7 @@
         />
       </div>
       <div
-        class="flex flex-col md:flex-row md:items-center justify-between gap-4 p-2 text-gray-800 dark:text-slate-200 font-body"
+        class="flex flex-col justify-between gap-4 p-2 text-gray-800 md:flex-row md:items-center dark:text-slate-200 font-body"
       >
         <label for="igbo"> Wrong answer2 </label>
         <input
@@ -260,6 +260,7 @@ let useSearch = ref(false);
 let useDict = ref(false);
 
 //submit states.
+let errMessage = ref("");
 let loading = ref(false);
 let ok_upload = ref(false);
 let fail_upload = ref(false);

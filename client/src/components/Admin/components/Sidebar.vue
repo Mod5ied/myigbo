@@ -18,6 +18,7 @@
           d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM14 11a1 1 0 011 1v1h1a1 1 0 110 2h-1v1a1 1 0 11-2 0v-1h-1a1 1 0 110-2h1v-1a1 1 0 011-1z"
         />
       </svg>
+      <p class="block text-xs md:hidden">Add</p>
     </button>
     <button
       @click="dispatch(Dispatch.update, true)"
@@ -39,6 +40,7 @@
           d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
         />
       </svg>
+      <p class="block text-xs md:hidden">Update</p>
     </button>
     <button
       @click="dispatch(Dispatch.delete, true)"
@@ -58,6 +60,7 @@
           clip-rule="evenodd"
         />
       </svg>
+      <p class="block text-xs md:hidden">Delete</p>
     </button>
     <button
       @click="dispatch(Dispatch.peek, true)"
@@ -75,6 +78,7 @@
           d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
         />
       </svg>
+      <p class="block text-xs md:hidden">Preview</p>
     </button>
     <button
       @click="dispatch(Dispatch.quiz, true)"
@@ -92,6 +96,7 @@
           d="M10 3.5a1.5 1.5 0 013 0V4a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-.5a1.5 1.5 0 000 3h.5a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-.5a1.5 1.5 0 00-3 0v.5a1 1 0 01-1 1H6a1 1 0 01-1-1v-3a1 1 0 00-1-1h-.5a1.5 1.5 0 010-3H4a1 1 0 001-1V6a1 1 0 011-1h3a1 1 0 001-1v-.5z"
         />
       </svg>
+      <p class="block text-xs md:hidden">Quiz</p>
     </button>
     <span class="side_span" @click="emergency = !emergency">
       <button class="bottom_bar_text" >Emergency config</button>
@@ -114,6 +119,7 @@
           d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
         />
       </svg>
+      <p class="block text-xs md:hidden">Config</p>
       <div
         class="absolute flex gap-4 p-2 border left-4 bottom-5"
         v-if="emergency"

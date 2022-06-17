@@ -1,16 +1,13 @@
 <template>
   <header
-    class="flex flex-row items-center justify-between w-full px-6 md:px-12 border-b border-gray-200 h-14 dark:border dark:border-slate-800 bg-gray-50 dark:bg-slate-900 font-body"
+    class="flex flex-row items-center justify-between w-full px-6 border-b border-gray-200 md:px-12 h-14 dark:border dark:border-slate-800 bg-gray-50 dark:bg-slate-900 font-body"
   >
     <section id="left">
       <h1 class="text-lg font-semibold dark:text-slate-300">
         IgboTrans Library
       </h1>
     </section>
-    <div
-      id="right"
-      class="admin_header_right"
-    >
+    <div id="right" class="admin_header_right">
       <router-link class="search-links" :to="{ name: 'Search' }"
         >Home</router-link
       >
@@ -60,6 +57,22 @@
           </i>
         </span>
       </section> -->
+    </div>
+    <div class="md:hidden">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-6 h-6 dark:text-slate-200 text-slate-600"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+        />
+      </svg>
     </div>
   </header>
 </template>

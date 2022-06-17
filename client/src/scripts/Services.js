@@ -82,14 +82,14 @@ class Requests {
     name,
     translation,
     genre,
-    constant
+    constant,
   ) => {
     try {
       fail.value = false;
       load.value = true;
       const newObj = Utilities.returnObject(name, translation, genre);
-      message.value = await createPosts(newObj, constant);
-      const { state, data } = message.value;
+      let res = await createPosts(newObj, constant);
+      const { state, data } = res;
       setTimeout(async () => {
         if (
           state
@@ -103,10 +103,8 @@ class Requests {
           ? ((load.value = false), (fail.value = true))
           : (fail.value = false),
         (message.value = err.message))
-      )
-        console.error({
-          message: `Error while uploading post: ${err.message}`,
-        });
+      );
+      //todo: should logger here.
     }
   };
 
@@ -114,6 +112,7 @@ class Requests {
     fail,
     load,
     ok,
+    err_message,
     question,
     right_answer,
     wrong_answer1,
@@ -129,8 +128,8 @@ class Requests {
         wrong_answer1,
         wrong_answer2
       );
-      await createQuiz(newObj);
-      const { state, data } = message.value;
+      const res = await createQuiz(newObj);
+      const { state, data } = res;
       setTimeout(async () => {
         if (
           state
@@ -143,11 +142,9 @@ class Requests {
         (!err.state
           ? ((load.value = false), (fail.value = true))
           : (fail.value = false),
-        (message.value = err.message))
-      )
-        console.error({
-          message: `Error while uploading post: ${err.message}`,
-        });
+        (err_message.value = err.message))
+      );
+      //todo: should logger here.
     }
   };
 
@@ -155,18 +152,12 @@ class Requests {
    * @param {string} ok @param {string} message  @param {string} load
    * @param {Function}use @param {string} del_con @param {string} fail
    */
-  static deletePost = async (
-    fail,
-    load,
-    del_con,
-    message,
-    ok,
-  ) => {
+  static deletePost = async (fail, load, del_con, message, ok) => {
     try {
       fail.value = false;
       load.value = true;
-      message.value = await deleteOnePost(del_con.value);
-      const { state, data } = message.value;
+      const res = await deleteOnePost(del_con.value);
+      const { state, data } = res;
       setTimeout(async () => {
         if (
           state
@@ -180,7 +171,8 @@ class Requests {
           ? ((load.value = false), (fail.value = true))
           : ((fail.value = false), (message.value = err.message))
       );
-      console.error({ message: `Error while removing ${err.message}` });
+      //todo: should logger here.
+      // console.error({ message: `Error while removing ${err.message}` });
     }
   };
   /**
