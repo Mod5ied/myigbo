@@ -8,6 +8,15 @@
       "problemMatcher": [],
       "label": "npm: dev - client",
       "detail": "vite"
+    },
+    {
+      "type": "npm",
+      "script": "test",
+      "path": "Api",
+      "group": "test",
+      "problemMatcher": [],
+      "label": "npm: test - Api",
+      "detail": "mocha --exit"
     }
   ]
 }

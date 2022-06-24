@@ -1,4 +1,11 @@
 {
   "cSpell.ignoreWords": ["allpost", "middlewares"],
-  "cSpell.words": ["btns", "Defi", "klass"]
+  "cSpell.words": [
+    "btns",
+    "Defi",
+    "enyi",
+    "klass",
+    "pino",
+    "savelog"
+  ]
 }

@@ -81,16 +81,54 @@
 // // console.log(p);
 
 //! how to handle the search for a word in JS, rather than multiple requests.
-const arrayWords = [
-  { name: "Woman", translation: "nwanyi", genre: "noun" },
-  { name: "Man", translation: "nwoke", genre: "noun" },
-  // { name: "Man", translation: "agadi-nwoke", genre: "noun" },
-  { name: "Human", translation: "mmadu", genre: "noun" },
-];
+// const arrayWords = [
+//   { name: "Woman", translation: "nwanyi", genre: "noun" },
+//   { name: "Man", translation: "nwoke", genre: "noun" },
+//   // { name: "Man", translation: "agadi-nwoke", genre: "noun" },
+//   { name: "Human", translation: "mmadu", genre: "noun" },
+// ];
 
-const matcher = () => {
-  const result = arrayWords.find((arr) => arr.name === "Man");
-  if (!result ? console.log("Its not found!") : console.log(result));
-};
+// const matcher = () => {
+//   const result = arrayWords.find((arr) => arr.name === "Man");
+//   if (!result ? console.log("Its not found!") : console.log(result));
+// };
 
-matcher();
+// //how to update a record using the spread operator.
+// const provide = () => {
+//   return { name: "Ogwuru", age: 22, height: 6.8, job: "developer" };
+// };
+
+// const useAffect = () => {
+//   const oldRecord = provide();
+//   const newRecord = { ...oldRecord, job: "engineer", age: 23 };
+//   console.log(newRecord);
+// };
+
+// const constant = {  };
+// let xy = Object.keys(constant);
+// console.log(xy.length <= 1);
+
+//! Sorry trial to handle network errors.
+// handleNetError = (errCode) => {
+//   const userError = [400, 401, 402, 403, 404];
+//   const serverError = [500, 501, 502, 503, 504];
+//   switch (errCode) {
+//     case errCode:
+//       if (userError.includes(errCode)) {
+//       }
+//     case errCode:
+//       if (serverError.includes(errCode)) {
+//       }
+//       break;
+
+//     default:
+//       break;
+//   }
+//   // if (userError.includes(errCode)) {
+//   //   console.log("it is 400:");
+//   // } else if (serverError.includes(errCode)) {
+//   //   console.log("it is 500:");
+//   // }
+// };
+
+// handleNetError(409);
