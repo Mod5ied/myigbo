@@ -168,7 +168,7 @@
           name="igbo"
           placeholder="Enter the answer"
           required
-          v-model="wrong_answer_one"
+          v-model="wrong_answer"
           class="dark_inputs"
         />
       </div>
@@ -182,7 +182,7 @@
           name="igbo"
           placeholder="Enter the answer"
           required
-          v-model="wrong_answer_two"
+          v-model="wrong_answer2"
           class="dark_inputs"
         />
       </div>
@@ -248,41 +248,77 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, watchEffect } from "vue";
+import { Requests } from "../../../scripts/Services";
+const { addNewQuiz } = Requests;
 
 //input states.
+let question = ref("");
 let right_answer = ref("");
 let wrong_answer = ref("");
-let question = ref("");
+let wrong_answer2 = ref("");
+
+watchEffect(() => {
+  question.value = question.value.toLowerCase();
+  right_answer.value = right_answer.value.toLowerCase();
+  wrong_answer.value = wrong_answer.value.toLowerCase();
+  wrong_answer2.value = wrong_answer2.value.toLowerCase();
+});
 
 //forms states.
 let useSearch = ref(false);
 let useDict = ref(false);
 
 //submit states.
-let errMessage = ref("");
-let loading = ref(false);
-let ok_upload = ref(false);
-let fail_upload = ref(false);
 const ok_class = ref("text-green-600");
 const fail_class = ref("text-red-500");
+let fail_upload = ref(false);
+let ok_upload = ref(false);
+let errMessage = ref("");
+let loading = ref(false);
 
 //dict submit handler.
-const handleDict = () => {};
+const handleDict = async (model = "") => {
+  return await addNewQuiz(
+    model,
+    fail_upload,
+    loading,
+    ok_upload,
+    question.value,
+    right_answer.value,
+    wrong_answer.value,
+    wrong_answer2.value
+  );
+};
 //search submit handler.
-const handleSearch = () => {};
+const handleWords = async (model = "") => {
+  return await addNewQuiz(
+    model,
+    fail_upload,
+    loading,
+    ok_upload,
+    question.value,
+    right_answer.value,
+    wrong_answer.value
+  );
+};
 
 //fn to submit the forms.
-const submitQuiz = (quizType) => {
+const submitQuiz = async (quizType) => {
   switch (quizType) {
     case "search":
-      break;
+      return handleWords("search")
+        .then()
+        .catch((err) => (errMessage.value = err));
+    // send to err handler and notify admin.
     case "dict":
-      break;
-
+      return handleDict("dict")
+        .then()
+        .catch((err) => (errMessage.value = err));
+    // send to err handler and notify admin.
     default:
-      return;
-      break;
+      return (errMessage.value = "An unknown error occurred");
+    // send to err handler and notify admin (An unknown error occurred).
   }
 };
 
@@ -290,18 +326,11 @@ const submitQuiz = (quizType) => {
 const formsToggle = (state) => {
   switch (state) {
     case "showDict":
-      useDict.value = !useDict.value;
-      useSearch.value = false;
-      break;
+      return (useDict.value = !useDict.value), (useSearch.value = false);
     case "showSearch":
-      useSearch.value = !useSearch.value;
-      useDict.value = false;
-      break;
-
+      return (useSearch.value = !useSearch.value), (useDict.value = false);
     default:
-      useSearch.value = false;
-      useDict.value = false;
-      break;
+      return (useSearch.value = false), (useDict.value = false);
   }
 };
 </script>

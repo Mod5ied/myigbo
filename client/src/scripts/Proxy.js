@@ -17,7 +17,7 @@ export class PostProxy {
         resolve(results);
         if (results.state == false) {
           throw new Error(results.state);
-          //! better hope this is really doing something...
+          //! better hope this is really doing something good...
         }
       } catch (err) {
         reject(err.message);
@@ -36,9 +36,9 @@ export class PostProxy {
     });
   };
   /**
-   *@params {allSearchQuiz} or {allDictQuiz}.
+   *@params {search} or {dict}.
    */
-  static getQuiz = async (quiz) => {
+  static getQuiz = async (quiz = "") => {
     return new Promise(async (resolve, reject) => {
       try {
         const res = await axios.get(`${url2}${quiz}`);
@@ -55,7 +55,7 @@ export class PostProxy {
   /**
    *@params {data}, @constant {word or dict}.
    */
-  static createPosts = async (data, constant) => {
+  static registerWord = async (data = {}, constant = "") => {
     return new Promise(async (resolve, reject) => {
       try {
         const res = await axios.post(`${url4}${constant}`, {
@@ -71,25 +71,25 @@ export class PostProxy {
     });
   };
   /**
-   *@params {data}, @constant {word or dict}.
+   *@params {data}, @constant {search or dict}.
    */
-  static createQuiz = async (data, constant) => {
+  static registerQuiz = async (data = {}, constant = "") => {
     return new Promise(async (resolve, reject) => {
       try {
         const res = await axios.post(`${url4}quiz/${constant}`, {
           question: data.question,
           answerRight: data.right_answer,
-          answerWrong1: data.wrong_answer1,
+          answerWrong1: data.wrong_answer,
           answerWrong2: data.wrong_answer2,
         });
         const results = await res.data;
         resolve(results);
       } catch (err) {
-        reject(err?.response?.data);
+        reject(err?.response.data);
       }
     });
   };
-  static batchUpload = async (data, constant) => {
+  static batchUpload = async (data = [], constant = "") => {
     return new Promise(async (resolve, reject) => {
       try {
         const res = await axios.post(`${url5}${constant}`, data);
@@ -100,36 +100,30 @@ export class PostProxy {
       }
     });
   };
-  // static batchUploadQuiz = async (data, constant) => {
-  //   return new Promise(async (resolve, reject) => {
-  //     try {
-  //       const res = await axios.post(`${url5}${constant}`, data);
-  //       const results = await res.data;
-  //       resolve(results);
-  //     } catch (err) {
-  //       reject(err?.response?.data);
-  //     }
-  //   });
-  // };
-  static deleteOnePost = async (constant) => {
-    //constant's form 👉 "category/name"
+  static deleteOnePost = async (constant = "", data) => {
     return new Promise(async (resolve, reject) => {
       try {
-        const res = await axios.delete(`${url7}${constant}`);
+        const res = await axios.delete(`${url7}${constant}`, {
+          data: { name: data },
+        });
         const results = await res.data;
         resolve(results);
       } catch (err) {
-        reject(err);
+        reject(err.response.data);
       }
     });
   };
   //! sends data in its request body rather than the params object.
-  static updatePost = async (name, data) => {
+  static updatePost = async (constant, data) => {
     return new Promise(async (resolve, reject) => {
       try {
-        const res = await axios.patch(`${url6}${name}`, {
+        const res = await axios.patch(`${url6}${constant}`, {
+          name: data.name,
           translation: data.translation,
           genre: data.genre,
+          definitions: data?.definitions,
+          adjectives: data?.adjectives,
+          synonyms: data?.synonyms,
         });
         const results = await res.data;
         resolve(results);

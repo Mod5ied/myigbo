@@ -6,29 +6,31 @@
       class="flex justify-between w-full overflow-hidden text-sm bg-blue-300 rounded-md md:w-3/4 mt-14"
     >
       <button
-        @click="formsToggle('showGenre')"
+        @click="formsToggle('showRecords')"
         class="w-1/2 px-6 font-bold text-gray-100 bg-blue-500"
       >
-        Update genre
+        Words/Records
       </button>
       <button
-        @click="formsToggle('showTrans')"
+        @click="formsToggle('showQuiz')"
         class="w-1/2 p-2 font-bold text-gray-50"
       >
-        Update translations
+        Quizzes
       </button>
     </span>
     <!-- forms1(genre) here👇 -->
     <form
-      @submit.prevent="updateGenre"
-      class="flex flex-col justify-around w-full gap-3 p-6 border rounded-lg dark:bg-slate-900 dark:border-slate-700 bg-gray-50 h-2/4"
-      v-if="showGenre"
+      @submit.prevent="updateRecords"
+      class="patch_forms h-3/5"
+      v-if="showRecords"
     >
       <div
         class="flex flex-col justify-start w-full gap-6 text-gray-800 dark:text-slate-200 font-body"
       >
-        <span class="flex flex-col justify-between gap-4 p-2 md:flex-row md:items-center">
-          <label for="patchName" class="px-2 text-lg">Enter the word</label>
+        <span
+          class="flex flex-col justify-between gap-4 p-2 md:flex-row md:items-center"
+        >
+          <label for="patchName" class="px-2">Enter the word</label>
           <input
             type="text"
             placeholder="English word only!"
@@ -37,8 +39,22 @@
             class="dark_inputs"
           />
         </span>
-        <span class="flex flex-col justify-between gap-4 p-2 md:flex-row md:items-center">
-          <label for="patchGenre" class="px-2 text-lg">New Genre</label>
+        <span
+          class="flex flex-col justify-between gap-4 p-2 md:flex-row md:items-center"
+        >
+          <label for="patchGenre" class="px-2">New Translation?</label>
+          <input
+            type="text"
+            placeholder="e.g: Medicals(Noun)"
+            v-model.trim="patchTranslation"
+            required
+            class="dark_inputs"
+          />
+        </span>
+        <span
+          class="flex flex-col justify-between gap-4 p-2 md:flex-row md:items-center"
+        >
+          <label for="patchGenre" class="px-2">New Genre?</label>
           <input
             type="text"
             placeholder="e.g: Medicals(Noun)"
@@ -105,35 +121,96 @@
             </svg>
           </i>
         </button>
+        <div
+          @click="useDropdown = !useDropdown"
+          class="patch_dropdown"
+          title="Selects the category to update"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-6 h-6 hover:text-blue-700"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </div>
+        <div v-if="useDropdown" class="use_dropdown">
+          <button
+            @click="dispatch('word')"
+            class="use_buttons"
+            title="Updates a simple word's translations"
+          >
+            Word
+          </button>
+          <button
+            @click="dispatch('dict')"
+            class="border-t use_buttons border-slate-500 dark:border-slate-300"
+            title="Updates the dictionary record"
+          >
+            Dictionary
+          </button>
+        </div>
       </span>
     </form>
     <!-- forms2(defs here 👇 -->
     <form
-      @submit.prevent="updateTranslation"
-      class="flex flex-col justify-around w-full gap-3 p-6 border rounded-lg dark:bg-slate-900 dark:border-slate-700 bg-gray-50 h-2/4"
-      v-if="showTrans"
+      @submit.prevent="updateQuizzes"
+      class="patch_forms h-3/4"
+      v-if="showQuiz"
     >
       <div
         class="flex flex-col justify-start w-full gap-6 text-gray-800 dark:text-slate-200 font-body"
       >
-        <span class="flex flex-col justify-between gap-4 p-2 md:flex-row md:items-center">
-          <label for="patchName" class="px-2 text-lg">Enter the word</label>
+        <span
+          class="flex flex-col justify-between gap-4 p-2 md:flex-row md:items-center"
+        >
+          <label for="patchName" class="px-2">Enter quiz code</label>
           <input
             type="text"
-            placeholder="English word only!"
-            v-model.trim="patchName"
+            placeholder="Quiz code"
+            v-model.trim="quizCode"
             required
             class="dark_inputs"
           />
         </span>
 
-        <span class="flex flex-col justify-between gap-4 p-2 md:flex-row md:items-center">
-          <label for="patchGenre" class="px-2 text-lg">New Definition</label>
+        <span
+          class="flex flex-col justify-between gap-4 p-2 md:flex-row md:items-center"
+        >
+          <label for="patchGenre" class="px-2">New answer?</label>
           <input
             type="text"
-            placeholder="New Definition here"
-            v-model.trim="patchTranslation"
-            required
+            placeholder="New Answer here"
+            v-model.trim="quizRight"
+            class="dark_inputs"
+          />
+        </span>
+        <span
+          class="flex flex-col justify-between gap-4 p-2 md:flex-row md:items-center"
+        >
+          <label for="patchGenre" class="px-2">New wrong1?</label>
+          <input
+            type="text"
+            placeholder="New wrong here"
+            v-model.trim="quizWrong"
+            class="dark_inputs"
+          />
+        </span>
+        <span
+          class="flex flex-col justify-between gap-4 p-2 md:flex-row md:items-center"
+        >
+          <label for="patchGenre" class="px-2">New wrong2?</label>
+          <input
+            type="text"
+            placeholder="Another wrong here"
+            v-model.trim="quizWrong2"
             class="dark_inputs"
           />
         </span>
@@ -194,6 +271,42 @@
             </svg>
           </i>
         </button>
+        <div
+          @click="useDropdown = !useDropdown"
+          class="patch_dropdown"
+          title="Selects the category to update"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-6 h-6 hover:text-blue-700"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </div>
+        <div v-if="useDropdown" class="use_dropdown">
+          <button
+            @click="dispatch('quiz/search')"
+            class="use_buttons"
+            title="Updates a simple word's translations"
+          >
+            Word
+          </button>
+          <button
+            @click="dispatch('quiz/dict')"
+            class="border-t use_buttons border-slate-500 dark:border-slate-300"
+            title="Updates the dictionary record"
+          >
+            Dictionary
+          </button>
+        </div>
       </span>
     </form>
   </div>
@@ -201,27 +314,32 @@
 
 <script setup>
 import { ref, watchEffect } from "vue";
-import { useRouter } from "vue-router";
 import { Requests, OfflineStorage } from "../../../scripts/Services";
 const { patchPost } = Requests;
-const Router = useRouter();
 
 //forms state.
-let showTrans = ref(false);
-let showGenre = ref(false);
+let showQuiz = ref(false);
+let showRecords = ref(false);
+let useDropdown = ref(false);
 
 //inputs state.
 let patchName = ref("");
 let patchGenre = ref("");
 let patchTranslation = ref("");
 
+let quizCode = ref(null);
+let quizRight = ref("");
+let quizWrong = ref("");
+let quizWrong2 = ref("");
+
 //submit states.
-let ok_patch = ref(false);
+const fail_class = ref("text-red-500");
+const ok_class = ref("text-green-600");
 let fail_patch = ref(false);
+let useConstant = ref("");
+let ok_patch = ref(false);
 let loading = ref(false);
 let errMessage = ref("");
-const ok_class = ref("text-green-600");
-const fail_class = ref("text-red-500");
 
 //watcher to lowercase input-states values.
 watchEffect(() => {
@@ -233,42 +351,65 @@ watchEffect(() => {
 //fn to toggle forms states.
 const formsToggle = (state) => {
   switch (state) {
-    case "showGenre":
-      showGenre.value = !showGenre.value;
-      showTrans.value = false;
+    case "showRecords":
+      showRecords.value = !showRecords.value;
+      showQuiz.value = false;
       break;
-    case "showTrans":
-      showTrans.value = !showTrans.value;
-      showGenre.value = false;
+    case "showQuiz":
+      showQuiz.value = !showQuiz.value;
+      showRecords.value = false;
       break;
     default:
-      showTrans.value = false;
-      showGenre.value = false;
+      showQuiz.value = !showQuiz.value;
+      showRecords.value = false;
+      break;
+  }
+};
+//fn to toggle dropdown.
+const dispatch = (constant) => {
+  switch (constant) {
+    case "word":
+      useDropdown.value = !useDropdown.value;
+      useConstant.value = constant;
+      break;
+    case "dict":
+      useDropdown.value = !useDropdown.value;
+      useConstant.value = constant;
+      break;
+    case "quiz/search":
+      useDropdown.value = !useDropdown.value;
+      useConstant.value = constant;
+      break;
+    default:
       break;
   }
 };
 
 //fns to submit and update.
-const updateGenre = async () => {
+const updateRecords = async () => {
   await patchPost(
-    fail_patch,
-    ok_patch,
-    loading,
-    errMessage,
-    patchName,
-    patchGenre,
-    Router
+    fail_patch.value,
+    ok_patch.value,
+    loading.value,
+    errMessage.value,
+    patchName.value,
+    patchGenre.value,
+    patchTranslation.value,
+    "",
+    "",
+    "",
+    "",
+    useConstant
   );
 };
-const updateTranslation = async () => {
+const updateQuizzes = async () => {
   await patchPost(
-    fail_patch,
-    ok_patch,
-    loading,
-    errMessage,
-    patchName,
-    patchTranslation,
-    Router
+    fail_patch.value,
+    ok_patch.value,
+    loading.value,
+    errMessage.value,
+    patchName.value,
+    patchTranslation.value
   );
 };
 </script>

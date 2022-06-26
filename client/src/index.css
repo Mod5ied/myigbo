@@ -103,9 +103,8 @@
   @apply items-center justify-around hidden w-1/5 gap-1 p-2 mb-4 text-center border rounded-lg md:flex md:w-3/5 bg-slate-200 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300 border-slate-300 text-slate-600;
 }
 .bottom_bar_text {
-  @apply hidden md:block
+  @apply hidden md:block;
 }
-
 
 /* Admin page, Add quiz dark-theme input styles */
 .dark_inputs {
@@ -122,6 +121,12 @@
 .delete_btn {
   @apply p-2 text-sm text-gray-700 transition duration-300 bg-transparent border-2 border-gray-100 rounded-md cursor-pointer md:text-base dark:text-slate-300 w-44 dark:border-slate-700 md:font-semibold font-body hover:bg-gray-200 dark:hover:bg-slate-800;
 }
+.delete_section_span {
+  @apply text-sm text-slate-600 dark:text-slate-500 hover:dark:text-slate-300 hover:dark:border-b;
+}
+.delete_section_span_active {
+  @apply text-sm border-b text-slate-600 dark:text-slate-500 hover:dark:text-slate-300 dark:border-b;
+}
 
 /* Error card styling */
 .error-card {
@@ -129,6 +134,20 @@
 }
 .dict-error-card {
   @apply relative w-2/3 m-auto mt-20 text-sm border-2 border-red-500 bottom-16 md:bottom-16 dark:bg-slate-900 dict-cards;
+}
+
+/* Patch area */
+.patch_forms {
+  @apply flex flex-col justify-around w-full gap-3 p-6 border rounded-lg dark:bg-slate-900 dark:border-slate-700 bg-gray-50;
+}
+.use_dropdown {
+  @apply absolute mt-36 md:mt-24 ml-52 md:right-96 w-1/4 md:w-36 flex flex-col rounded border-2 border-slate-300 dark:border-slate-500
+}
+.use_buttons {
+  @apply bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-300 hover:bg-slate-300 dark:hover:bg-slate-800;
+}
+.patch_dropdown {
+  @apply border-2 rounded-sm border-slate-300 dark:border-slate-500 text-slate-400 dark:text-slate-500;
 }
 
 /* transition */

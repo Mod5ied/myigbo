@@ -6,8 +6,8 @@ const { getState, useSwitch } = StateProxy;
 const {
   getWords,
   getDicts,
-  createPosts,
-  createQuiz,
+  registerWord,
+  registerQuiz,
   batchUpload,
   updatePost,
   deleteOnePost,
@@ -15,11 +15,11 @@ const {
 
 class Requests {
   /**
-   * @param {string} ok @param {string} serve @param {Array} store @param {string} ok
-   * @param {Function}get @param {string} fail
+   * @param {string} ok @param {string} serve @param {Array}
+   * store @param {string} store @param {string} fail
    */
   static fetchAllPost = async (ok, serve, store, fail) => {
-    let post_data;
+    let response;
     try {
       ok.value = false;
       serve.value = true;
@@ -27,12 +27,12 @@ class Requests {
       setTimeout(async () => {
         store.value = await getWords();
         let { state, data } = store.value;
-        post_data = data;
         if (
           state
             ? ((serve.value = false), (ok.value = true))
             : ((ok.value = false), (serve.value = false), (fail.value = true))
         );
+        return (response = data);
       }, 2000);
     } catch (err) {
       if (
@@ -40,10 +40,9 @@ class Requests {
           ? ((serve.value = false), (fail.value = true))
           : (fail.value = false)
       );
-      //! get this console outta here ASAP!
-      console.error({ message: `Error while getting posts: ${err.state}` });
+      return (response = "Error while fetching data");
+      //todo: /* use a logger here instead to get err-message. */
     }
-    return post_data;
   };
 
   static fetchWords = async () => {
@@ -51,21 +50,22 @@ class Requests {
     try {
       const store = await getWords();
       let { state, data } = store;
-      response = data;
+      return (response = data);
     } catch (err) {
-      throw Error("Error while getting words");
-      /* can also log here */
+      return (response = "Error while fetching words");
+      //todo: /* use a logger here instead to get err-message. */
     }
-    return response;
   };
 
-  static fetchDictionary = async () => {
+  static fetchDictionary = async (msg = "") => {
     let response;
     try {
       const store = await getDicts();
       let { state, data } = store;
+      response = data;
     } catch (err) {
-      throw Error("Error while getting dictionary records");
+      return (msg = "Error while fetching records");
+      //todo: /* use a logger here instead to get err-message. */
     }
   };
 
@@ -82,13 +82,13 @@ class Requests {
     name,
     translation,
     genre,
-    constant,
+    constant
   ) => {
     try {
       fail.value = false;
       load.value = true;
       const newObj = Utilities.returnObject(name, translation, genre);
-      let res = await createPosts(newObj, constant);
+      let res = await registerWord(newObj, constant);
       const { state, data } = res;
       setTimeout(async () => {
         if (
@@ -102,33 +102,34 @@ class Requests {
         (!err.state
           ? ((load.value = false), (fail.value = true))
           : (fail.value = false),
-        (message.value = err.message))
+        (message.value = "Error occurred while uploading word"))
       );
-      //todo: should logger here.
+      //todo: should logger here, err-message must not go to user!
     }
   };
 
   static addNewQuiz = async (
+    constant,
     fail,
     load,
     ok,
-    err_message,
     question,
     right_answer,
-    wrong_answer1,
-    wrong_answer2
-    // router
+    wrong_answer,
+    wrong_answer2 = ""
   ) => {
+    let response;
     try {
       fail.value = false;
       load.value = true;
-      const newObj = Utilities.returnObject(
+      const newObj = {
+        constant,
         question,
         right_answer,
-        wrong_answer1,
-        wrong_answer2
-      );
-      const res = await createQuiz(newObj);
+        wrong_answer,
+        wrong_answer2,
+      };
+      const res = await registerQuiz(newObj, constant);
       const { state, data } = res;
       setTimeout(async () => {
         if (
@@ -136,27 +137,26 @@ class Requests {
             ? ((load.value = false), (ok.value = true))
             : ((load.value = false), (ok.value = false))
         );
+        return (response = res);
       }, 2000);
     } catch (err) {
-      if (
-        (!err.state
-          ? ((load.value = false), (fail.value = true))
-          : (fail.value = false),
-        (err_message.value = err.message))
-      );
+      load.value = false;
+      fail.value = true;
+      response = err.message;
       //todo: should logger here.
     }
+    return response;
   };
 
   /**
    * @param {string} ok @param {string} message  @param {string} load
    * @param {Function}use @param {string} del_con @param {string} fail
    */
-  static deletePost = async (fail, load, del_con, message, ok) => {
+  static deletePost = async (fail, load, del_con, message, ok, payload) => {
     try {
       fail.value = false;
       load.value = true;
-      const res = await deleteOnePost(del_con.value);
+      const res = await deleteOnePost(del_con.value, payload.value);
       const { state, data } = res;
       setTimeout(async () => {
         if (
@@ -166,26 +166,40 @@ class Requests {
         );
       }, 2000);
     } catch (err) {
-      if (
-        !err.state
-          ? ((load.value = false), (fail.value = true))
-          : ((fail.value = false), (message.value = err.message))
+      if (!err || err == null) {
+        return `An unknown error occurred`;
+      }
+      return (
+        (load.value = false), (fail.value = true), (message.value = err.message)
       );
       //todo: should logger here.
-      // console.error({ message: `Error while removing ${err.message}` });
     }
   };
   /**
-   * @param {string} ok @param {string} message  @param {string} load
-   * @param {string} nom @param {string} genre @param {string} fail
+   * @param {string} ok @param {string} message
+   * @param {string} fail @param {string} load
    */
-  static patchPost = async (fail, ok, load, message, nom, genre) => {
+  static patchPost = async (
+    fail,
+    ok,
+    load,
+    message,
+    name = "",
+    genre = "",
+    translation = "",
+    code = 0,
+    right = "",
+    wrong1 = "",
+    wrong2 = "",
+    constant = ""
+  ) => {
     try {
       fail.value = false;
       load.value = true;
-      message.value = await updatePost(nom.value, genre.value);
+      const newObj = { name, translation, genre, code, right, wrong1, wrong2 };
+      console.log(newObj);
+      message.value = await updatePost(constant, newObj);
       const { state, data } = message.value;
-
       setTimeout(async () => {
         if (
           state
@@ -194,13 +208,15 @@ class Requests {
         );
       }, 2000);
     } catch (err) {
-      if (
-        !err.state
-          ? ((load.value = false), (fail.value = true))
-          : ((fail.value = false), (message.value = err.message))
+      if (!err) {
+        return `An unknown error occurred`;
+      }
+      return (
+        (load.value = false), (fail.value = true), (message.value = err.message)
       );
     }
   };
+
   //!! TO BE Deprecated pre-production!
   static useRefreshStore = (all, Router) => {
     all.length = 0;
@@ -368,7 +384,10 @@ class OfflineStorage {
     }
     return response ?? false;
   };
-  static pushToCloud = async () => {
+  /**
+   * @params [words, dict, search, record]
+   */
+  static pushToCloud = async (constant = "", msg = "") => {
     let response;
     let payload;
     const onlineState = await getState();
@@ -376,16 +395,19 @@ class OfflineStorage {
       if (
         onlineState === true
           ? ((payload = await get("offlineData")),
-            (response = await batchUpload(payload)),
+            (response = await batchUpload(payload, constant)),
+            (msg = `Offline data has been synchronized`),
             await del("offlineData"))
-          : console.log({ message: `No internet connection to sync data` })
+          : (console.log({ message: `No internet connection to sync data` }),
+            (msg = `No internet connection to sync data`))
       );
     } catch (err) {
-      //todo: /* use a logger here instead, and display error to user. */
-      console.error({
-        message: `Error occurred while pushing to cloud`,
-        details: `${err.message}`,
-      });
+      //todo: /* use a logger here instead to get err-message. */
+      msg = `Error occurred while pushing to cloud`;
+      // console.error({
+      //   message: `Error occurred while pushing to cloud`,
+      //   details: `${err.message}`,
+      // });
     }
     return response ?? false;
   };

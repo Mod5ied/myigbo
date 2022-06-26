@@ -3,9 +3,43 @@
     class="flex flex-col items-center w-full h-full gap-1 p-4 md:w-1/2 md:mr-40"
   >
     <div class="delete_body">
-      <h2 class="delete_btn" @click="useDelete = !useDelete">
-        Delete a Word Here:
-      </h2>
+      <div class="flex flex-col justify-between gap-2 md:flex-row md:gap-0">
+        <h2 class="delete_btn" @click="useDelete = !useDelete">
+          Delete a Word Here:
+        </h2>
+        <span
+          class="flex items-center justify-between md:w-1/2"
+          v-if="useDelete"
+        >
+          <button
+            :class="
+              useWord ? 'delete_section_span_active' : 'delete_section_span'
+            "
+            @click="dispatch('word')"
+          >
+            Word
+          </button>
+          <button
+            :class="
+              useDict ? 'delete_section_span_active' : 'delete_section_span'
+            "
+            @click="dispatch('dict')"
+          >
+            Dictionary
+          </button>
+          <button
+            :class="
+              useQuiz ? 'delete_section_span_active' : 'delete_section_span'
+            "
+            @click="dispatch('quiz/search')"
+          >
+            Quizzes
+          </button>
+          <!-- <button class="delete_section_span" @click="useInput('quiz/dict')">
+            Quizzes(dict)
+          </button> -->
+        </span>
+      </div>
       <form
         @submit.prevent="removeWord"
         class="flex flex-col w-full gap-3 mb-5 h-1/2"
@@ -20,7 +54,7 @@
           <input
             type="text"
             placeholder="English words only!"
-            v-model.trim="deleteConst"
+            v-model.trim="input"
             required
             class="dark_inputs"
           />
@@ -91,7 +125,6 @@
 
 <script setup>
 import { ref, watchEffect } from "vue";
-import { useRouter } from "vue-router";
 import { Requests } from "../../../scripts/Services";
 const { deletePost } = Requests;
 
@@ -99,26 +132,68 @@ const { deletePost } = Requests;
 let useDelete = ref(false);
 
 //input & submit states.
-let deleteConst = ref("word/");
-let loading = ref(false);
-let errMessage = ref("");
-let useError = ref(true);
-let ok_delete = ref(false);
-let fail_delete = ref(false);
 const ok_class = ref("text-green-600");
 const fail_class = ref("text-red-500");
+let deleteConst = ref("");
+let fail_delete = ref(false);
+let ok_delete = ref(false);
+let loading = ref(false);
+let useError = ref(true);
+let errMessage = ref("");
+let useDict = ref(false);
+let useWord = ref(false);
+let useQuiz = ref(false);
+let input = ref("");
 
 //watcher to lowercase input state.
 watchEffect(() => {
+  input.value = input.value.toLowerCase();
   deleteConst.value = deleteConst.value.toLowerCase();
 });
 
 //delete function.
 const removeWord = async () => {
   try {
-    await deletePost(fail_delete, loading, deleteConst, errMessage, ok_delete)
+    await deletePost(
+      fail_delete,
+      loading,
+      deleteConst,
+      errMessage,
+      ok_delete,
+      input
+    );
   } catch (err) {
     useError = true;
+  }
+};
+
+// input constant toggler.
+const useInput = (constant) => {
+  deleteConst.value = `${constant}/`;
+};
+
+const dispatch = (constant) => {
+  switch (constant) {
+    case "word":
+      useInput(constant);
+      useWord.value = true;
+      useDict.value = false;
+      useQuiz.value = false;
+      break;
+    case "dict":
+      useInput(constant);
+      useDict.value = true;
+      useWord.value = false;
+      useQuiz.value = false;
+      break;
+    case "quiz/search":
+      useInput(constant);
+      useQuiz.value = true;
+      useDict.value = false;
+      useWord.value = false;
+      break;
+    default:
+      break;
   }
 };
 </script>
