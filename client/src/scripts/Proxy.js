@@ -20,7 +20,7 @@ export class PostProxy {
           //! better hope this is really doing something good...
         }
       } catch (err) {
-        reject(err.message);
+        reject(err.response.data);
       }
     });
   };
@@ -31,7 +31,7 @@ export class PostProxy {
         const results = await res.data;
         resolve(results);
       } catch (err) {
-        reject(err.message);
+        reject(err.response.data);
       }
     });
   };
@@ -48,7 +48,7 @@ export class PostProxy {
           throw new Error(results.state);
         }
       } catch (err) {
-        reject(err);
+        reject(err.response.data);
       }
     });
   };
@@ -128,7 +128,7 @@ export class PostProxy {
         const results = await res.data;
         resolve(results);
       } catch (err) {
-        reject(err);
+        reject(err.response.data);
       }
     });
   };

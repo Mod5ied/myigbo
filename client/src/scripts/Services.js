@@ -16,40 +16,33 @@ const {
 class Requests {
   /**
    * @param {string} ok @param {string} serve @param {Array}
-   * store @param {string} store @param {string} fail
+   * store @param {string} store @param {string} fail @param {string} constant
    */
-  static fetchAllPost = async (ok, serve, store, fail) => {
+  static fetchWords = async (ok, serve, store, fail) => {
     let response;
     try {
       ok.value = false;
       serve.value = true;
-
       setTimeout(async () => {
-        store.value = await getWords();
-        let { state, data } = store.value;
-        if (
-          state
-            ? ((serve.value = false), (ok.value = true))
-            : ((ok.value = false), (serve.value = false), (fail.value = true))
-        );
-        return (response = data);
+        const { state, data } = await getWords();
+        if (!state) {
+          (ok.value = false), (serve.value = false), (fail.value = true);
+          throw new Error("No data found");
+        }
+        return (serve.value = false), (ok.value = true), (store.value = data);
       }, 2000);
     } catch (err) {
-      if (
-        !err.state
-          ? ((serve.value = false), (fail.value = true))
-          : (fail.value = false)
-      );
-      return (response = "Error while fetching data");
+      serve = false;
+      fail = true;
+      return (response = err.message || "Error while fetching data");
       //todo: /* use a logger here instead to get err-message. */
     }
   };
 
-  static fetchWords = async () => {
+  static fetchAllWords = async () => {
     let response;
     try {
-      const store = await getWords();
-      let { state, data } = store;
+      const { state, data } = await getWords();
       return (response = data);
     } catch (err) {
       return (response = "Error while fetching words");
@@ -57,14 +50,24 @@ class Requests {
     }
   };
 
-  static fetchDictionary = async (msg = "") => {
+  static fetchDictionary = async (ok, serve, store, fail) => {
     let response;
     try {
-      const store = await getDicts();
-      let { state, data } = store;
-      response = data;
+      ok.value = false;
+      serve.value = true;
+      setTimeout(async () => {
+        const res = await getDicts();
+        let { state, data } = res;
+        if (!state) {
+          (serve.value = false), (ok.value = false), (fail.value = true);
+          throw new Error("No data found");
+        }
+        return (store.value = data), (ok.value = true), (serve.value = false);
+      }, 2000);
     } catch (err) {
-      return (msg = "Error while fetching records");
+      serve.value = false;
+      fail.value = true;
+      return (response = err.message || "Error while fetching data");
       //todo: /* use a logger here instead to get err-message. */
     }
   };
@@ -87,7 +90,7 @@ class Requests {
     try {
       fail.value = false;
       load.value = true;
-      const newObj = Utilities.returnObject(name, translation, genre);
+      const newObj = { name, translation, genre };
       let res = await registerWord(newObj, constant);
       const { state, data } = res;
       setTimeout(async () => {
@@ -98,12 +101,9 @@ class Requests {
         );
       }, 2000);
     } catch (err) {
-      if (
-        (!err.state
-          ? ((load.value = false), (fail.value = true))
-          : (fail.value = false),
-        (message.value = "Error occurred while uploading word"))
-      );
+      load.value = false;
+      fail.value = true;
+      message.value = err.message || "Error occurred while uploading word";
       //todo: should logger here, err-message must not go to user!
     }
   };
@@ -166,12 +166,9 @@ class Requests {
         );
       }, 2000);
     } catch (err) {
-      if (!err || err == null) {
-        return `An unknown error occurred`;
-      }
-      return (
-        (load.value = false), (fail.value = true), (message.value = err.message)
-      );
+      load.value = false;
+      fail.value = true;
+      return (message.value = err.message);
       //todo: should logger here.
     }
   };
@@ -187,6 +184,7 @@ class Requests {
     name = "",
     genre = "",
     translation = "",
+    definitions = "",
     code = 0,
     right = "",
     wrong1 = "",
@@ -196,8 +194,16 @@ class Requests {
     try {
       fail.value = false;
       load.value = true;
-      const newObj = { name, translation, genre, code, right, wrong1, wrong2 };
-      console.log(newObj);
+      const newObj = {
+        name,
+        translation,
+        genre,
+        definitions,
+        code,
+        right,
+        wrong1,
+        wrong2,
+      };
       message.value = await updatePost(constant, newObj);
       const { state, data } = message.value;
       setTimeout(async () => {
@@ -208,12 +214,10 @@ class Requests {
         );
       }, 2000);
     } catch (err) {
-      if (!err) {
-        return `An unknown error occurred`;
-      }
-      return (
-        (load.value = false), (fail.value = true), (message.value = err.message)
-      );
+      load.value = false;
+      fail.value = true;
+      return (message.value = err.message);
+      //todo: should logger here.
     }
   };
 
@@ -225,37 +229,6 @@ class Requests {
 }
 
 class Utilities {
-  /**
-   * @returns A new object
-   * @param {string} translation @param {string} genre @param {string} name
-   */
-  static returnObject = (name, translation, genre) => {
-    let newObj = {
-      name,
-      translation,
-      genre,
-    };
-    return newObj;
-  };
-
-  /** @param {string} data  */
-  //!! TO BE Deprecated pre-production!
-  static returnSwitch = async (data, l_load, l_loaded, c_load, c_loaded) => {
-    l_load = data !== "local" ? false : true;
-    c_load = data !== "cloud" ? false : true;
-    try {
-      const res = await useSwitch(data);
-      if (res !== true ? (l_loaded = false) : (l_load = true));
-      if (res !== true ? (c_loaded = false) : (c_load = true));
-      //   c_loaded = res !== true ? (false, c_load) : (true, c_load);
-    } catch (err) {
-      console.error({
-        message: "Error switching databases",
-        detail: err.message,
-      });
-    }
-  };
-
   //!! TO BE Deprecated pre-production!
   /**
    * @param {string} key @param {boolean} value

@@ -18,10 +18,10 @@
         Quizzes
       </button>
     </span>
-    <!-- forms1(genre) here👇 -->
+    <!-- forms1(Records) here👇 -->
     <form
       @submit.prevent="updateRecords"
-      class="patch_forms h-3/5"
+      class="patch_forms h-3/4"
       v-if="showRecords"
     >
       <div
@@ -33,7 +33,7 @@
           <label for="patchName" class="px-2">Enter the word</label>
           <input
             type="text"
-            placeholder="English word only!"
+            placeholder="english word only!"
             v-model.trim="patchName"
             required
             class="dark_inputs"
@@ -45,9 +45,8 @@
           <label for="patchGenre" class="px-2">New Translation?</label>
           <input
             type="text"
-            placeholder="e.g: Medicals(Noun)"
+            placeholder="new translation here"
             v-model.trim="patchTranslation"
-            required
             class="dark_inputs"
           />
         </span>
@@ -59,7 +58,17 @@
             type="text"
             placeholder="e.g: Medicals(Noun)"
             v-model.trim="patchGenre"
-            required
+            class="dark_inputs"
+          />
+        </span>
+        <span
+          class="flex flex-col justify-between gap-4 p-2 md:flex-row md:items-center"
+        >
+          <label for="patchGenre" class="px-2">New Definitions?</label>
+          <input
+            type="text"
+            placeholder="new definitions here"
+            v-model.trim="patchDefinitions"
             class="dark_inputs"
           />
         </span>
@@ -128,7 +137,7 @@
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="w-6 h-6 hover:text-blue-700"
+            class="w-6 h-6 text-blue-700"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -141,7 +150,7 @@
             />
           </svg>
         </div>
-        <div v-if="useDropdown" class="use_dropdown">
+        <div v-if="useDropdown" class="use_dropdown_patch">
           <button
             @click="dispatch('word')"
             class="use_buttons"
@@ -151,15 +160,18 @@
           </button>
           <button
             @click="dispatch('dict')"
-            class="border-t use_buttons border-slate-500 dark:border-slate-300"
+            class="border-t use_buttons border-slate-500 dark:border-slate-400"
             title="Updates the dictionary record"
           >
             Dictionary
           </button>
         </div>
       </span>
+      <span class="mx-auto" v-if="useError">
+        <p class="text-sm text-red-400">{{ errMessage }}</p>
+      </span>
     </form>
-    <!-- forms2(defs here 👇 -->
+    <!-- forms2 (Quizzes) 👇 -->
     <form
       @submit.prevent="updateQuizzes"
       class="patch_forms h-3/4"
@@ -241,13 +253,14 @@
             </svg>
           </i>
           <!-- loaded state -->
-          <i class="flex flex-row items-center" v-if="ok_patch">
+          <i class="flex flex-row items-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="w-5 h-5"
               viewBox="0 0 20 20"
               fill="currentColor"
               :class="ok_class"
+              v-if="ok_patch"
             >
               <path
                 fill-rule="evenodd"
@@ -278,7 +291,7 @@
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="w-6 h-6 hover:text-blue-700"
+            class="w-6 h-6 text-blue-700"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -291,7 +304,7 @@
             />
           </svg>
         </div>
-        <div v-if="useDropdown" class="use_dropdown">
+        <div v-if="useDropdown" class="use_dropdown_patch">
           <button
             @click="dispatch('quiz/search')"
             class="use_buttons"
@@ -301,12 +314,15 @@
           </button>
           <button
             @click="dispatch('quiz/dict')"
-            class="border-t use_buttons border-slate-500 dark:border-slate-300"
+            class="border-t use_buttons border-slate-500 dark:border-slate-400"
             title="Updates the dictionary record"
           >
             Dictionary
           </button>
         </div>
+      </span>
+      <span class="mx-auto" v-if="useError">
+        <p class="text-sm text-red-400">{{ errMessage }}</p>
       </span>
     </form>
   </div>
@@ -326,6 +342,7 @@ let useDropdown = ref(false);
 let patchName = ref("");
 let patchGenre = ref("");
 let patchTranslation = ref("");
+let patchDefinitions = ref("");
 
 let quizCode = ref(null);
 let quizRight = ref("");
@@ -340,12 +357,14 @@ let useConstant = ref("");
 let ok_patch = ref(false);
 let loading = ref(false);
 let errMessage = ref("");
+let useError = ref(false);
 
 //watcher to lowercase input-states values.
 watchEffect(() => {
   patchName.value = patchName.value.toLowerCase();
   patchGenre.value = patchGenre.value.toLowerCase();
   patchTranslation.value = patchTranslation.value.toLowerCase();
+  patchDefinitions.value = patchDefinitions.value.toLowerCase();
 });
 
 //fn to toggle forms states.
@@ -388,28 +407,46 @@ const dispatch = (constant) => {
 //fns to submit and update.
 const updateRecords = async () => {
   await patchPost(
-    fail_patch.value,
-    ok_patch.value,
-    loading.value,
-    errMessage.value,
+    fail_patch,
+    ok_patch,
+    loading,
+    errMessage,
     patchName.value,
     patchGenre.value,
     patchTranslation.value,
+    patchDefinitions.value,
     "",
     "",
     "",
     "",
-    useConstant
-  );
+    useConstant.value
+  )
+    .then((res) => {
+      if (res) return (useError.value = true);
+      useError.value = false;
+    })
+    .catch((e) => (useError.value = true));
 };
 const updateQuizzes = async () => {
-  await patchPost(
-    fail_patch.value,
-    ok_patch.value,
-    loading.value,
-    errMessage.value,
+  patchPost(
+    fail_patch,
+    ok_patch,
+    loading,
+    errMessage,
     patchName.value,
-    patchTranslation.value
-  );
+    patchGenre.value,
+    patchTranslation.value,
+    patchDefinitions.value,
+    quizCode.value,
+    quizRight.value,
+    quizWrong.value,
+    quizWrong2.value,
+    useConstant.value
+  )
+    .then((res) => {
+      if (res) return (useError.value = true);
+      useError.value = false;
+    })
+    .catch((e) => (useError.value = true));
 };
 </script>
