@@ -3,7 +3,7 @@
     class="flex flex-col items-center w-full h-full gap-6 p-4 md:w-4/5 font-body"
   >
     <span
-      class="flex justify-between w-full mt-12 overflow-hidden rounded-md md:w-3/5 bg-slate-300 dark:bg-slate-600"
+      class="flex justify-between w-full overflow-hidden rounded-md mt-14 md:w-1/2 bg-slate-300 dark:bg-slate-600"
     >
       <div v-if="dropDownRecords" class="use_dropdown_peek_left">
         <button
@@ -41,7 +41,7 @@
           />
         </svg>
       </div>
-      <!-- right-btn FETCH-RECORDS-->
+      <!-- left-btn FETCH-RECORDS-->
       <button
         @click="fetchRecords(constant)"
         class="flex flex-row justify-center w-1/2 gap-2 p-2 text-sm font-bold text-gray-100 bg-blue-500"
@@ -99,7 +99,7 @@
           </svg>
         </i>
       </button>
-      <!-- left btn FETCH-QUIZZES-->
+      <!-- right btn FETCH-QUIZZES-->
       <button
         @click="fetchQuizzes(quizConstant)"
         class="flex flex-row justify-center w-1/2 gap-2 p-2 text-sm font-bold bg-red-300 text-gray-50"
@@ -291,9 +291,9 @@ function dispatch(factor) {
     case "allRecords":
       return (constant.value = factor), (dropDownRecords.value = false);
     case "search":
-      return (constant.value = factor), (dropDownQuizzes.value = false);
+      return (quizConstant.value = factor), (dropDownQuizzes.value = false);
     case "dict":
-      return (constant.value = factor), (dropDownQuizzes.value = false);
+      return (quizConstant.value = factor), (dropDownQuizzes.value = false);
     default:
       break;
   }

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex flex-col items-center w-full h-full gap-1 p-4 md:w-1/2 md:mr-40"
+    class="flex flex-col items-center w-full h-full gap-1 p-4 md:w-1/2"
   >
     <div class="delete_body">
       <div class="flex flex-col justify-between gap-2 md:flex-row md:gap-0">

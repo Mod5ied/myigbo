@@ -156,7 +156,7 @@ const SearchResult = defineAsyncComponent(() =>
 const SearchInteract = defineAsyncComponent(() =>
   import("../Interactive/Search_Interact.vue")
 );
-const { fetchWords } = Requests;
+const { fetchAllWords } = Requests;
 const { errorMatcher } = ErrorStates;
 
 //dynamic arrays.
@@ -294,7 +294,7 @@ currentState.value = checkState();
 
 async function fetchRecords() {
   try {
-    useArray.value = await fetchWords();
+    useArray.value = await fetchAllWords();
   } catch (err) {
     useError.value = true;
     errorMatcher(503, errorState);
@@ -305,6 +305,7 @@ async function fetchRecords() {
 }
 
 onErrorCaptured((error, component, info) => {
+  //definitely logger here!!
   console.log(
     "An error occurred: \n",
     error,

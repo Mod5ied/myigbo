@@ -88,7 +88,7 @@
   @apply flex flex-col items-center justify-around w-1/5 gap-1 p-1 mb-4 text-center transition-all border rounded-lg md:p-2 md:flex-row md:w-3/5 hover:bg-slate-200 dark:bg-transparent dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-900 dark:md:hover:bg-slate-800 dark:hover:duration-300;
 }
 .side_span_active {
-  @apply flex flex-col items-center justify-around w-1/5 gap-1 p-1 mb-4 text-center border rounded-lg md:p-2 md:flex-row md:w-3/5 bg-slate-200 dark:border-slate-600 dark:bg-slate-900 dark:text-slate-300 border-slate-300 text-slate-600;
+  @apply flex flex-col items-center justify-around w-1/5 gap-1 p-1 mb-4 text-center border rounded-lg md:p-2 md:flex-row md:w-3/5 bg-slate-200 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300 border-slate-300 text-slate-600;
 }
 .side_config {
   @apply flex items-center justify-around gap-1 text-xs;
@@ -109,6 +109,9 @@
 /* Admin page, Add quiz dark-theme input styles */
 .dark_inputs {
   @apply w-full px-5 py-2 lowercase transition duration-300 bg-white border-2 border-gray-100 rounded-lg md:w-2/3 hover:border-gray-300 focus:border-gray-300 dark:text-slate-400 dark:border-none dark:ring-1 dark:bg-slate-800 dark:hover:bg-slate-700;
+}
+.dark_inputs_disabled{
+  @apply dark_inputs;
 }
 .dark_btns {
   @apply flex items-center justify-center w-1/2 gap-4 p-2 mx-auto font-medium transition duration-300 bg-transparent border-2 rounded-md cursor-pointer border-emerald-500 font-body hover:bg-emerald-500 dark:text-emerald-500 dark:hover:text-slate-200 hover:text-slate-100 hover:shadow-md hover:border-transparent;

@@ -134,20 +134,7 @@
 // handleNetError(409);
 
 //! Another stupid trial.
-// const r = () => {
-//   //   return { name: "Ogwuru", state: true };
-//   throw new Error("Oops!");
-// };
+// const input = "fon,ekwe-oku,ekwebekee"
 
-// const tryme = async () => {
-//   let response;
-//   try {
-//     const store = r();
-//     let { name, state } = store;
-//     return (response = name);
-//   } catch (err) {
-//     return (response = err);
-//   }
-// };
-
-// console.log(tryme());
+// const r = input.split(",")
+// console.log(r);

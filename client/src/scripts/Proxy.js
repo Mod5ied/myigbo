@@ -15,9 +15,8 @@ export class PostProxy {
         const res = await axios.get(`${url1}allWords`);
         const results = await res.data;
         resolve(results);
-        if (results.state == false) {
+        if (!results.state) {
           throw new Error(results.state);
-          //! better hope this is really doing something good...
         }
       } catch (err) {
         reject(err.response.data);
@@ -62,6 +61,7 @@ export class PostProxy {
           name: data.name,
           translation: data.translation,
           genre: data.genre,
+          definitions: data.definitions,
         });
         const results = await res.data;
         resolve(results);
@@ -70,6 +70,7 @@ export class PostProxy {
       }
     });
   };
+
   /**
    *@params {data}, @constant {search or dict}.
    */

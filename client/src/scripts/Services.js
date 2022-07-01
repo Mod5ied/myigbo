@@ -2,16 +2,8 @@
 import isOnline from "is-online";
 import { PostProxy, StateProxy } from "./Proxy.js";
 import { get, set, del } from "idb-keyval";
-const { getState, useSwitch } = StateProxy;
-const {
-  getWords,
-  getDicts,
-  registerWord,
-  registerQuiz,
-  batchUpload,
-  updatePost,
-  deleteOnePost,
-} = PostProxy;
+const { getState } = StateProxy;
+const { getWords, getDicts, registerWord, registerQuiz, batchUpload, updatePost, deleteOnePost } = PostProxy;
 
 class Requests {
   /**
@@ -77,33 +69,47 @@ class Requests {
    * @param {string} fail @param {string} name
    * @param {string} genre @param {string} translation
    */
-  static addNewPost = async (
-    fail,
-    load,
-    message,
-    ok,
-    name,
-    translation,
-    genre,
-    constant
-  ) => {
+  static addNewWord = async (fail, load, message, ok, name, translation, genre, definitions, constant) => {
     try {
       fail.value = false;
       load.value = true;
-      const newObj = { name, translation, genre };
+      const newObj = { name, translation, genre, definitions };
       let res = await registerWord(newObj, constant);
       const { state, data } = res;
       setTimeout(async () => {
-        if (
-          state
-            ? ((load.value = false), (ok.value = true))
-            : ((load.value = false), (ok.value = false))
-        );
+        if (state) {
+          return (load.value = false), (ok.value = true);
+        }
+        return (load.value = false), (ok.value = false);
+      }, 2000);
+    } catch (err) {
+      console.log(err);
+      load.value = false;
+      fail.value = true;
+      message.value = err.message; //|| "Error occurred while uploading word";
+      //todo: should logger here, err-message must not go to user!
+    }
+  };
+  static addNewDict = async (fail, load, message, ok, name, trans, genre, definitions, constant) => {
+    try {
+      fail.value = false;
+      load.value = true;
+      const t = trans.split(",");
+      const newObj = {
+        name,
+        translation: [{ commonTranslate: t[0], primitive: [t[1]] }],
+        genre,
+        definitions: [definitions],
+      };
+      let res = await registerWord(newObj, constant);
+      const { state, data } = res;
+      setTimeout(async () => {
+        if (state ? ((load.value = false), (ok.value = true)) : ((load.value = false), (ok.value = false)));
       }, 2000);
     } catch (err) {
       load.value = false;
       fail.value = true;
-      message.value = err.message || "Error occurred while uploading word";
+      message = err.message || "Error occurred while uploading word";
       //todo: should logger here, err-message must not go to user!
     }
   };
@@ -113,36 +119,41 @@ class Requests {
     fail,
     load,
     ok,
+    errMsg,
     question,
     right_answer,
     wrong_answer,
-    wrong_answer2 = ""
+    wrong_answer2
   ) => {
     let response;
+    let newObj;
+    let res;
     try {
       fail.value = false;
       load.value = true;
-      const newObj = {
-        constant,
-        question,
-        right_answer,
-        wrong_answer,
-        wrong_answer2,
-      };
-      const res = await registerQuiz(newObj, constant);
+      switch (constant) {
+        case "search":
+          newObj = { question, right_answer, wrong_answer };
+          res = await registerQuiz(newObj, constant);
+          break;
+        case "dict":
+          newObj = { question, right_answer, wrong_answer, wrong_answer2 };
+          res = await registerQuiz(newObj, constant);
+          break;
+        default:
+          break;
+      }
       const { state, data } = res;
       setTimeout(async () => {
-        if (
-          state
-            ? ((load.value = false), (ok.value = true))
-            : ((load.value = false), (ok.value = false))
-        );
-        return (response = res);
+        if (state) {
+          return (load.value = false), (ok.value = true);
+        }
+        return (load.value = false), (ok.value = false);
       }, 2000);
     } catch (err) {
       load.value = false;
       fail.value = true;
-      response = err.message;
+      errMsg = err.message || "Error occurred while uploading word";
       //todo: should logger here.
     }
     return response;
@@ -159,11 +170,7 @@ class Requests {
       const res = await deleteOnePost(del_con.value, payload.value);
       const { state, data } = res;
       setTimeout(async () => {
-        if (
-          state
-            ? ((load.value = false), (ok.value = true))
-            : ((load.value = false), (ok.value = false))
-        );
+        if (state ? ((load.value = false), (ok.value = true)) : ((load.value = false), (ok.value = false)));
       }, 2000);
     } catch (err) {
       load.value = false;
@@ -204,14 +211,13 @@ class Requests {
         wrong1,
         wrong2,
       };
-      message.value = await updatePost(constant, newObj);
-      const { state, data } = message.value;
+      const res = await updatePost(constant, newObj);
+      const { state, data } = res;
       setTimeout(async () => {
-        if (
-          state
-            ? ((load.value = false), (ok.value = true))
-            : ((load.value = false), (ok.value = false))
-        );
+        if (state) {
+          return (load.value = false), (ok.value = true);
+        }
+        return (load.value = false), (ok.value = false);
       }, 2000);
     } catch (err) {
       load.value = false;
@@ -329,8 +335,7 @@ class OfflineStorage {
       const localData = await get("offlineData");
       if (
         localData === undefined || !localData
-          ? ((resp = await set("offlineData", [payload])),
-            (response = resp ? true : false))
+          ? ((resp = await set("offlineData", [payload])), (response = resp ? true : false))
           : (localData.push(payload),
             await set("offlineData", localData),
             (response = true),
