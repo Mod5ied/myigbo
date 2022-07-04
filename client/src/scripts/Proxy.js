@@ -86,7 +86,7 @@ export class PostProxy {
         const results = await res.data;
         resolve(results);
       } catch (err) {
-        reject(err?.response.data);
+        reject(err.response.data);
       }
     });
   };
@@ -97,7 +97,7 @@ export class PostProxy {
         const results = await res.data;
         resolve(results);
       } catch (err) {
-        reject(err?.response?.data);
+        reject(err.response.data);
       }
     });
   };
@@ -140,9 +140,9 @@ export class StateProxy {
   static getState = async () => {
     return new Promise(async (resolve, reject) => {
       try {
-        const res = await axios.get(`${url3}state`);
-        const results = await res.data;
-        resolve(results);
+        const res = await axios.get(`${url3}app_state`);
+        const result = await res.data;
+        resolve(result);
       } catch (err) {
         reject(err.message);
       }

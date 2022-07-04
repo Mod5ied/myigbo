@@ -55,7 +55,6 @@
 import { ref, inject } from "vue";
 import UploadQuizzes from "../components/forms/UploadQuizzes.vue";
 import UploadWords from "../components/forms/uploadWords.vue";
-
 const emitter = inject("emitter");
 
 let useQuiz = ref(false);
@@ -63,8 +62,7 @@ let useWords = ref(false);
 
 let dropDownRecords = ref(false);
 let dropDownQuizzes = ref(false);
-
-let quizConstant = ref("");
+// let quizConstant = ref("");
 
 //fn to toggle forms views.
 const formsToggle = (state) => {

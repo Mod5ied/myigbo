@@ -170,12 +170,19 @@ class Requests {
       const res = await deleteOnePost(del_con.value, payload.value);
       const { state, data } = res;
       setTimeout(async () => {
-        if (state ? ((load.value = false), (ok.value = true)) : ((load.value = false), (ok.value = false)));
+        if (state) {
+          load.value = false;
+          ok.value = true;
+          return;
+        }
+        load.value = false;
+        ok.value = false;
+        return;
       }, 2000);
     } catch (err) {
-      load.value = false;
       fail.value = true;
-      return (message.value = err.message);
+      load.value = false;
+      message.value = err.message;
       //todo: should logger here.
     }
   };
@@ -248,43 +255,58 @@ class Utilities {
   };
 }
 
-//todo: Get rid of all console-logs and send to logger instead and also to client.
 class OfflineStorage {
-  /**
-   * @description makes a  request to Indexed Storage.
-   * @checks if data exists ? returns null : 👇
-   * @returns array of data
-   */
-  static useFetch = async () => {
+  static handleOffline = async (name, translation, genre, definitions, storeName = "") => {
     let response;
-    try {
-      const resp = await get("offlineData");
-      if (resp == undefined || !resp) {
-        response = null;
-        console.log("No data was found in IDB");
-      } else {
-        response = resp;
-        console.log("🛒"); //data was found in idb.
+    if (!definitions) {
+      try {
+        const resp = await this.useGuard({ name, translation, genre }, storeName);
+        return (response = resp);
+      } catch (err) {
+        console.log("Error occurred during offline operation", err.message);
+        return false;
       }
-    } catch (err) {
-      console.error({
-        message: "Error fetching local data @ useFetch",
-        detail: err.message,
-      });
     }
-    return response;
+    try {
+      const resp = await this.useGuard({ name, translation, genre, definitions }, storeName);
+      return (response = resp);
+    } catch (err) {
+      console.log("Error occurred during offline operation", err.message);
+      return false;
+    }
   };
   /**
-   * @returns true or false if data exists or not in IDB
-   * @param {Object} payload @param {[Object]} state
+   * @param {Object} payload @description checks if payload exists in IDB storage.
+   * @returns true if saved, false if it fails as payload exists.
+   */
+  static useGuard = async (payload, storeName) => {
+    const state = await this.useFetch(storeName); //null if empty.
+    if (state === null) {
+      const res = await this.useSave(payload, storeName);
+      return res;
+    }
+    const resp = await this.useExists(payload, state);
+    try {
+      if (resp === undefined || !resp) {
+        const res = await this.useSave(payload, storeName);
+        return res;
+      } else {
+        console.log("🛑"); //query exists in idb.
+        return false;
+      }
+    } catch (err) {
+      console.log("Failed to save @ useGuard", err.message);
+      //loading stops, errMessage is updated & returned.
+    }
+  };
+  /**
+   * @returns true or false if similar data exists or not in IDB
+   * @param {object} payload @param {[object]} state
    * @returns {null} if state is null.
    */
   static useExists = async (payload, state) => {
     let response;
     try {
-      if (state === null) {
-        return;
-      }
       //* obj.map is a lil fairly accurate than obj.some.
       const isExists = state.map(
         (obj) =>
@@ -292,103 +314,90 @@ class OfflineStorage {
             ? (response = true) //hence, we can't save the payload.
             : (response = false) //hence, we can save the payload.
       );
+      //todo: Update condition, loop through 'isExists', if 'true' exists in its array,
+      // return false generally for the 'useExists' function, otherwise return true.
+      console.log(isExists);
     } catch (err) {
-      console.error({
-        message: `Error while checking for duplicates @ useExists`,
-        details: err.message,
-      });
+      console.log("Error while checking for duplicates @ useExists", err.message);
+      //loading stops, errMessage is updated & returned.
     }
     return response;
   };
-  /**
-   * @param {Object} payload @description checks if payload exists in IDB storage.
-   * @returns true if saved, false if it fails as payload exists.
-   */
-  static useGuard = async (payload) => {
-    let response;
-    const state = await this.useFetch(); //should return if useFetch rets null||undefined.
-    const resp = await this.useExists(payload, state);
-
-    try {
-      if (resp === undefined || resp === false) {
-        const res = await this.useSave(payload);
-        response = res;
-      } else {
-        response = false;
-        console.error("🛑"); //query exists in idb.
-      }
-    } catch (err) {
-      console.error({
-        message: "Failed to save @ useGuard",
-        detail: err.message,
-      });
-    }
-    return response;
-  };
-  static useSave = async (payload) => {
+  static useSave = async (payload, storeName) => {
     let response;
     let resp;
     try {
       /* sets a new DB with payload if IDb query returns empty,
           appends payload to existing data if IDb is query returns data.
        */
-      const localData = await get("offlineData");
+      const localData = await get(storeName);
+      //todo: The following condition below is unnecessary as its been done in useGuard.
       if (
         localData === undefined || !localData
-          ? ((resp = await set("offlineData", [payload])), (response = resp ? true : false))
-          : (localData.push(payload),
-            await set("offlineData", localData),
-            (response = true),
-            console.log("✅"))
+          ? ((resp = await set(storeName, [payload])), (response = resp ? true : false))
+          : (localData.push(payload), await set(storeName, localData), (response = true), console.log("✅"))
       );
     } catch (err) {
-      console.error({
-        message: `Error occurred while uploading to Indexed storage`,
-        details: err.message,
-      });
-    }
-    return response ?? false;
-  };
-  static handleOffline = async (name, translation, genre) => {
-    let response;
-    try {
-      const resp = await this.useGuard({ name, translation, genre });
-      response = resp;
-    } catch (err) {
-      console.error({
-        message: `Error occurred during offline operation`,
-        details: err,
-      });
+      console.log("Error occurred while uploading to Indexed storage", err.message);
     }
     return response ?? false;
   };
   /**
-   * @params [words, dict, search, record]
+   * @description makes a  request to Indexed Storage.
+   * @checks if data exists ? returns it : returns null
+   * @returns array of data
    */
-  static pushToCloud = async (constant = "", msg = "") => {
+  static useFetch = async (storeName) => {
     let response;
-    let payload;
-    const onlineState = await getState();
     try {
-      if (
-        onlineState === true
-          ? ((payload = await get("offlineData")),
-            (response = await batchUpload(payload, constant)),
-            (msg = `Offline data has been synchronized`),
-            await del("offlineData"))
-          : (console.log({ message: `No internet connection to sync data` }),
-            (msg = `No internet connection to sync data`))
-      );
+      const resp = await get(storeName);
+      if (resp == undefined || !resp) {
+        response = null;
+        //loading stops, errMessage is updated & returned.
+        console.log("No store detected, creating a new store...");
+      } else {
+        response = resp;
+        console.log("Data store detected"); //data was found in idb.
+      }
     } catch (err) {
-      //todo: /* use a logger here instead to get err-message. */
-      msg = `Error occurred while pushing to cloud`;
-      // console.error({
-      //   message: `Error occurred while pushing to cloud`,
-      //   details: `${err.message}`,
-      // });
+      console.log("Error fetching local data @ useFetch", err.message);
     }
-    return response ?? false;
+    return response;
+  };
+  /**
+   * @params [word or record. search or record]
+   */
+  static pushToCloud = async (constant = "", msg = "", ok = false, storeName = "") => {
+    try {
+      //get state would be replaced by 'online-state' pre-production.
+      const onlineState = await getState();
+      if (!onlineState) {
+        msg.value = `No internet connection to sync data`;
+        ok.value = false;
+        return;
+      }
+      const payload = await get(storeName);
+      ok.value = false;
+      setTimeout(async () => {
+        if (!payload) return (msg.value = `No offline data available`), (ok.value = false);
+        try {
+          const res = await batchUpload(payload, constant);
+          if (res.state) {
+            msg.value = "Offline data is synchronized";
+            ok.value = true;
+            await del(storeName);
+            return;
+          }
+        } catch (err) {
+          ok.value = false;
+          msg.value = err.message || `Error occurred while pushing to cloud`;
+        }
+      }, 2000);
+    } catch (err) {
+      ok.value = false;
+      msg.value = err.message || `Error occurred while pushing to cloud`;
+      //todo: /* use a logger here instead to get err-message. */
+    }
   };
 }
-
 export { OfflineStorage, Utilities, Requests };

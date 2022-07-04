@@ -138,6 +138,9 @@
 .dict-error-card {
   @apply relative w-2/3 m-auto mt-20 text-sm border-2 border-red-500 bottom-16 md:bottom-16 dark:bg-slate-900 dict-cards;
 }
+.sync-card {
+  @apply absolute flex items-center justify-center h-10 gap-4 p-3 mb-16 ml-14 text-sm border rounded-md shadow-md md:left-3/4 bottom-16 md:bottom-3/4 dark:bg-slate-900 md:w-72 bg-gray-50;
+}
 
 /* Patch area */
 .patch_forms {

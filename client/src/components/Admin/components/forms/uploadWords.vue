@@ -4,7 +4,7 @@
 		<div
 			class="flex flex-col justify-between gap-4 p-2 text-gray-800 md:flex-row md:items-center dark:text-slate-200 font-body">
 			<label for="english">English Word</label>
-			<input @focusin="fail_upload = false, ok_upload = false" type="text" id="english" name="english"
+			<input @focusin="(fail_upload = false), (ok_upload = false)" type="text" id="english" name="english"
 				placeholder="Enter an English word" required v-model.trim="name" class="dark_inputs" />
 		</div>
 		<div
@@ -79,7 +79,7 @@
 </template>
 
 <script setup>
-import { ref, watchEffect, inject } from "vue";
+import { ref, watchEffect, inject, onMounted } from "vue";
 import isOnline from "is-online";
 import { Requests, OfflineStorage } from "../../../../scripts/Services";
 const { handleOffline } = OfflineStorage;
@@ -105,7 +105,11 @@ let dictTranslations = ref("");
 let dictDefinitions = ref("");
 
 let constant = ref("");
+let syncMsg = ref("Synchronizing offline data");
 
+onMounted(() => {
+	emitter.emit("syncOfflineData", ["word", syncMsg.value, "wordsStore"]);
+});
 //watcher to smallint user-input
 watchEffect(() => {
 	name.value = name.value.toLowerCase();
@@ -122,7 +126,7 @@ emitter.on("allRecords", (payload) => (constant.value = payload));
 async function runSubmit(factor, state) {
 	switch (factor) {
 		case "word":
-			if (!state) {
+			if (state) {
 				return addNewWord(
 					fail_upload,
 					loading,
@@ -137,8 +141,8 @@ async function runSubmit(factor, state) {
 					.then((res) => (useError.value = true))
 					.catch((err) => (useError.value = true));
 			}
-			return handleOffline(name.value, translation.value, genre.value, definitions.value)
-				.then((res) => (useError.value = true))
+			return handleOffline(name.value, translation.value, genre.value, definitions.value, "wordsStore")
+				.then((res) => (useError.value = false))
 				.catch((err) => (useError.value = true));
 		case "dict":
 			if (!state) {
@@ -156,8 +160,14 @@ async function runSubmit(factor, state) {
 					.then((res) => (useError.value = true))
 					.catch((err) => (useError.value = true));
 			}
-			return handleOffline(name.value, dictTranslations.value, genre.value, dictDefinitions.value)
-				.then((res) => (useError.value = true))
+			return handleOffline(
+				name.value,
+				dictTranslations.value,
+				genre.value,
+				dictDefinitions.value,
+				"dictStore"
+			)
+				.then((res) => console.log(res), (useError.value = false))
 				.catch((err) => (useError.value = true));
 		default:
 			return flashError("Unknown Operation");
