@@ -8,12 +8,10 @@ class ErrorStates {
         errVal.value = "Word not found. Try checking your spellings again.";
         break;
       case 500:
-        errVal.value =
-          "Something went wrong during input processing, please try again.";
+        errVal.value = "Something went wrong during input processing, please try again.";
         break;
       case 503:
-        errVal.value =
-          "Something went wrong while fetching data from database.";
+        errVal.value = "Something went wrong while fetching data from database.";
         break;
 
       default:
@@ -24,6 +22,13 @@ class ErrorStates {
   static errorPrimitive(message, errVal) {
     // here: logic to render a human readable and useful error to user, while
     // -> sending necessary logs to log engine.
+  }
+  static useUniversal(fn) {
+    try {
+      const res = fn();
+    } catch (err) {
+      return (res = res);
+    }
   }
 }
 

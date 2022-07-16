@@ -38,7 +38,7 @@
     </div>
     <!-- submitting section 👇 -->
     <span class="flex flex-row items-center gap-2 p-2 text-right">
-      <button class="dark_btns">
+      <button class="sub-btns hover:bg-emerald-500 dark:text-emerald-500 dark:hover:text-slate-200 hover:text-slate-200 hover:shadow-md hover:border-transparent">
         Upload
         <!-- loading state -->
         <i class="flex items-center" v-if="loading">
@@ -154,7 +154,6 @@ async function runSubmit(quizConstant, state) {
 }
 
 async function handleSubmit(factor) {
-  console.log(factor);
   const onlineState = await isOnline();
   if (factor) {
     switch (factor) {

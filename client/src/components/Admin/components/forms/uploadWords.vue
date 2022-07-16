@@ -1,6 +1,6 @@
 <template>
 	<form @submit.prevent="handleSubmit(constant)"
-		class="flex flex-col justify-around w-full gap-3 p-6 border rounded-lg bg-gray-50 dark:bg-slate-900 dark:border-slate-700 h-3/4">
+		class="flex flex-col justify-around w-full gap-3 p-6 border rounded-lg bg-gray-50 dark:bg-slate-900 dark:border-slate-700 h-4/5">
 		<div
 			class="flex flex-col justify-between gap-4 p-2 text-gray-800 md:flex-row md:items-center dark:text-slate-200 font-body">
 			<label for="english">English Word</label>
@@ -141,11 +141,13 @@ async function runSubmit(factor, state) {
 					.then((res) => (useError.value = true))
 					.catch((err) => (useError.value = true));
 			}
-			return handleOffline(name.value, translation.value, genre.value, definitions.value, "wordsStore")
-				.then((res) => (useError.value = false))
+			flashInfo("Saving data offline");
+			errMessage.value = null;
+			return handleOffline(name.value, translation.value, genre.value, definitions.value, "wordsStore", errMessage)
+				.then((res) => flashError(errMessage.value))
 				.catch((err) => (useError.value = true));
 		case "dict":
-			if (!state) {
+			if (state) {
 				return addNewDict(
 					fail_upload,
 					loading,
@@ -160,14 +162,17 @@ async function runSubmit(factor, state) {
 					.then((res) => (useError.value = true))
 					.catch((err) => (useError.value = true));
 			}
+			flashInfo("Saving data offline");
+			errMessage.value = null;
 			return handleOffline(
 				name.value,
 				dictTranslations.value,
 				genre.value,
 				dictDefinitions.value,
-				"dictStore"
+				"dictStore",
+				errMessage
 			)
-				.then((res) => console.log(res), (useError.value = false))
+				.then((res) => flashError(errMessage.value))
 				.catch((err) => (useError.value = true));
 		default:
 			return flashError("Unknown Operation");
@@ -195,5 +200,8 @@ function flashError(err) {
 	setTimeout(() => {
 		useError.value = false;
 	}, 3000);
+}
+function flashInfo(info) {
+	emitter.emit("useSyncInfo", info)
 }
 </script>

@@ -3,7 +3,8 @@ import isOnline from "is-online";
 import { PostProxy, StateProxy } from "./Proxy.js";
 import { get, set, del } from "idb-keyval";
 const { getState } = StateProxy;
-const { getWords, getDicts, registerWord, registerQuiz, batchUpload, updatePost, deleteOnePost } = PostProxy;
+const { getWords, getDicts, getQuiz, registerWord, registerQuiz, batchUpload, updatePost, deleteOnePost } =
+  PostProxy;
 
 class Requests {
   /**
@@ -61,6 +62,32 @@ class Requests {
       fail.value = true;
       return (response = err.message || "Error while fetching data");
       //todo: /* use a logger here instead to get err-message. */
+    }
+  };
+
+  static fetchQuiz = async (serve = false, ok = false, fail = false, store, constant) => {
+    switch (constant) {
+      case "search":
+        try {
+          serve.value = true;
+          const res = await getQuiz(constant);
+          const { data } = res;
+          if (data) {
+            ok.value = true;
+            serve.value = false;
+          }
+          console.log(data);
+        } catch (err) {
+          serve.value = false;
+          fail.value = true;
+          return err.message || "Error while fetching quizzes";
+        }
+        break;
+      case "dict":
+        break;
+
+      default:
+        break;
     }
   };
 
@@ -256,11 +283,11 @@ class Utilities {
 }
 
 class OfflineStorage {
-  static handleOffline = async (name, translation, genre, definitions, storeName = "") => {
+  static handleOffline = async (name, translation, genre, definitions, storeName = "", msg) => {
     let response;
     if (!definitions) {
       try {
-        const resp = await this.useGuard({ name, translation, genre }, storeName);
+        const resp = await this.useGuard({ name, translation, genre }, storeName, msg);
         return (response = resp);
       } catch (err) {
         console.log("Error occurred during offline operation", err.message);
@@ -279,13 +306,13 @@ class OfflineStorage {
    * @param {Object} payload @description checks if payload exists in IDB storage.
    * @returns true if saved, false if it fails as payload exists.
    */
-  static useGuard = async (payload, storeName) => {
+  static useGuard = async (payload, storeName, msg) => {
     const state = await this.useFetch(storeName); //null if empty.
     if (state === null) {
       const res = await this.useSave(payload, storeName);
       return res;
     }
-    const resp = await this.useExists(payload, state);
+    const resp = await this.useExists(payload, state, msg);
     try {
       if (resp === undefined || !resp) {
         const res = await this.useSave(payload, storeName);
@@ -304,7 +331,7 @@ class OfflineStorage {
    * @param {object} payload @param {[object]} state
    * @returns {null} if state is null.
    */
-  static useExists = async (payload, state) => {
+  static useExists = async (payload, state, msg) => {
     let response;
     try {
       //* obj.map is a lil fairly accurate than obj.some.
@@ -316,6 +343,7 @@ class OfflineStorage {
       );
       //todo: Update condition, loop through 'isExists', if 'true' exists in its array,
       // return false generally for the 'useExists' function, otherwise return true.
+      msg.value = `Current data already exists offline`;
       console.log(isExists);
     } catch (err) {
       console.log("Error while checking for duplicates @ useExists", err.message);
@@ -379,7 +407,11 @@ class OfflineStorage {
       const payload = await get(storeName);
       ok.value = false;
       setTimeout(async () => {
-        if (!payload) return (msg.value = `No offline data available`), (ok.value = false);
+        if (!payload) {
+          ok.value = false;
+          msg.value = `No offline data available`;
+          return;
+        }
         try {
           const res = await batchUpload(payload, constant);
           if (res.state) {
@@ -395,7 +427,7 @@ class OfflineStorage {
       }, 2000);
     } catch (err) {
       ok.value = false;
-      msg.value = err.message || `Error occurred while pushing to cloud`;
+      msg.value = err.message || `Error occurred while synchronizing`;
       //todo: /* use a logger here instead to get err-message. */
     }
   };

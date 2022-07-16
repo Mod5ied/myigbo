@@ -1,7 +1,7 @@
 <template>
 	<div class="flex flex-col items-center w-full h-full gap-6 p-4 md:w-1/2 font-body">
 		<span
-			class="flex justify-between w-full overflow-hidden text-sm rounded-md bg-slate-300 dark:bg-slate-700 md:w-4/5 mt-14">
+			class="flex justify-between w-full mt-0 overflow-hidden text-sm rounded-md bg-slate-300 dark:bg-slate-700 md:w-4/5 md:mt-14">
 			<div v-if="dropDownRecords" class="use_dropdown_peek_left">
 				<button @click="dispatch('allWords')" class="use_buttons" title="Selects to load all search words">
 					Words
@@ -20,7 +20,7 @@
 				</svg>
 			</div>
 			<!-- left-btn ADD-RECORDS -->
-			<button @click="formsToggle('showTrans')" class="w-1/2 px-6 font-bold text-gray-100 bg-blue-500">
+			<button @click="formsToggle('showTrans')" class="w-1/2 px-4 font-bold text-gray-100 bg-blue-500">
 				Add to Record
 			</button>
 			<!-- right-btn ADD-QUIZZES -->
