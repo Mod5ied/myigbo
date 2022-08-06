@@ -135,8 +135,6 @@ emitter.on("useSyncError", payload => {
 emitter.on("syncOfflineData", async (payload) => {
   switch (payload[0]) {
     case "word":
-      // console.log('word');
-      // break
       return await syncData(payload[0], payload);
     case "record":
       return await syncData(payload[0], payload);
@@ -173,11 +171,11 @@ async function syncData(constant, payload) {
 //       }, 3000)
 //     })
 //
-
-//fetch data from idb on component mount.
-onMounted(async () => {
-  // await syncData("word", [syncMessage.value, "wordsStore"])
-});
+/* Deprecated, now being called within components that requires it. */
+// //fetch data from idb on component mount.
+// onMounted(async () => {
+//   // await syncData("word", [syncMessage.value, "wordsStore"])
+// });
 </script>
 
 <style scoped>

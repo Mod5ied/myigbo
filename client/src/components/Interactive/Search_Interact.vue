@@ -51,7 +51,7 @@
     <!-- navs below. -->
     <div class="items-center hidden px-3 md:flex">
       <!-- v2, arrows would be replaced with actual fns that do navigation. -->
-      <!-- <todo> To implement the switcher fucntion. </todo> -->
+      <!-- <todo> To implement the switcher function. </todo> -->
       <i class="icon_style" @click="handleSwitch">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -71,4 +71,11 @@
     </div>
   </div>
 </template>
-<script setup></script>
+<script setup>
+/* Upcoming features:
+    (1) Verification of users selection and notifying if users are correct.
+    (2) Forward users to the next quiz if users passes each test.
+    (3) Presenting a leaders board to current users based on others users who played the quiz.
+*/
+
+</script>

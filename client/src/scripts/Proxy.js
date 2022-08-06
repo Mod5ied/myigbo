@@ -1,18 +1,12 @@
 "use strict";
+import { endPoints } from "../config/index.js";
 import axios from "axios";
-const url1 = `http://localhost:5000/api/v1/`;
-const url2 = `http://localhost:5000/api/v1/quiz/`;
-const url3 = `http://localhost:5000/api/v1/get/`;
-const url4 = `http://localhost:5000/api/v1/post/`;
-const url5 = `http://localhost:5000/api/v1/post/batch/`;
-const url6 = `http://localhost:5000/api/v1/update/`;
-const url7 = `http://localhost:5000/api/v1/delete/`;
 
 export class PostProxy {
   static getWords = async () => {
     return new Promise(async (resolve, reject) => {
       try {
-        const res = await axios.get(`${url1}allWords`);
+        const res = await axios.get(`${endPoints.url1}allWords`);
         const results = await res.data;
         resolve(results);
         if (!results.state) {
@@ -26,7 +20,7 @@ export class PostProxy {
   static getDicts = async () => {
     return new Promise(async (resolve, reject) => {
       try {
-        const res = await axios.get(`${url1}allRecords`);
+        const res = await axios.get(`${endPoints.url1}allRecords`);
         const results = await res.data;
         resolve(results);
       } catch (err) {
@@ -40,7 +34,7 @@ export class PostProxy {
   static getQuiz = async (quiz = "") => {
     return new Promise(async (resolve, reject) => {
       try {
-        const res = await axios.get(`${url2}${quiz}`);
+        const res = await axios.get(`${endPoints.url2}${quiz}`);
         const results = await res.data;
         resolve(results);
         if (results.state == false) {
@@ -57,7 +51,7 @@ export class PostProxy {
   static registerWord = async (data = {}, constant = "") => {
     return new Promise(async (resolve, reject) => {
       try {
-        const res = await axios.post(`${url4}${constant}`, {
+        const res = await axios.post(`${endPoints.url4}${constant}`, {
           name: data.name,
           translation: data.translation,
           genre: data.genre,
@@ -77,7 +71,7 @@ export class PostProxy {
   static registerQuiz = async (data = {}, constant = "") => {
     return new Promise(async (resolve, reject) => {
       try {
-        const res = await axios.post(`${url4}quiz/${constant}`, {
+        const res = await axios.post(`${endPoints.url4}quiz/${constant}`, {
           question: data.question,
           answerRight: data.right_answer,
           answerWrong1: data.wrong_answer,
@@ -90,10 +84,13 @@ export class PostProxy {
       }
     });
   };
+  /**
+   *@params {data}, @constant {search or dict}.
+   */
   static batchUpload = async (data = [], constant = "") => {
     return new Promise(async (resolve, reject) => {
       try {
-        const res = await axios.post(`${url5}${constant}`, data);
+        const res = await axios.post(`${endPoints.url5}${constant}`, data);
         const results = await res.data;
         resolve(results);
       } catch (err) {
@@ -101,10 +98,13 @@ export class PostProxy {
       }
     });
   };
-  static deleteOnePost = async (constant = "", data) => {
+  /**
+   *@params {data}, @constant {search or dict}.
+   */
+  static deleteOnePost = async (data, constant = "") => {
     return new Promise(async (resolve, reject) => {
       try {
-        const res = await axios.delete(`${url7}${constant}`, {
+        const res = await axios.delete(`${endPoints.url7}${constant}`, {
           data: { name: data },
         });
         const results = await res.data;
@@ -118,7 +118,7 @@ export class PostProxy {
   static updatePost = async (constant, data) => {
     return new Promise(async (resolve, reject) => {
       try {
-        const res = await axios.patch(`${url6}${constant}`, {
+        const res = await axios.patch(`${endPoints.url6}${constant}`, {
           name: data.name,
           translation: data.translation,
           genre: data.genre,
@@ -140,7 +140,7 @@ export class StateProxy {
   static getState = async () => {
     return new Promise(async (resolve, reject) => {
       try {
-        const res = await axios.get(`${url3}app_state`);
+        const res = await axios.get(`${endPoints.url3}app_state`);
         const result = await res.data;
         resolve(result);
       } catch (err) {

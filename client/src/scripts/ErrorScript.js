@@ -20,8 +20,10 @@ class ErrorStates {
     }
   }
   static errorPrimitive(message, errVal) {
-    // here: logic to render a human readable and useful error to user, while
-    // -> sending necessary logs to log engine.
+    /* Upcoming features: 
+      here: logic to render a human readable and useful error to user, while
+      sending necessary logs to log engine.
+    */
   }
   static useUniversal(fn) {
     try {

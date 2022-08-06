@@ -96,7 +96,7 @@
 </template>
 
 <script setup>
-import { inject, ref } from "vue";
+import { ref } from "vue";
 
 const props = defineProps({
   dynamicClass: String,
@@ -109,6 +109,13 @@ let dyna_class = props.dynamicClass;
 function useTrans() {
   useTranslation.value = !useTranslation.value;
 }
+
+
+/* Upcoming features:
+    (1) Verification of users selection and notifying if users are correct.
+    (2) Forward users to the next quiz if users passes each test.
+    (3) Presenting a leaders board to current users based on others users who played the quiz.
+*/
 </script>
 
 <style scoped>
