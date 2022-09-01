@@ -81,7 +81,7 @@
 <script setup>
 import { ref, watchEffect, inject, onMounted } from "vue";
 import isOnline from "is-online";
-import { Requests, OfflineStorage } from "../../../../scripts/Services";
+import { Requests, OfflineStorage } from "../../../../proxy/Services";
 const { handleOffline } = OfflineStorage;
 const { addNewWord, addNewDict } = Requests;
 const emitter = inject("emitter");

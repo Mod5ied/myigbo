@@ -26,7 +26,7 @@
 
 <script setup>
 import { ref, watchEffect } from "vue";
-import { Requests } from "../../../scripts/Services";
+import { Requests } from "../../../proxy/Services";
 const { addNewQuiz } = Requests;
 
 //input states.

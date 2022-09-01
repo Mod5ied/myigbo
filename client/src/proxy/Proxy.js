@@ -13,7 +13,7 @@ export class PostProxy {
           throw new Error(results.state);
         }
       } catch (err) {
-        reject(err.response.data);
+        reject(err ?? err.response.data);
       }
     });
   };
@@ -24,7 +24,7 @@ export class PostProxy {
         const results = await res.data;
         resolve(results);
       } catch (err) {
-        reject(err.response.data);
+        reject(err ?? err.response.data);
       }
     });
   };
@@ -41,7 +41,7 @@ export class PostProxy {
           throw new Error(results.state);
         }
       } catch (err) {
-        reject(err.response.data);
+        reject(err ?? err.response.data);
       }
     });
   };
@@ -60,7 +60,7 @@ export class PostProxy {
         const results = await res.data;
         resolve(results);
       } catch (err) {
-        reject(err?.response?.data);
+        reject(err ?? err.response.data);
       }
     });
   };
@@ -80,7 +80,7 @@ export class PostProxy {
         const results = await res.data;
         resolve(results);
       } catch (err) {
-        reject(err.response.data);
+        reject(err ?? err.response.data);
       }
     });
   };
@@ -94,7 +94,7 @@ export class PostProxy {
         const results = await res.data;
         resolve(results);
       } catch (err) {
-        reject(err.response.data);
+        reject(err ?? err.response.data);
       }
     });
   };
@@ -110,7 +110,7 @@ export class PostProxy {
         const results = await res.data;
         resolve(results);
       } catch (err) {
-        reject(err.response.data);
+        reject(err ?? err.response.data);
       }
     });
   };
@@ -129,7 +129,7 @@ export class PostProxy {
         const results = await res.data;
         resolve(results);
       } catch (err) {
-        reject(err.response.data);
+        reject(err ?? err.response.data);
       }
     });
   };
@@ -144,7 +144,7 @@ export class StateProxy {
         const result = await res.data;
         resolve(result);
       } catch (err) {
-        reject(err.message);
+        reject(err ?? err.message);
       }
     });
   };

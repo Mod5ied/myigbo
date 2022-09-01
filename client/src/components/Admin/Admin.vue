@@ -52,7 +52,7 @@
 <script setup>
 import isOnline from "is-online";
 import { ref, inject, onMounted, defineAsyncComponent } from "vue";
-import { OfflineStorage } from "../../scripts/Services";
+import { OfflineStorage } from "../../proxy/Services";
 import { useRouter } from "vue-router";
 import Header1 from "./components/Header.vue";
 import Sidebar from "./components/Sidebar.vue";

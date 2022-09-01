@@ -75,7 +75,7 @@
 
 <script setup>
 import { ref, watchEffect } from "vue";
-import { Requests } from "../../../scripts/Services";
+import { Requests } from "../../../proxy/Services";
 const { deletePost } = Requests;
 
 //show states.

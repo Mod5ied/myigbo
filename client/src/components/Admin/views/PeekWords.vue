@@ -123,7 +123,7 @@
 
 <script setup>
 import { ref } from "vue";
-import { Requests, OfflineStorage } from "../../../scripts/Services";
+import { Requests, OfflineStorage } from "../../../proxy/Services";
 const { fetchWords, fetchDictionary, fetchQuiz } = Requests;
 
 //states.

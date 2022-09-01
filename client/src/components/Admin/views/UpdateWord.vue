@@ -222,7 +222,7 @@
 
 <script setup>
 import { ref, watchEffect } from "vue";
-import { Requests, OfflineStorage } from "../../../scripts/Services";
+import { Requests, OfflineStorage } from "../../../proxy/Services";
 const { patchPost } = Requests;
 
 //forms state.

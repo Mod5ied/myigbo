@@ -36,7 +36,7 @@
 
 <script setup>
 import { ref, inject, onMounted } from "vue";
-import { ErrorStates } from "../../../scripts/ErrorScript";
+import { ErrorStates } from "../../../proxy/ErrorScript";
 import Search_card from "./Search_card.vue";
 const { errorMatcher } = ErrorStates;
 

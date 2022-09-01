@@ -44,7 +44,7 @@
 </template>
 
 <script setup>
-import { ErrorStates } from "../../../scripts/ErrorScript";
+import { ErrorStates } from "../../../proxy/ErrorScript";
 // 👇 from {Search_result}.
 const props = defineProps({
   useRecord: {
