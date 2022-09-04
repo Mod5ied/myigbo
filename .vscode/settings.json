@@ -2,12 +2,16 @@
   "cSpell.ignoreWords": ["allpost", "middlewares"],
   "cSpell.words": [
     "btns",
+    "cntlr",
     "Defi",
     "enyi",
     "keyval",
     "klass",
+    "localstorage",
     "pino",
     "savelog",
-    "semibold"
+    "semibold",
+    "Sinq",
+    "toggl"
   ]
 }
