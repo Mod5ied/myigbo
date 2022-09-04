@@ -5,40 +5,37 @@
       <div class="dict-cards" id="noun">
         <p class="text-gray-400 dark:text-white">Noun</p>
         <ul class="flex flex-col gap-1 px-2 text-sm dark:text-slate-400">
-          <li>1. {{ props.useRecord.translation }}</li>
-          <li>2. {{}}</li>
+          <li>1. {{ translations[0].commonTranslate }}</li>
+          <li>2. {{ translations[0].primitive[0] }}, {{ translations[0].primitive[1] }}</li>
         </ul>
       </div>
       <div class="dict-cards" id="verb">
-        <p class="text-gray-400 dark:text-white">Adjectives</p>
+        <p class="text-gray-400 dark:text-white">Definitions</p>
 
         <ul class="flex flex-col gap-1 px-2 text-sm dark:text-slate-400">
-          <li>1. {{}}</li>
-          <li>1. {{}}</li>
+          <li>1. {{ definitions[0] }}</li>
+          <li>1. {{ definitions[1] }}</li>
         </ul>
       </div>
     </div>
   </Transition>
   <!-- synonyms. -->
   <Transition>
-    <div
-      v-if="useSynonyms"
-      class="flex flex-col gap-5 select-none w-72 md:w-full"
-    >
+    <div v-if="useSynonyms" class="flex flex-col gap-5 select-none w-72 md:w-full">
       <div class="dict-cards" id="noun">
         <p class="text-gray-400 dark:text-gray-300">Synonyms</p>
         <ul class="flex flex-col gap-1 px-2 text-sm dark:text-slate-400">
-          <!-- Here,loop & render with nums being incremented by result num -->
-          <!-- See dummy.js for clue -->
           <li class="flex items-center justify-between gap-3">
-            1. {{ props.useRecord.translation }}
-            <span class="text-xs text-red-400">Ozuitem, Bende.</span>
+            1. {{ synonyms[0] || "null" }}
+            <span class="text-xs text-red-400">{{ "unknown" }}</span>
+            <!-- <span class="text-xs text-red-400">{{Ozuitem, Bende.}}</span> -->
             <!-- maybe make the span a link that takes to a history component that shows the 
-              history of the current item and the people that speaks it.
-          --></li>
+              history of the current item and the people that speaks it. -->
+          </li>
           <li class="flex items-center justify-between gap-3">
-            2. lorem ipsum dolor<span class="text-xs text-red-400">
-              Ebonyi.
+            2. {{ synonyms[1] || "null" }}
+            <span class="text-xs text-red-400">
+              {{ "unknown" || "props with location of word usage (e.g: Ebonyi, Bende)" }}
             </span>
           </li>
         </ul>
@@ -47,17 +44,12 @@
   </Transition>
   <!-- antonyms. -->
   <Transition>
-    <div
-      v-if="useAntonyms"
-      class="flex flex-col gap-5 select-none w-72 md:w-full"
-    >
+    <div v-if="useAntonyms" class="flex flex-col gap-5 select-none w-72 md:w-full">
       <div class="dict-cards" id="noun">
         <p class="text-gray-400 dark:text-white">Antonyms</p>
         <ul class="flex flex-col gap-1 px-2 text-sm dark:text-slate-400">
-          <!-- Here,loop & render with nums being incremented by result num -->
-          <!-- See dummy.js for clue -->
-          <li>1. lorem ipsum dolor sit am</li>
-          <li>2. lorem ipsum dolor sit am</li>
+          <li>1. {{ antonyms[0] || "null" }}</li>
+          <li>2. {{ antonyms[1] || "null" }}</li>
         </ul>
       </div>
     </div>
@@ -67,22 +59,28 @@
 <script setup>
 import { inject, ref } from "vue";
 
-//define the emitter.
 const emitter = inject("emitter");
 const props = defineProps({
   useRecord: {
     type: Object,
     default() {
-      return { name: "", translation: "", genre: "" };
+      return { name: "", translation: "", genre: "", definitions: "", antonyms: "", synonyms: "", adjectives: "" };
     },
   },
-  // errorState: String,
 });
 
 //dynamic vars.
 let useDefi = ref(true);
 let useSynonyms = ref(null);
 let useAntonyms = ref(null);
+
+let word = ref(props.useRecord.name)
+let genre = ref(props.useRecord.genre)
+let antonyms = ref(props.useRecord.antonyms)
+let adjectives = ref(props.useRecord.adjectives);
+let definitions = ref(props.useRecord.definitions)
+let synonyms = ref(props.useRecord.synonyms)
+let translations = ref(props.useRecord.translation)
 
 //emit comes from {dict-results}.
 emitter.on("alter-synonym", (payload) => {

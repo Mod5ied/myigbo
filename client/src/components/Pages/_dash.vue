@@ -6,7 +6,7 @@
                 alt=""></div>
         <span>
             <p class="absolute font-medium right-10 bottom-5 font-body text-slate-900 dark:text-indigo-600">Founded by
-                Sync.io</p>
+                Sinq.io</p>
         </span>
         <!-- opacity-wrapper here below. -->
         <div class="flex items-center justify-center w-screen h-screen opacity-75 bg-slate-200 dark:opacity-40 dark:bg-slate-900">

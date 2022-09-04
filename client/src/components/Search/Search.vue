@@ -1,6 +1,7 @@
 <template>
   <div class="h-screen overflow-hidden overflow-x-hidden bg-gray-100 dark:bg-slate-900 font-body">
-    <Header @toggl-theme="setDarkMode" @toggl-learn="router.push({ name: 'Learn' })" :darkState="darkState" title="Learn Igbo" />
+    <Header @toggl-theme="setDarkMode" @toggl-learn="router.push({ name: 'Learn' })" :darkState="darkState"
+      title="Learn Igbo" />
     <main class="flex flex-col items-center justify-center gap-3 py-10 md:px-5 md:py-6 md:gap-10">
       <div id="parent" class="flex flex-col items-center md:w-2/4 md:h-96">
         <!-- homepage image and texts. -->
@@ -23,9 +24,7 @@
           </div>
         </Transition>
         <!-- homepage interactive quiz box. -->
-        <Transition>
-          <SearchInteract v-if="useInteract" />
-        </Transition>
+        <SearchInteract v-if="useInteract" />
       </div>
       <Search_box v-if="useSearchBar" :HideArrow="HideArrow" :SearchClass="SearchClass" />
       <!-- homepage error pop-out box. -->
@@ -44,7 +43,7 @@
         <SearchResult v-if="hasResult" :useRecord="useRecord" :passError="passError" :passErrorCode="passErrorCode" />
       </Transition>
     </main>
-    <DockTabs :use-games="true" />
+    <DockTabs :use-games="true" :use-speaker="useSpeaker" />
   </div>
 </template>
 
@@ -70,6 +69,7 @@ const SearchInteract = defineAsyncComponent(() => import("../Interactive/Search_
 const { fetchAllWords } = Requests;
 const { errorMatcher } = ErrorStates;
 const router = useRouter()
+const emitter = inject("emitter");
 
 //dynamic arrays.
 // const images = ref([image1, image2]); //👈 should be used to loop through homepage images.
@@ -88,18 +88,13 @@ function arrDelay(arr, delegate, delay) {
   return interval;
 }
 
-//homepage name is altered,and entire data is fetched, once comp is mounted.
-onMounted(async () => {
-  arrDelay(array, (obj) => (name.value = obj), 6000);
-  // useArray.value = await fetchWords();
-  await fetchRecords();
-});
 
 //reactive states for all mini components
 let hasResult = ref(false); //👈 if new search is truthy.
 let useIntro = ref(true); //👈 to show the intro section.
 let useSearchBar = ref(true) //👈 to show the tab buttons below.
 let useHistory = ref(true); //👈 to show the history tab.
+let useSpeaker = ref(false); //👈 to show the voice-out tab.
 let useInteract = ref(false); //👈 to show the interact section.
 // let useLearnComponent = ref(null); //👈 to show the learn page.
 let HideArrow = ref(false); // 👈 to hide the search-box arrow.
@@ -120,7 +115,6 @@ let SearchClass = "mt-10 md:mt-0";
 //reactive state for header dropdown.
 // let menu = ref(false);
 
-const emitter = inject("emitter");
 
 //emitter to grab user input.
 emitter.on("use-input", (payload) => {
@@ -212,12 +206,15 @@ async function fetchRecords() {
   } catch (err) {
     useError.value = true;
     errorMatcher(503, errorState);
-    setTimeout(() => {
-      useError.value = false;
-    }, 2000);
+    setTimeout(() => { useError.value = false }, 2000);
   }
 }
 
+//homepage name is altered,and entire data is fetched, once comp is mounted.
+onMounted(async () => {
+  arrDelay(array, (obj) => (name.value = obj), 6000);
+  await fetchRecords();
+});
 onErrorCaptured((error, component, info) => {
   //definitely logger here!!
   console.log(

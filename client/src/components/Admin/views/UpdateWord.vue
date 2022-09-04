@@ -1,7 +1,9 @@
 <template>
-  <div class="flex flex-col items-center w-full h-full gap-6 p-4 md:w-1/2 font-body">
+  <div class="flex flex-col items-center absolute z-20 w-full h-full gap-6 p-4 md:w-1/2 font-body">
+    <!-- Selection tabs. -->
     <span
-      class="flex justify-between w-full overflow-hidden text-sm rounded-md bg-slate-300 dark:bg-slate-700 md:w-4/5 mt-14">
+      class="flex justify-between w-full mt-0 overflow-hidden text-sm rounded-md bg-slate-300 dark:bg-slate-700 md:w-4/5 md:mt-14">
+
       <div v-if="dropDownRecords" class="use_dropdown_peek_left">
         <button @click="dispatch('word')" class="use_buttons" title="Selects to load all search words">
           Words
@@ -44,41 +46,39 @@
       </div>
     </span>
     <!-- forms1(Records) here👇 -->
-    <form @submit.prevent="updateRecords" class="patch_forms h-3/4" v-if="showRecords">
-      <div class="flex flex-col justify-start w-full gap-6 text-gray-800 dark:text-slate-200 font-body">
-        <span class="flex flex-col justify-between gap-4 p-2 md:flex-row md:items-center">
-          <label for="patchName">Enter the word</label>
-          <input  @focusin="fail_patch = false, ok_patch = false, useError = false" type="text" placeholder="english word only!"
-            v-model.trim="patchName" required class="dark_inputs" />
-        </span>
-        <span class="flex flex-col justify-between gap-4 p-2 md:flex-row md:items-center">
-          <label for="patchGenre">New Translation</label>
-          <input type="text" placeholder="new translation here" v-model.trim="patchTranslation" class="dark_inputs" />
-        </span>
-        <span class="flex flex-col justify-between gap-4 p-2 md:flex-row md:items-center">
-          <label for="patchGenre">New Genre</label>
-          <input type="text" placeholder="e.g: Medicals(Noun)" v-model.trim="patchGenre" class="dark_inputs" />
-        </span>
-        <span class="flex flex-col justify-between gap-4 p-2 md:flex-row md:items-center">
-          <label for="patchGenre" class="flex items-center gap-2">New Definitions
-            <transition>
-              <svg v-if="useConstant == 'word'" xmlns="http://www.w3.org/2000/svg" class="w-5 h-6 text-red-500"
-                fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </transition>
-          </label>
-          <input type="text" :disabled="useConstant == 'word'"
-            :placeholder="useConstant == 'word' ? 'not required' : 'new definitions here'"
-            v-model.trim="patchDefinitions" class="dark_inputs" />
-        </span>
-      </div>
+    <form @submit.prevent="updateRecords" class="adminForms bg-gray-50" v-if="showRecords">
+      <span class="uploadWordSpans">
+        <label for="patchName" class="text-sm font-semibold">Enter the word</label>
+        <input @focusin="fail_patch = false, ok_patch = false, useError = false" type="text"
+          placeholder="english word only!" v-model.trim="patchName" required class="dark_inputs" />
+      </span>
+      <span class="uploadWordSpans">
+        <label for="patchGenre" class="text-sm font-semibold">New translation</label>
+        <input type="text" placeholder="new translation here" v-model.trim="patchTranslation" class="dark_inputs" />
+      </span>
+      <span class="uploadWordSpans">
+        <label for="patchGenre" class="text-sm font-semibold">New genre</label>
+        <input type="text" placeholder="e.g: Medicals(Noun)" v-model.trim="patchGenre" class="dark_inputs" />
+      </span>
+      <span class="uploadWordSpans">
+        <label for="patchGenre" class="flex items-center gap-2 text-sm font-semibold">New definitions
+          <transition>
+            <svg v-if="useConstant == 'word'" xmlns="http://www.w3.org/2000/svg" class="w-5 h-6 text-red-500"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </transition>
+        </label>
+        <input type="text" :disabled="useConstant == 'word'"
+          :placeholder="useConstant == 'word' ? 'not required' : 'new definitions here'" v-model.trim="patchDefinitions"
+          class="dark_inputs" />
+      </span>
       <!-- submitting section👇 -->
-      <span class="flex flex-row items-center gap-2 p-2 text-right">
+      <span class="flex flex-row items-center gap-2 p-2 w-11/12 md:w-4/5 text-right">
         <button
-          class="sub-btns hover:text-slate-100 dark:text-emerald-500 dark:hover:text-slate-200 hover:bg-emerald-500 hover:shadow-md hover:border-transparent">
-          Update
+          class="sub-btns bg-emerald-600 hover:bg-emerald-500 dark:text-slate-100 dark:hover:text-slate-200 text-slate-100 hover:shadow-md">
+          Update word
           <!-- loading state -->
           <i class="flex items-center" v-if="loading">
             <svg role="status" class="w-4 h-4 mr-2 text-gray-200 animate-spin dark:text-gray-100 fill-green-600"
@@ -107,21 +107,6 @@
             </svg>
           </i>
         </button>
-        <!-- <div @click="useDropdown = !useDropdown" class="patch_dropdown" title="Selects the category to update">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-blue-700" fill="none" viewBox="0 0 24 24"
-            stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-          </svg>
-        </div>
-        <div v-if="useDropdown" class="use_dropdown_patch">
-          <button @click="dispatch('word')" class="use_buttons" title="Updates a simple word's translations">
-            Word
-          </button>
-          <button @click="dispatch('dict')" class="border-t use_buttons border-slate-500 dark:border-slate-400"
-            title="Updates the dictionary record">
-            Dictionary
-          </button>
-        </div> -->
       </span>
       <transition>
         <span class="mx-auto" v-if="useError">
@@ -130,43 +115,40 @@
       </transition>
     </form>
     <!-- forms2 (Quizzes) 👇 -->
-    <form @submit.prevent="updateQuizzes" class="patch_forms h-3/4" v-if="showQuiz">
-      <div class="flex flex-col justify-start w-full gap-6 text-gray-800 dark:text-slate-200 font-body">
-        <span class="flex flex-col justify-between gap-4 p-2 md:flex-row md:items-center">
-          <label for="patchName">Enter quiz code</label>
-          <input @change="fail_patch = false, ok_patch = false" type="text" placeholder="Quiz code"
-            v-model.trim="quizCode" required class="dark_inputs" />
-        </span>
-
-        <span class="flex flex-col justify-between gap-4 p-2 md:flex-row md:items-center">
-          <label for="patchGenre">New answer</label>
-          <input type="text" placeholder="New Answer here" v-model.trim="quizRight" class="dark_inputs" />
-        </span>
-        <span class="flex flex-col justify-between gap-4 p-2 md:flex-row md:items-center">
-          <label for="patchGenre">New wrong1</label>
-          <input type="text" placeholder="New wrong here" v-model.trim="quizWrong" class="dark_inputs" />
-        </span>
-        <span class="flex flex-col justify-between gap-4 p-2 md:flex-row md:items-center">
-          <label for="patchGenre" class="flex items-center gap-2">
-            New wrong2
-            <transition>
-              <svg v-if="useConstant == 'quiz/search'" xmlns="http://www.w3.org/2000/svg" class="w-5 h-6 text-red-500"
-                fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </transition>
-          </label>
-          <input type="text" :disabled="useConstant == 'quiz/search'"
-            :placeholder="useConstant == 'quiz/search' ? 'not required' : 'Another wrong answer here'"
-            v-model.trim="quizWrong2" class="dark_inputs" />
-        </span>
-      </div>
+    <form @submit.prevent="updateQuizzes" class="adminForms bg-gray-50" v-if="showQuiz">
+      <span class="uploadWordSpans">
+        <label for="patchName" class="text-sm font-semibold">Enter quiz code</label>
+        <input @change="fail_patch = false, ok_patch = false" type="text" placeholder="Quiz code"
+          v-model.trim="quizCode" required class="dark_inputs" />
+      </span>
+      <span class="uploadWordSpans">
+        <label for="patchGenre" class="text-sm font-semibold">New answer</label>
+        <input type="text" placeholder="New Answer here" v-model.trim="quizRight" class="dark_inputs" />
+      </span>
+      <span class="uploadWordSpans">
+        <label for="patchGenre" class="text-sm font-semibold">New wrong1</label>
+        <input type="text" placeholder="New wrong here" v-model.trim="quizWrong" class="dark_inputs" />
+      </span>
+      <span class="uploadWordSpans">
+        <label for="patchGenre" class="flex items-center gap-2 text-sm font-semibold">
+          New wrong2
+          <transition>
+            <svg v-if="useConstant == 'quiz/search'" xmlns="http://www.w3.org/2000/svg" class="w-5 h-6 text-red-500"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </transition>
+        </label>
+        <input type="text" :disabled="useConstant == 'quiz/search'"
+          :placeholder="useConstant == 'quiz/search' ? 'not required' : 'Another wrong answer here'"
+          v-model.trim="quizWrong2" class="dark_inputs" />
+      </span>
       <!-- submitting section -->
-      <span class="flex flex-row items-center gap-2 p-2 text-right">
+      <span class="flex flex-row items-center gap-2 p-2 w-11/12 md:w-4/5 text-right">
         <button
-          class="sub-btns dark:text-emerald-500 dark:hover:text-slate-200 hover:bg-emerald-500 hover:text-slate-100 hover:shadow-md hover:border-transparent">
-          Update
+          class="sub-btns bg-emerald-600 hover:bg-emerald-500 dark:text-slate-100 dark:hover:text-slate-200 text-slate-100 hover:shadow-md">
+          Update quiz
           <!-- loading state -->
           <i class="flex items-center" v-if="loading">
             <svg role="status" class="w-4 h-4 mr-2 text-gray-200 animate-spin dark:text-gray-100 fill-green-600"
@@ -195,21 +177,6 @@
             </svg>
           </i>
         </button>
-        <!-- <div @click="useDropdown = !useDropdown" class="patch_dropdown" title="Selects the category to update">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-blue-700" fill="none" viewBox="0 0 24 24"
-            stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-          </svg>
-        </div>
-        <div v-if="useDropdown" class="use_dropdown_patch">
-          <button @click="dispatch('quiz/search')" class="use_buttons" title="Updates a simple word's translations">
-            Word
-          </button>
-          <button @click="dispatch('quiz/dict')" class="border-t use_buttons border-slate-500 dark:border-slate-400"
-            title="Updates the dictionary record">
-            Dictionary
-          </button>
-        </div> -->
       </span>
       <transition>
         <span class="mx-auto" v-if="useError">
@@ -222,7 +189,7 @@
 
 <script setup>
 import { ref, watchEffect } from "vue";
-import { Requests, OfflineStorage } from "../../../proxy/Services";
+import { Requests } from "../../../proxy/Services";
 const { patchPost } = Requests;
 
 //forms state.
@@ -249,8 +216,8 @@ let fail_patch = ref(false);
 let ok_patch = ref(false);
 let loading = ref(false);
 let errMessage = ref("");
-let useError = ref(false);
 let useConstant = ref("");
+let useError = ref(false);
 
 //watcher to lowercase input-states values.
 watchEffect(() => {
@@ -306,10 +273,7 @@ const updateRecords = async () => {
       patchGenre.value,
       patchTranslation.value,
       patchDefinitions.value,
-      "",
-      "",
-      "",
-      "",
+      "", "", "", "",
       useConstant.value
     )
       .then((res) => {
@@ -330,6 +294,7 @@ const updateQuizzes = async () => {
       patchGenre.value,
       patchTranslation.value,
       patchDefinitions.value,
+      "", "",
       quizCode.value,
       quizRight.value,
       quizWrong.value,

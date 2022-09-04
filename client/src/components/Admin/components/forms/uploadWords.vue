@@ -1,21 +1,21 @@
 <template>
 	<form @submit.prevent="handleSubmit(constant)"
-		class="flex flex-col justify-around w-full gap-3 p-6 border rounded-lg bg-gray-50 dark:bg-slate-900 dark:border-slate-700 h-4/5">
+		class="adminForms bg-gray-50">
 		<div
-			class="flex flex-col justify-between gap-4 p-2 text-gray-800 md:flex-row md:items-center dark:text-slate-200 font-body">
-			<label for="english">English Word</label>
+			class="uploadWordSpans">
+			<label for="english" class="text-sm font-semibold">English Word</label>
 			<input @focusin="(fail_upload = false), (ok_upload = false)" type="text" id="english" name="english"
 				placeholder="Enter an English word" required v-model.trim="name" class="dark_inputs" />
 		</div>
 		<div
-			class="flex flex-col justify-between gap-4 p-2 text-gray-800 md:flex-row md:items-center dark:text-slate-200 font-body">
-			<label for="igbo">Igbo Translation</label>
+			class="uploadWordSpans">
+			<label for="igbo" class="text-sm font-semibold">Igbo Translation</label>
 			<input type="text" id="igbo" name="igbo" placeholder="E.g: Akwa, Akwa" required v-model.trim="translation"
 				class="dark_inputs" />
 		</div>
 		<div
-			class="flex flex-col justify-between gap-4 p-2 text-gray-800 md:flex-row md:items-center dark:text-slate-200 font-body">
-			<label for="igbo" class="flex items-center gap-2">
+			class="uploadWordSpans">
+			<label for="igbo" class="flex items-center gap-2 text-sm font-semibold">
 				Definitions:
 				<transition>
 					<svg v-if="constant == 'word'" xmlns="http://www.w3.org/2000/svg" class="w-5 h-6 text-red-500"
@@ -30,16 +30,16 @@
 				v-model.trim="definitions" class="dark_inputs" />
 		</div>
 		<div
-			class="flex flex-col justify-between gap-4 p-2 text-gray-800 md:flex-row md:items-center dark:text-slate-200 font-body">
-			<label for="igbo">Genre:</label>
+			class="uploadWordSpans">
+			<label for="igbo" class="text-sm font-semibold">Genre:</label>
 			<input type="text" id="genre" name="igbo" placeholder="e.g: (Noun, Verb, etc.)" required
 				v-model.trim="genre" class="dark_inputs" />
 		</div>
 		<!-- submitting section 👇-->
-		<span class="flex flex-row items-center gap-2 p-2 text-right">
+		<span class="flex flex-row items-center gap-2 p-2 w-11/12 md:w-4/5 text-right">
 			<button
-				class="sub-btns hover:bg-emerald-500 dark:text-emerald-500 dark:hover:text-slate-200 hover:text-slate-200 hover:shadow-md hover:border-transparent">
-				Upload
+				class="sub-btns bg-emerald-600 hover:bg-emerald-500 dark:text-slate-100 dark:hover:text-slate-200 text-slate-100 hover:shadow-md hover:border-transparent">
+				Upload word
 				<!-- loading state -->
 				<i class="flex items-center" v-if="loading">
 					<svg role="status" class="w-4 h-4 mr-2 text-gray-200 animate-spin dark:text-gray-100 fill-green-600"
@@ -126,7 +126,7 @@ emitter.on("allRecords", (payload) => (constant.value = payload));
 async function runSubmit(factor, state) {
 	switch (factor) {
 		case "word":
-			if (state) {
+			if (!state) {
 				return addNewWord(
 					fail_upload,
 					loading,

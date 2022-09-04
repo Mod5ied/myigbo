@@ -1,7 +1,7 @@
 <template>
     <header
         class="flex flex-row justify-between w-full px-3 py-5 list-none border-b dark:border-b-gray-800 md:px-5 md:py-4 dark:bg-slate-900 bg-gray-50">
-        <span class="flex w-full text-gray-400 md:w-8 md:relative md:left-10">
+        <span class="flex w-full text-gray-500 md:w-8 md:relative md:left-10">
             <i class="flex justify-between w-full cursor-pointer md:items-center">
                 <!-- hamburger menu. -->
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:hidden" viewBox="0 0 20 20"

@@ -1,6 +1,6 @@
 <template>
   <div class="bottom_bar">
-    <button @click="dispatch(Dispatch.add, true)" :to="{ name: 'AddWord' }"
+    <button @click="dispatch(Dispatch.add, true)"
       :class="useAdd ? 'side_span_active' : 'side_span'">
       <p class="bottom_bar_text">Add to library</p>
       <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-blue-500" viewBox="0 0 20 20" fill="currentColor">
@@ -9,7 +9,7 @@
       </svg>
       <p class="block text-xs md:hidden">Add</p>
     </button>
-    <button @click="dispatch(Dispatch.update, true)" :to="{ name: 'UpdateWord' }"
+    <button @click="dispatch(Dispatch.update, true)"
       :class="useUpdate ? 'side_span_active' : 'side_span'">
       <p class="bottom_bar_text">Update a word</p>
       <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-emerald-500" fill="none" viewBox="0 0 24 24"
@@ -19,7 +19,7 @@
       </svg>
       <p class="block text-xs md:hidden">Update</p>
     </button>
-    <button @click="dispatch(Dispatch.delete, true)" :to="{ name: 'DeleteWord' }"
+    <button @click="dispatch(Dispatch.delete, true)"
       :class="useDelete ? 'side_span_active' : 'side_span'">
       <p class="bottom_bar_text">Delete a word</p>
       <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
@@ -29,7 +29,7 @@
       </svg>
       <p class="block text-xs md:hidden">Delete</p>
     </button>
-    <button @click="dispatch(Dispatch.peek, true)" :to="{ name: 'PeekWords' }"
+    <button @click="dispatch(Dispatch.peek, true)"
       :class="usePeek ? 'bottom_bar_active' : 'bottom_bar_inactive'">
       <p class="bottom_bar_text">View library</p>
       <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-blue-500" viewBox="0 0 20 20" fill="currentColor">
@@ -38,8 +38,8 @@
       </svg>
       <p class="block text-xs md:hidden">Preview</p>
     </button>
-    <button @click="dispatch(Dispatch.quiz, true)" :to="{ name: 'AddQuiz' }"
-      :class="useQuiz ? 'side_span_active' : 'side_span'">
+    <button @click="dispatch(Dispatch.audio, true)"
+      :class="useAudio ? 'side_span_active' : 'side_span'">
       <p class="bottom_bar_text">Add Audio</p>
       <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
         <path fill-rule="evenodd"
@@ -57,7 +57,8 @@
         <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
       </svg>
       <p class="block text-xs md:hidden">Utilities</p>
-      <div class="absolute flex gap-4 p-2 border -bottom-10 left-56 md:left-4 md:bottom-5" v-if="emergency">
+      <!-- find out what to do here. -->
+      <!-- <div class="absolute flex gap-4 p-2 border -bottom-10 left-56 md:left-4 md:bottom-5" v-if="emergency">
         <span class="side_config">
           <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-green-500" viewBox="0 0 20 20" fill="currentColor">
             <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
@@ -76,15 +77,7 @@
           </svg>
           <button>Quizzes</button>
         </span>
-        <!-- <span class="side_config">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-red-500" fill="none" viewBox="0 0 24 24"
-            stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M12 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2M3 12l6.414 6.414a2 2 0 001.414.586H19a2 2 0 002-2V7a2 2 0 00-2-2h-8.172a2 2 0 00-1.414.586L3 12z" />
-          </svg>
-          <button>Clear Library</button>
-        </span> -->
-      </div>
+      </div> -->
     </span>
   </div>
 </template>
@@ -92,15 +85,12 @@
 <script setup>
 import { ref, inject } from "vue";
 
-//initialize emitter.
 const emitter = inject("emitter");
-
-//reactive states.
 const emergency = ref(false);
 
 //style states.
 let useAdd = ref(false);
-let useQuiz = ref(false);
+let useAudio = ref(false);
 let usePeek = ref(false);
 let useDelete = ref(false);
 let useUpdate = ref(false);
@@ -108,7 +98,7 @@ let useUpdate = ref(false);
 //dispatch states.
 const Dispatch = ref({
   add: "addWord",
-  quiz: "addQuiz",
+  audio: "addAudio",
   delete: "deleteWord",
   update: "updateWord",
   peek: "peekWords",
@@ -120,17 +110,17 @@ const toggleView = (view, state, styleVar) => {
   styleVar.value = state;
 };
 
-const dispatch = (action, state) => {
+function dispatch (action, state) {
   switch (action) {
     case "addWord":
       toggleView(action, state, useAdd);
-      useQuiz.value = false;
+      useAudio.value = false;
       usePeek.value = false;
       useDelete.value = false;
       useUpdate.value = false;
       break;
-    case "addQuiz":
-      toggleView(action, state, useQuiz);
+    case "addAudio":
+      toggleView(action, state, useAudio);
       useAdd.value = false;
       usePeek.value = false;
       useDelete.value = false;
@@ -139,21 +129,21 @@ const dispatch = (action, state) => {
     case "updateWord":
       toggleView(action, state, useUpdate);
       useAdd.value = false;
-      useQuiz.value = false;
+      useAudio.value = false;
       usePeek.value = false;
       useDelete.value = false;
       break;
     case "deleteWord":
       toggleView(action, state, useDelete);
       useAdd.value = false;
-      useQuiz.value = false;
+      useAudio.value = false;
       usePeek.value = false;
       useUpdate.value = false;
       break;
     case "peekWords":
       toggleView(action, state, usePeek);
       useAdd.value = false;
-      useQuiz.value = false;
+      useAudio.value = false;
       useDelete.value = false;
       useUpdate.value = false;
       break;

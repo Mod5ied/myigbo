@@ -6,6 +6,8 @@ const { getState } = StateProxy;
 const { getWords, getDicts, getQuiz, registerWord, registerQuiz, batchUpload, updatePost, deleteOnePost } =
   PostProxy;
 
+//TODO: Separate class use by the Admin and one used by user. Params are becoming an issue.
+
 class Requests {
   /**
    * @param {string} ok @param {string} serve @param {Array}
@@ -36,10 +38,19 @@ class Requests {
     let response;
     try {
       const { state, data } = await getWords();
-      return (response = data);
+      return data;
     } catch (err) {
       return (response = "Error while fetching words");
       //todo: /* use a logger here instead to get err-message. */
+    }
+  };
+
+  static fetchAllRecords = async () => {
+    try {
+      const { state, data } = await getDicts();
+      return data;
+    } catch (err) {
+      return "Error while fetching records";
     }
   };
 
@@ -226,6 +237,8 @@ class Requests {
     genre = "",
     translation = "",
     definitions = "",
+    synonyms = "",
+    antonyms = "",
     code = 0,
     right = "",
     wrong1 = "",
@@ -240,6 +253,9 @@ class Requests {
         translation,
         genre,
         definitions,
+        adjectives,
+        synonyms,
+        antonyms,
         code,
         right,
         wrong1,

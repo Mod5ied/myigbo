@@ -1,5 +1,5 @@
 <template>
-	<div class="flex flex-col items-center w-full h-full gap-6 p-4 md:w-1/2 font-body">
+	<div class="flex flex-col items-center absolute z-20 w-full h-full gap-6 p-4 md:w-1/2 font-body">
 		<span
 			class="flex justify-between w-full overflow-hidden text-sm bg-slate-300 dark:bg-slate-700 rounded-md md:w-3/4 mt-14">
 			<button @click="formsToggle('showSearch')" class="w-1/2 px-6 font-bold text-gray-100 bg-yellow-500">
@@ -25,22 +25,20 @@
 </template>
 
 <script setup>
-import { ref, watchEffect } from "vue";
-import { Requests } from "../../../proxy/Services";
-const { addNewQuiz } = Requests;
+import { ref} from "vue";
 
-//input states.
-let question = ref("");
-let right_answer = ref("");
-let wrong_answer = ref("");
-let wrong_answer2 = ref("");
+// //input states.
+// let question = ref("");
+// let right_answer = ref("");
+// let wrong_answer = ref("");
+// let wrong_answer2 = ref("");
 
-watchEffect(() => {
-	question.value = question.value.toLowerCase();
-	right_answer.value = right_answer.value.toLowerCase();
-	wrong_answer.value = wrong_answer.value.toLowerCase();
-	wrong_answer2.value = wrong_answer2.value.toLowerCase();
-});
+// watchEffect(() => {
+// 	// question.value = question.value.toLowerCase();
+// 	// right_answer.value = right_answer.value.toLowerCase();
+// 	// wrong_answer.value = wrong_answer.value.toLowerCase();
+// 	// wrong_answer2.value = wrong_answer2.value.toLowerCase();
+// });
 
 //forms states.
 let useSearch = ref(false);
@@ -55,49 +53,50 @@ let errMessage = ref("");
 let loading = ref(false);
 
 //dict submit handler.
-const handleDict = async (model = "") => {
-	return await addNewQuiz(
-		model,
-		fail_upload,
-		loading,
-		ok_upload,
-		question.value,
-		right_answer.value,
-		wrong_answer.value,
-		wrong_answer2.value
-	);
-};
+// const handleDict = async (model = "") => {
+// 	return await addNewQuiz(
+// 		model,
+// 		fail_upload,
+// 		loading,
+// 		ok_upload,
+// 		question.value,
+// 		right_answer.value,
+// 		wrong_answer.value,
+// 		wrong_answer2.value
+// 	);
+// };
+
 //search submit handler.
-const handleWords = async (model = "") => {
-	return await addNewQuiz(
-		model,
-		fail_upload,
-		loading,
-		ok_upload,
-		question.value,
-		right_answer.value,
-		wrong_answer.value
-	);
-};
+// const handleWords = async (model = "") => {
+// 	return await addNewQuiz(
+// 		model,
+// 		fail_upload,
+// 		loading,
+// 		ok_upload,
+// 		question.value,
+// 		right_answer.value,
+// 		wrong_answer.value
+// 	);
+// };
 
 //fn to submit the forms.
-const submitQuiz = async (quizType) => {
-	switch (quizType) {
-		case "search":
-			return handleWords("search")
-				.then()
-				.catch((err) => (errMessage.value = err));
-		// send to err handler and notify admin.
-		case "dict":
-			return handleDict("dict")
-				.then()
-				.catch((err) => (errMessage.value = err));
-		// send to err handler and notify admin.
-		default:
-			return (errMessage.value = "An unknown error occurred");
-		// send to err handler and notify admin (An unknown error occurred).
-	}
-};
+// const submitQuiz = async (quizType) => {
+// 	switch (quizType) {
+// 		case "search":
+// 			return handleWords("search")
+// 				.then()
+// 				.catch((err) => (errMessage.value = err));
+// 		// send to err handler and notify admin.
+// 		case "dict":
+// 			return handleDict("dict")
+// 				.then()
+// 				.catch((err) => (errMessage.value = err));
+// 		// send to err handler and notify admin.
+// 		default:
+// 			return (errMessage.value = "An unknown error occurred");
+// 		// send to err handler and notify admin (An unknown error occurred).
+// 	}
+// };
 
 //fn to toggle forms views.
 const formsToggle = (state) => {
@@ -111,10 +110,10 @@ const formsToggle = (state) => {
 	}
 };
 
-function flashError() {
-	useError.value = true;
-	setTimeout(() => {
-		useError.value = false;
-	}, 3000);
-}
+// function flashError() {
+// 	useError.value = true;
+// 	setTimeout(() => {
+// 		useError.value = false;
+// 	}, 3000);
+// }
 </script>

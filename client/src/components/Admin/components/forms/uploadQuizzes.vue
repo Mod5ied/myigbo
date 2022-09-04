@@ -1,28 +1,28 @@
 <template>
   <!-- dictionaryQuiz form 👇 -->
   <form @submit.prevent="handleSubmit(quizConstant)"
-    class="flex flex-col justify-around w-full gap-3 p-6 border rounded-lg bg-gray-50 h-4/5 md:h-3/4 dark:bg-slate-900 dark:border-slate-600">
+    class="adminForms bg-gray-50">
     <div
-      class="flex flex-col justify-between gap-4 p-2 text-gray-800 md:flex-row md:items-center dark:text-slate-200 font-body">
-      <label for="english">Quiz question</label>
+      class="uploadWordSpans">
+      <label for="english" class="text-sm font-semibold">Quiz question</label>
       <input @focusin="fail_upload = false, ok_upload = false, useError = false" type="text" id="english" name="english"
         placeholder="Enter the question" required v-model="question" class="dark_inputs" />
     </div>
     <div
-      class="flex flex-col justify-between gap-4 p-2 text-gray-800 md:flex-row md:items-center dark:text-slate-200 font-body">
-      <label for="igbo"> Right answer </label>
+      class="uploadWordSpans">
+      <label for="igbo" class="text-sm font-semibold"> Right answer </label>
       <input @change="fail_upload = false" type="text" id="igbo" name="igbo" placeholder="Enter the answer" required
         v-model="right_answer" class="dark_inputs" />
     </div>
     <div
-      class="flex flex-col justify-between gap-4 p-2 text-gray-800 md:flex-row md:items-center dark:text-slate-200 font-body">
-      <label for="igbo"> Wrong answer1 </label>
+      class="uploadWordSpans">
+      <label for="igbo" class="text-sm font-semibold"> Wrong answer1 </label>
       <input @change="fail_upload = false" type="text" id="igbo" name="igbo" placeholder="Enter wrong answer" required
         v-model="wrong_answer" class="dark_inputs" />
     </div>
     <div
-      class="flex flex-col justify-between gap-4 p-2 text-gray-800 md:flex-row md:items-center dark:text-slate-200 font-body">
-      <label for="igbo" class="flex items-center gap-2">
+      class="uploadWordSpans">
+      <label for="igbo" class="flex items-center gap-2 text-sm font-semibold">
         Wrong answer2
         <transition>
           <svg v-if="quizConstant == 'search'" xmlns="http://www.w3.org/2000/svg" class="w-5 h-6 text-red-500"
@@ -37,9 +37,9 @@
         class="dark_inputs" />
     </div>
     <!-- submitting section 👇 -->
-    <span class="flex flex-row items-center gap-2 p-2 text-right">
-      <button class="sub-btns hover:bg-emerald-500 dark:text-emerald-500 dark:hover:text-slate-200 hover:text-slate-200 hover:shadow-md hover:border-transparent">
-        Upload
+    <span class="flex flex-row items-center gap-2 p-2 w-11/12 md:w-4/5 text-right">
+      <button class="sub-btns bg-emerald-600 hover:bg-emerald-500 dark:text-slate-100 dark:hover:text-slate-200 text-slate-100 hover:shadow-md">
+        Upload quiz
         <!-- loading state -->
         <i class="flex items-center" v-if="loading">
           <svg role="status" class="w-4 h-4 mr-2 text-gray-200 animate-spin dark:text-gray-100 fill-green-600"

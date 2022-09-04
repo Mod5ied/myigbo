@@ -60,7 +60,7 @@ export class PostProxy {
         const results = await res.data;
         resolve(results);
       } catch (err) {
-        reject(err ?? err.response.data);
+        reject(err?.response.data);
       }
     });
   };
@@ -80,7 +80,7 @@ export class PostProxy {
         const results = await res.data;
         resolve(results);
       } catch (err) {
-        reject(err ?? err.response.data);
+        reject(err?.response.data);
       }
     });
   };

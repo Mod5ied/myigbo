@@ -1,11 +1,11 @@
 <template>
-  <div class="flex flex-col items-center w-full h-full gap-1 p-4 md:w-1/2">
+  <div class="flex flex-col items-center absolute z-20 w-full h-full gap-1 p-4 md:w-1/2">
     <div class="delete_body">
       <div class="flex flex-col justify-between gap-2 md:flex-row md:gap-0">
-        <h2 class="delete_btn" @click="useDelete = !useDelete">
+        <h2 class="delete_btn" @click="useDelete = !useDelete" v-if="showBtn">
           Delete a Word Here:
         </h2>
-        <span class="flex items-center justify-between md:w-1/2" v-if="useDelete">
+        <span class="flex items-center justify-between gap-2 md:w-3/5" v-if="useDelete">
           <button :class="
             useWord ? 'delete_section_span_active' : 'delete_section_span'
           " @click="dispatch('word')">
@@ -21,20 +21,16 @@
           " @click="dispatch('quiz/search')">
             Quizzes
           </button>
-          <!-- <button class="delete_section_span" @click="useInput('quiz/dict')">
-            Quizzes(dict)
-          </button> -->
         </span>
       </div>
-      <form @submit.prevent="removeWord" class="flex flex-col w-full gap-3 mb-5 h-1/2" v-if="useDelete">
-        <span
-          class="flex flex-col items-center w-full gap-2 p-2 text-gray-800 md:flex-row md:justify-around dark:text-slate-200 font-body">
-          <label for="deleteConst" class="text-sm md:text-base">Enter word:</label>
+      <form @submit.prevent="removeWord" class="adminFormsDelete bg-gray-100 border border-slate-300" v-if="useDelete">
+        <span class="uploadWordSpans">
+          <label for="deleteConst" class="text-sm font-semibold">Enter word:</label>
           <input type="text" placeholder="English words only!" v-model.trim="input" required class="dark_inputs"
             @focusin="ok_delete = false, fail_delete = false, loading = false" @change="useError = false" />
         </span>
         <!-- submitting here 👇 -->
-        <span class="flex flex-row items-center justify-center gap-4">
+        <span class="flex flex-row items-center gap-2 p-2 w-full md:w-4/5 text-right">
           <button class="btns-danger">
             Delete word
             <i class="flex flex-row items-center">
@@ -93,16 +89,24 @@ let errMessage = ref("");
 let useDict = ref(false);
 let useWord = ref(false);
 let useQuiz = ref(false);
+let showBtn = ref(false);
 let input = ref("");
 
+function toggleDeleteButton() {
+  if (useDelete.value === true) {
+    return showBtn.value = false
+  }
+  showBtn.value = true
+}
 //watcher to lowercase input state.
 watchEffect(() => {
   input.value = input.value.toLowerCase();
   deleteConst.value = deleteConst.value.toLowerCase();
+  toggleDeleteButton()
 });
 
-//delete function.
-const removeWord = async () => {
+
+async function removeWord() {
   if (deleteConst.value.length < 5) {
     return flashError("Select category above");
   }
@@ -143,8 +147,6 @@ const dispatch = (constant) => {
       useQuiz.value = true;
       useDict.value = false;
       useWord.value = false;
-      break;
-    default:
       break;
   }
 };

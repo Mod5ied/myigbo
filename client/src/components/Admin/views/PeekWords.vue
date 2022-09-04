@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col items-center w-full h-full gap-6 p-4 md:w-4/5 font-body">
+  <div class="flex flex-col items-center absolute z-20 w-full h-full gap-6 p-4 md:w-4/5 font-body">
     <span class="flex justify-between w-full overflow-hidden rounded-md mt-14 md:w-1/2 bg-slate-300 dark:bg-slate-600">
       <div v-if="dropDownRecords" class="use_dropdown_peek_left">
         <button @click="dispatch('allWords')" class="use_buttons" title="Selects to load all search words">
@@ -123,7 +123,7 @@
 
 <script setup>
 import { ref } from "vue";
-import { Requests, OfflineStorage } from "../../../proxy/Services";
+import { Requests} from "../../../proxy/Services";
 const { fetchWords, fetchDictionary, fetchQuiz } = Requests;
 
 //states.

@@ -117,6 +117,7 @@ let isTyping = ref(false);
 let searchClass = props.SearchClass;
 let dictClass = props.DictClass;
 const useState = [false, true];
+const emitter = inject("emitter");
 
 // watchers -> to alter reactive state.
 watchEffect(() => {
@@ -130,10 +131,7 @@ const props = defineProps({
   DictClass: String,
 });
 
-//event bus initialized.
-const emitter = inject("emitter");
 
-//methods.
 function hideCard() {
   emitter.emit("hide-card", useState);
 }

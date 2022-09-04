@@ -1,5 +1,6 @@
 <template>
-	<div class="flex flex-col items-center w-full h-full gap-6 p-4 md:w-1/2 font-body">
+	<div class="flex flex-col items-center absolute w-full h-full gap-6 p-4 md:w-1/2 font-body z-20">
+		<!-- Selection tabs. -->
 		<span
 			class="flex justify-between w-full mt-0 overflow-hidden text-sm rounded-md bg-slate-300 dark:bg-slate-700 md:w-4/5 md:mt-14">
 			<div v-if="dropDownRecords" class="use_dropdown_peek_left">
@@ -52,17 +53,18 @@
 </template>
 
 <script setup>
-import { ref, inject } from "vue";
-import UploadQuizzes from "../components/forms/UploadQuizzes.vue";
+import { inject, ref } from "vue";
+import UploadQuizzes from "../components/forms/uploadQuizzes.vue";
 import UploadWords from "../components/forms/uploadWords.vue";
-const emitter = inject("emitter");
+const emitter = inject("emitter")
 
 let useQuiz = ref(false);
 let useWords = ref(false);
 
+// let quizConstant = ref("");
 let dropDownRecords = ref(false);
 let dropDownQuizzes = ref(false);
-// let quizConstant = ref("");
+
 
 //fn to toggle forms views.
 const formsToggle = (state) => {
