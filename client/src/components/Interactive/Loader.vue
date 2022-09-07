@@ -1,7 +1,7 @@
 <template>
     <div v-if="!showLoader"
-        class="flex items-center justify-center flex-col h-screen overflow-hidden overflow-x-hidden bg-gray-100 dark:bg-slate-900 font-body">
-        <main class="flex items-center justify-center flex-col gap-4">
+        class="flex flex-col items-center justify-center h-screen overflow-hidden overflow-x-hidden bg-gray-100 dark:bg-slate-900 font-body">
+        <main class="flex flex-col items-center justify-center gap-4">
             <h1 class="text-4xl font-bold text-slate-600 dark:text-slate-200">IGBO LIBRARY.</h1>
             <span>
                 <vue-loaders name="ball-pulse" color="#135bbf" scale="0.8"></vue-loaders>
@@ -19,7 +19,7 @@ import { onMounted, inject } from 'vue';
 import { useRouter } from 'vue-router';
 
 const emitter = inject("emitter")
-const router = useRouter()
+const router = useRouter()          
 const props = defineProps({
     location: String,
     showLoader: Boolean
@@ -27,8 +27,8 @@ const props = defineProps({
 
 function redirectToLogin() {
     setTimeout(() => {
-        router.push({ name: "Search" })
-    }, 10000)
+        router.push({ name: "Register" })
+    }, 8000)
 }
 
 function hideLoaderPage() {

@@ -1,5 +1,5 @@
 <template>
-  <div class="h-screen overflow-hidden overflow-x-hidden bg-gray-100 dark:bg-slate-900 font-body">
+  <div class="h-screen overflow-hidden overflow-x-hidden bg-gray-100 select-none dark:bg-slate-900 font-body">
     <Header @toggl-theme="setDarkMode" @toggl-learn="router.push({ name: 'Learn' })" :darkState="darkState"
       title="Learn Igbo" />
     <main class="flex flex-col items-center justify-center gap-3 py-10 md:px-5 md:py-6 md:gap-10">
