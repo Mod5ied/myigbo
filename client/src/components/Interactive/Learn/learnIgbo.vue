@@ -45,6 +45,7 @@ emitter.on("return-to-learn", () => {
     useNumber.value = false
     setTimeout(() => {
         useHome.value = true
+        emitter.emit("can-use-router")
     }, 700)
 })
 
@@ -58,7 +59,6 @@ const setDarkMode = () => {
         return;
     }
     emitter.emit("set-theme", "light");
-    console.log(darkState.value);
     darkState.value = !darkState.value;
 };
 
@@ -76,6 +76,7 @@ function toggleView(view) {
             alert("Not functional!")
             // useHome.value = false;
             // setTimeout(() => useAlpha.value = true, 800)
+            canReturn.value = !canReturn.value
             break;
     }
 }

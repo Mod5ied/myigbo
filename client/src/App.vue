@@ -5,11 +5,6 @@ const emitter = inject("emitter");
 let parentDiv = ref(null);
 let currentState = ref(null);
 
-//parent element reference.
-onMounted(() => {
-  parentDiv.value = document.getElementById("parent");
-  persistState();
-});
 
 //fn that checks the localstorage for state changes & assigns to var.
 function checkStorage() {
@@ -39,10 +34,15 @@ emitter.on("set-theme", (payload) => {
     parentDiv.value.classList.add(payload);
     return
   }
-  console.log(payload);
   //write "light" to localstorage.
   localStorage.setItem("state", payload);
   parentDiv.value.classList.remove("dark");
+});
+
+//parent element reference.
+onMounted(() => {
+  parentDiv.value = document.getElementById("parent");
+  persistState();
 });
 </script>
 

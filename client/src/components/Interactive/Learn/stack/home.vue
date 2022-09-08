@@ -34,8 +34,6 @@
 </template>
 
 <script setup>
-import { inject } from 'vue';
-
 const emit = defineEmits(["alpha", "numbers", "vowels"])
 const Props = defineProps({
     useHome: {

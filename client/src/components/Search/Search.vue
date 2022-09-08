@@ -43,7 +43,7 @@
         <SearchResult v-if="hasResult" :useRecord="useRecord" :passError="passError" :passErrorCode="passErrorCode" />
       </Transition>
     </main>
-    <DockTabs :use-games="true" :use-speaker="useSpeaker" />
+    <DockTabs :use-games="true" :use-speaker="useSpeaker" :use-learn="true" />
   </div>
 </template>
 
@@ -172,7 +172,7 @@ emitter.on("submit-error", (payload) => {
 //fns() for tweaking light and dark modes.
 const setDarkMode = () => {
   if (!darkState.value || darkState.value === null) {
-    //emit a set-to-light event to App.vue and toggles to dark-mode.
+    //emit a set-to-dark event to App.vue and toggles to dark-mode.
     emitter.emit("set-theme", "dark");
     darkState.value = !darkState.value;
     return;
@@ -196,7 +196,7 @@ const matchWord = (input) => {
 
 //fns() to check for state in localStorage
 function checkState() {
-  localStorage.getItem("state");
+  return localStorage.getItem("state");
 }
 currentState.value = checkState();
 
@@ -215,6 +215,7 @@ onMounted(async () => {
   arrDelay(array, (obj) => (name.value = obj), 6000);
   await fetchRecords();
 });
+
 onErrorCaptured((error, component, info) => {
   //definitely logger here!!
   console.log(

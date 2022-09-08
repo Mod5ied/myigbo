@@ -2,12 +2,12 @@ import { createRouter, createWebHistory } from "vue-router";
 //dynamic routing.
 const Admin = () => import("../components/Admin/Admin.vue");
 const Search = () => import("../components/Search/Search.vue");
-const PeekWords = () => import("../components/Admin/views/PeekWords.vue");
 const Dictionary = () => import("../components/Dictionary/Dictionary.vue");
 const ErrorPage = () => import("../components/Interactive/FourOhFour.vue");
 const Learn = () => import("../components/Interactive/Learn/learnIgbo.vue");
 const Register = () => import("../components/Pages/_dash.vue");
 import Loader from "../components/Interactive/Loader.vue";
+// const PeekWords = () => import("../components/Admin/views/PeekWords.vue");
 // const AddWord = () => import("../components/Admin/views/AddWord.vue");
 // const AddQuiz = () => import("../components/Admin/views/AddQuiz.vue");
 // const DeleteWord = () => import("../components/Admin/views/DeleteWord.vue");

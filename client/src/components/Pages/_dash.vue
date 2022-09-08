@@ -1,5 +1,5 @@
 <template>
-    <div class="flex items-center justify-center h-screen">
+    <div class="flex items-center justify-center w-screen h-screen">
         <div class="absolute border rounded-md right-24 top-16 border-slate-300"><img :src="people" class="w-52" alt="">
         </div>
         <div class="absolute border rounded-full left-20 bottom-10 border-slate-300"><img :src="world" class="w-92"
@@ -12,7 +12,7 @@
         <div class="flex items-center justify-center w-screen h-screen opacity-75 bg-slate-200 dark:opacity-40 dark:bg-slate-900">
         </div>
         <div class="registrationFormWrapper">
-            <div class="flex flex-row justify-around w-1/3 border border-slate-400">
+            <div class="flex flex-row justify-around w-4/5 border md:w-1/3 border-slate-400">
                 <p @click="showLogIn"
                     :class="useLogIn ? 'bg-slate-900 text-slate-200 font-semibold' : 'font-semibold bg-white'"
                     class="w-1/2 p-2 text-center border-r border-r-slate-400">Log-In</p>
@@ -27,9 +27,9 @@
                 <SignUp v-if="useSignUp" :hasError="hasError" />
             </Transition>
             <Transition>
-                <Login v-show="useLogIn" :hasError="hasError" />
+                <Login v-if="useLogIn" :hasError="hasError" />
             </Transition>
-            <span class="relative dark:border-dotted border right-40 flex  items-center">
+            <span class="relative flex items-center border dark:border-dotted md:right-40">
                 <router-link class="p-1 text-sm font-semibold text-indigo-900" :to="{ name: 'Search' }">Continue without
                     Sign-Up</router-link>
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"

@@ -27,7 +27,8 @@
         </Transition>
       </ErrorBoundary> -->
     </main>
-    <footer class="flex justify-end w-full px-3 md:justify-between md:gap-5 md:px-10 md:fixed md:bottom-3">
+    <DockTabs :use-learn="true" :use-dict="false" />
+    <!-- <footer class="flex justify-end w-full px-3 md:justify-between md:gap-5 md:px-10 md:fixed md:bottom-3">
       <i @click="handleView" title="Play a Puzzle"
         class="flex items-center text-red-300 transition-all hover:text-red-500 focus:text-red-700 hover:duration-300">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 md:w-9 md:h-9" fill="none" viewBox="0 0 24 24"
@@ -36,7 +37,7 @@
             d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" />
         </svg>
       </i>
-    </footer>
+    </footer> -->
   </div>
 </template>
 
@@ -52,6 +53,7 @@ import {
   onMounted,
   onErrorCaptured,
 } from "vue";
+import DockTabs from "../Search/components/DockTabs.vue";
 const DictResults = defineAsyncComponent(() => import("./components/Dict_results.vue"));
 const DictInteract = defineAsyncComponent(() => import("../Interactive/Dict_Interact.vue"));
 const emitter = inject("emitter");
@@ -162,15 +164,5 @@ onErrorCaptured((error, component, info) => {
 .scrollable::-webkit-scrollbar {
   width: 0;
   height: 0;
-}
-
-.v-enter-active,
-.v-leave-active {
-  transition: opacity 0.6s ease;
-}
-
-.v-enter-from,
-.v-leave-to {
-  opacity: 0;
 }
 </style>

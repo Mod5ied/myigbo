@@ -1,6 +1,6 @@
 <template>
     <!-- Ordinarily we should loop and render here, but not yet. -->
-    <div class="flex flex-row flex-wrap items-center justify-center w-11/12 gap-5 p-3 md:w-3/4">
+    <div class="flex flex-row flex-wrap items-center justify-center w-11/12 gap-5 p-3 md:gap-6 md:w-4/5">
         <span class="alphaSpan">
             <p class="alphaPara">{{ alphabets[0] }}</p>
             <div class="alphaHidden"></div>

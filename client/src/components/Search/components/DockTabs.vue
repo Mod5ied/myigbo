@@ -49,6 +49,17 @@
           </i>
         </router-link>
       </span>
+      <span class="search-btns" v-if="useLearn" title="Learn Igbo">
+        <router-link :to="{ name: 'Learn' }">
+          <i class="flex items-center text-gray-100">
+            <svg class="w-6 h-6 md:w-6 md:h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+              stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5" />
+            </svg>
+          </i>
+        </router-link>
+      </span>
       <span class="search-btns" v-if="useExit" title="Exit" @click="refreshState">
         <a>
           <i class="flex items-center text-gray-100">
@@ -61,7 +72,8 @@
           </i>
         </a>
       </span>
-      <span class="search-btns" v-if="useReturn" title="Exit" @click="emitter.emit('return-to-learn')">
+      <span class="search-btns" v-if="useReturn" title="return to previous page"
+        @click.once="emitter.emit('return-to-learn')" @dblclick="router.push({ name: 'Search' })">
         <a>
           <i class="flex items-center text-gray-100">
             <svg class="w-6 h-6 md:w-6 md:h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -80,6 +92,14 @@ import { inject, ref } from "vue";
 import { useRouter } from 'vue-router';
 const router = useRouter()
 const Props = defineProps({
+  useDict: {
+    type: Boolean,
+    default: true
+  },
+  useLearn: {
+    type: Boolean,
+    default: false
+  },
   useGames: {
     type: Boolean,
     default: false
@@ -95,17 +115,17 @@ const Props = defineProps({
   useReturn: {
     type: Boolean,
     default: false
-  }
+  },
 })
 
 //reactive button states.
-let useDict = ref(true);
-let useSearch = ref(true)
+let useSearch = ref(true);
 let useButtons = ref(true);
-let useExit = ref(Props.useExit)
-let useGames = ref(Props.useGames)
-let useReturn = ref(Props.useReturn)
-let useSpeaker = ref(Props.useSpeaker)
+let useDict = ref(Props.useDict);
+let useExit = ref(Props.useExit);
+let useGames = ref(Props.useGames);
+let useReturn = ref(Props.useReturn);
+let useSpeaker = ref(Props.useSpeaker);
 const useState = [false, true];
 
 
@@ -132,4 +152,5 @@ const refreshState = () => {
   emitter.emit("clear-result", false); //goes up to {Search}.
   emitter.emit("revert-btns", useState); //goes across to {Search-box} input btns.
 };
+
 </script>

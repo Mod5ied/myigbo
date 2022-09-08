@@ -4,8 +4,8 @@
         <span class="flex w-full text-gray-500 md:w-8 md:relative md:left-10">
             <i class="flex justify-between w-full cursor-pointer md:items-center">
                 <!-- hamburger menu. -->
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:hidden" viewBox="0 0 20 20"
-                    fill="currentColor">
+                <svg @click="useMenu = !useMenu" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:hidden"
+                    viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd"
                         d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h6a1 1 0 110 2H4a1 1 0 01-1-1z"
                         clip-rule="evenodd" />
@@ -18,23 +18,31 @@
                 </svg>
             </i>
         </span>
-        <span class="relative hidden gap-16 text-sm font-semibold text-gray-500 right-32 dark:text-slate-400 md:flex"
-            id="menu">
-            <li @click="dispatchToggle(Props.title)" class="search-links">
-                <p>{{ Props.title }}</p>
-            </li>
-            <li class="search-links">
-                <router-link :to="{ name: 'Register' }">Register here</router-link>
-            </li>
-            <li class="search-links">
-                <router-link :to="{ name: 'Admin' }">Admin</router-link>
-            </li>
-        </span>
+        <Transition>
+            <span v-if="useMenu" class="headerDropdown" id="menu">
+                <li class="search-links">
+                    <router-link class="relative left-8 md:left-0" :to="{ name: 'Admin' }">Admin</router-link>
+                </li>
+                <li @click="dispatchToggle(Props.title)" class="search-links">
+                    <p class="relative left-8 md:left-0">{{ Props.title }}</p>
+                </li>
+                <li class="search-links">
+                    <router-link class="relative left-8 md:left-0" :to="{ name: 'Register' }">Register here
+                    </router-link>
+                </li>
+            </span>
+        </Transition>
     </header>
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue';
 
+
+
+let dynamicClass = "flex flex-col";
+let menuDiv = ref(null);
+let useMenu = ref(false)
 const Props = defineProps({
     darkState: {
         type: Boolean,
@@ -51,4 +59,30 @@ function dispatchToggle(where) {
     emit("togglSearch");
 }
 
+function toggleMenu() {
+    if (!useMenu.value) {
+        menuDiv.value.classList.remove("hidden")
+        menuDiv.value.classList.add("flex flex-col")
+        useMenu.value = true
+        return
+    }
+    menuDiv.value.classList.remove("flex flex-col")
+    menuDiv.value.classList.add("hidden")
+    useMenu.value = false
+}
+
+onMounted(() => {
+    menuDiv.value = document.getElementById("menu");
+})
 </script>
+<style scoped>
+.v-enter-active,
+.v-leave-active {
+    transition: opacity 0.3s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+    opacity: 0;
+}
+</style>
