@@ -37,8 +37,6 @@
           </div>
         </div>
       </Transition>
-      <!-- Would be toggled from the searchBox component instead. -->
-      <!-- <Search_history v-if="useHistory" /> -->
       <Transition>
         <SearchResult v-if="hasResult" :useRecord="useRecord" :passError="passError" :passErrorCode="passErrorCode" />
       </Transition>
@@ -56,25 +54,24 @@ import {
   ref,
 } from "vue";
 import { useRouter } from "vue-router";
-import { Requests } from "../../proxy/Services";
-import image2 from "../../assets/Solutions_2.png";
-// import image1 from "../../assets/home.svg";
-import Search_box from "./components/Search_box.vue";
-// import Search_history from "./components/Search_history.vue";
-import { ErrorStates } from "../../proxy/ErrorScript";
 import Header from "./components/Header.vue";
+import { Requests } from "../../proxy/Services";
 import DockTabs from "./components/DockTabs.vue";
-const SearchResult = defineAsyncComponent(() => import("./components/Search_result.vue"));
+import image2 from "../../assets/Solutions_2.png";
+import Search_box from "./components/Search_box.vue";
+import { ErrorStates } from "../../proxy/ErrorScript";
+
 const SearchInteract = defineAsyncComponent(() => import("../Interactive/Search_Interact.vue"));
-const { fetchAllWords } = Requests;
+const SearchResult = defineAsyncComponent(() => import("./components/Search_result.vue"));
 const { errorMatcher } = ErrorStates;
-const router = useRouter()
+const { fetchAllWords } = Requests;
 const emitter = inject("emitter");
+const router = useRouter()
 
 //dynamic arrays.
 // const images = ref([image1, image2]); //👈 should be used to loop through homepage images.
-let name = ref("Services");
-const array = ["Translates", "Teaches", "Transcends", "Services"];
+const array = ["Translates", "Teaches", "Transcends", "By Sinq.io"];
+let name = ref(array[3]);
 
 //function to randomize home text.
 function arrDelay(arr, delegate, delay) {
@@ -116,12 +113,14 @@ let SearchClass = "mt-10 md:mt-0";
 // let menu = ref(false);
 
 
-//emitter to grab user input.
-emitter.on("use-input", (payload) => {
-  matchWord(payload);
+//emitters to grab user input.
+emitter.on("use-input-igbo", (payload) => {
+  matchWord(payload, "igbo");
 });
+emitter.on("use-input-english", (payload) => {
+  matchWord(payload, "english");
+})
 
-//emits events
 emitter.on("clear-result", (payload) => {
   //comes from {search-btns}
   hasResult.value = payload;
@@ -181,7 +180,7 @@ const setDarkMode = () => {
   darkState.value = !darkState.value;
 };
 
-const matchWord = (input) => {
+const switchToIgbo = (input) => {
   //seek to manage app crash, should useArray be undefined||null.
   const result = useArray.value.find((obj) => obj.name === input);
   if (!result || result === null) {
@@ -190,17 +189,43 @@ const matchWord = (input) => {
     passErrorCode.value = 404;
     return;
   }
-  passError.value = false; //to be sent as props to search-result.
-  useRecord.value = result; //to be sent as props to search-result.`
+  //sent 2 search-result.
+  passError.value = false;
+  useRecord.value = result;
+}
+const switchToEnglish = (input) => {
+  const data = useArray.value;
+  const result = data.find(obj => obj.translation == input)
+  if (!result || result == null) {
+    useRecord.value = {}
+    passError.value = true
+    passErrorCode.value = 404
+    return;
+  }
+  passError.value = false
+  useRecord.value = { name: result.translation, translation: result.name, genre: result.genre }
+}
+
+/*TODO: search for english meanings of duplicate igbo words from the dict records instead, 
+        rather than creating a new record for them each time.
+*/
+
+const matchWord = (input, translation) => {
+  switch (translation) {
+    case "igbo":
+      return switchToIgbo(input)
+    case "english":
+      return switchToEnglish(input)
+    default:
+      return switchToIgbo(input)
+  }
 };
 
 //fns() to check for state in localStorage
-function checkState() {
-  return localStorage.getItem("state");
-}
+const checkState = () => localStorage.getItem("state");
 currentState.value = checkState();
 
-async function fetchRecords() {
+const fetchRecords = async () => {
   try {
     useArray.value = await fetchAllWords();
   } catch (err) {
@@ -208,7 +233,7 @@ async function fetchRecords() {
     errorMatcher(503, errorState);
     setTimeout(() => { useError.value = false }, 2000);
   }
-}
+};
 
 //homepage name is altered,and entire data is fetched, once comp is mounted.
 onMounted(async () => {

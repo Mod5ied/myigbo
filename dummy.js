@@ -138,3 +138,32 @@
 
 // const r = input.split(",")
 // console.log(r);
+
+//! Yet another stupid trial to get clean arr of values.
+// let output;
+// function getPerson(input) {
+//   arr.map((obj) => {
+//     Object.values(obj).forEach((el) => {
+//       if (el === input) {
+//         return (output = el);
+//       }
+//     });
+//   });
+//   return output;
+// }
+const arr = [
+  { name: "mother", translation: "nne" },
+  { name: "father", translation: "nna" },
+];
+
+/* predictive search tests ongoing... */
+function getIgboName(name) {
+  arr.find((obj) => getNearMatch(name, obj.translation));
+}
+
+function getNearMatch(word = "", match) {
+  const first3Words = word.split()
+  console.log(first3Words);
+}
+
+getNearMatch("nnam")

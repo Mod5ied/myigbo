@@ -18,20 +18,20 @@
                 </svg>
             </i>
         </span>
-        <Transition>
-            <span v-if="useMenu" class="headerDropdown" id="menu">
-                <li class="search-links">
-                    <router-link class="relative left-8 md:left-0" :to="{ name: 'Admin' }">Admin</router-link>
-                </li>
-                <li @click="dispatchToggle(Props.title)" class="search-links">
-                    <p class="relative left-8 md:left-0">{{ Props.title }}</p>
-                </li>
-                <li class="search-links">
-                    <router-link class="relative left-8 md:left-0" :to="{ name: 'Register' }">Register here
-                    </router-link>
-                </li>
-            </span>
-        </Transition>
+        <!-- <Transition> -->
+        <span v-if="useMenu" class="headerDropdown" id="menu">
+            <li class="search-links">
+                <router-link class="relative left-8 md:left-0" :to="{ name: 'Admin' }">Admin</router-link>
+            </li>
+            <li @click="dispatchToggle(Props.title)" class="search-links">
+                <p class="relative left-8 md:left-0">{{ Props.title }}</p>
+            </li>
+            <li class="search-links">
+                <router-link class="relative left-8 md:left-0" :to="{ name: 'Register' }">Register here
+                </router-link>
+            </li>
+        </span>
+        <!-- </Transition> -->
     </header>
 </template>
 
@@ -42,7 +42,7 @@ import { ref, onMounted } from 'vue';
 
 let dynamicClass = "flex flex-col";
 let menuDiv = ref(null);
-let useMenu = ref(false)
+let useMenu = ref(true)
 const Props = defineProps({
     darkState: {
         type: Boolean,
@@ -52,14 +52,14 @@ const Props = defineProps({
 })
 const emit = defineEmits(["togglTheme", "togglLearn", "togglSearch"])
 
-function dispatchToggle(where) {
+const dispatchToggle = (where) => {
     if (where === "Learn Igbo") {
         return emit("togglLearn")
     }
     emit("togglSearch");
-}
+};
 
-function toggleMenu() {
+const toggleMenu = () => {
     if (!useMenu.value) {
         menuDiv.value.classList.remove("hidden")
         menuDiv.value.classList.add("flex flex-col")
@@ -69,7 +69,7 @@ function toggleMenu() {
     menuDiv.value.classList.remove("flex flex-col")
     menuDiv.value.classList.add("hidden")
     useMenu.value = false
-}
+};
 
 onMounted(() => {
     menuDiv.value = document.getElementById("menu");

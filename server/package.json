@@ -10,7 +10,7 @@
   "type": "module",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon Api/index.js",
+    "start": "nodemon server/index.js",
     "test": "mocha --recursive",
     "build": ""
   },
