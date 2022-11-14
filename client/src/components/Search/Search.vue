@@ -1,7 +1,6 @@
 <template>
   <div class="h-screen overflow-hidden overflow-x-hidden bg-gray-100 select-none dark:bg-slate-900 font-body">
-    <Header @toggl-theme="setDarkMode" @toggl-learn="router.push({ name: 'Learn' })" :darkState="darkState"
-      title="Learn Igbo" />
+    <Header @toggl-theme="setDarkMode" :darkState="darkState" title="Learn Igbo" />
     <main class="flex flex-col items-center justify-center gap-3 py-10 md:px-5 md:py-6 md:gap-10">
       <div id="parent" class="flex flex-col items-center md:w-2/4 md:h-96">
         <!-- homepage image and texts. -->
@@ -93,7 +92,6 @@ let useSearchBar = ref(true) //👈 to show the tab buttons below.
 let useHistory = ref(true); //👈 to show the history tab.
 let useSpeaker = ref(false); //👈 to show the voice-out tab.
 let useInteract = ref(false); //👈 to show the interact section.
-// let useLearnComponent = ref(null); //👈 to show the learn page.
 let HideArrow = ref(false); // 👈 to hide the search-box arrow.
 let useArray = ref([]); // 👈 to store the array that is fetched on mount.
 let useRecord = ref({}); // 👈 to be sent to search-result > search-card.
@@ -108,10 +106,6 @@ let darkState = ref(true);
 
 //reactive class states
 let SearchClass = "mt-10 md:mt-0";
-
-//reactive state for header dropdown.
-// let menu = ref(false);
-
 
 //emitters to grab user input.
 emitter.on("use-input-igbo", (payload) => {
@@ -143,11 +137,13 @@ emitter.on("show-games", () => {
 })
 emitter.on('reset-search', () => {
   useInteract.value = false;
-  // useLearnComponent.value = false
   setTimeout(() => {
     useSearchBar.value = true;
     useIntro.value = true;
   }, 1000);
+})
+emitter.on("togglLearn", () => {
+  router.push({ name: 'Learn' })
 })
 
 //emit to catch error events.

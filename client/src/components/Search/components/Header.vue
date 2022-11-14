@@ -1,10 +1,10 @@
 <template>
     <header
-        class="flex flex-row justify-between w-full px-3 py-5 list-none border-b dark:border-b-gray-800 md:px-5 md:py-4 dark:bg-slate-900 bg-gray-50">
+        class="flex flex-row justify-between w-full h-16 px-3 py-5 list-none border-b dark:border-b-gray-800 md:px-5 dark:bg-slate-900 bg-gray-50">
         <span class="flex w-full text-gray-500 md:w-8 md:relative md:left-10">
             <i class="flex justify-between w-full cursor-pointer md:items-center">
                 <!-- hamburger menu. -->
-                <svg @click="useMenu = !useMenu" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:hidden"
+                <svg @click="useMenu = !useMenu" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 dark:text-slate-300 md:hidden"
                     viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd"
                         d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h6a1 1 0 110 2H4a1 1 0 01-1-1z"
@@ -18,31 +18,16 @@
                 </svg>
             </i>
         </span>
-        <!-- <Transition> -->
-        <span v-if="useMenu" class="headerDropdown" id="menu">
-            <li class="search-links">
-                <router-link class="relative left-8 md:left-0" :to="{ name: 'Admin' }">Admin</router-link>
-            </li>
-            <li @click="dispatchToggle(Props.title)" class="search-links">
-                <p class="relative left-8 md:left-0">{{ Props.title }}</p>
-            </li>
-            <li class="search-links">
-                <router-link class="relative left-8 md:left-0" :to="{ name: 'Register' }">Register here
-                </router-link>
-            </li>
-        </span>
-        <!-- </Transition> -->
+        <Header_links display="headerDropdown" :title="Props.title" v-if="useMenu" />
+        <Header_links display="headerLinks" :title="Props.title" />
     </header>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
+import Header_links from './helpers/header_links.vue';
 
-
-
-let dynamicClass = "flex flex-col";
-let menuDiv = ref(null);
-let useMenu = ref(true)
+let useMenu = ref(false)
 const Props = defineProps({
     darkState: {
         type: Boolean,
@@ -50,30 +35,7 @@ const Props = defineProps({
     },
     title: String
 })
-const emit = defineEmits(["togglTheme", "togglLearn", "togglSearch"])
-
-const dispatchToggle = (where) => {
-    if (where === "Learn Igbo") {
-        return emit("togglLearn")
-    }
-    emit("togglSearch");
-};
-
-const toggleMenu = () => {
-    if (!useMenu.value) {
-        menuDiv.value.classList.remove("hidden")
-        menuDiv.value.classList.add("flex flex-col")
-        useMenu.value = true
-        return
-    }
-    menuDiv.value.classList.remove("flex flex-col")
-    menuDiv.value.classList.add("hidden")
-    useMenu.value = false
-};
-
-onMounted(() => {
-    menuDiv.value = document.getElementById("menu");
-})
+const emit = defineEmits(["togglTheme"])
 </script>
 <style scoped>
 .v-enter-active,

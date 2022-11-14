@@ -1,7 +1,6 @@
 <template>
     <div class="h-screen overflow-hidden overflow-x-hidden bg-gray-100 select-none dark:bg-slate-900 font-body">
-        <Header class="z-10" @toggl-theme="setDarkMode" @toggl-search="router.push({ name: 'Search' })"
-            :dark-state="darkState" title="Search Words" />
+        <Header class="z-10" @toggl-theme="setDarkMode" :dark-state="darkState" title="Search Words" />
         <Transition>
             <Home @alpha="toggleView('alpha')" @number="toggleView('number')" @vowels="toggleView('vowels')"
                 :use-home="useHome" />
@@ -48,6 +47,9 @@ emitter.on("return-to-learn", () => {
         emitter.emit("can-use-router")
     }, 700)
 })
+emitter.on("togglSearch", () => {
+    router.push({ name: 'Search' })
+})
 
 //fns() for tweaking light and dark modes.
 const setDarkMode = () => {
@@ -62,7 +64,7 @@ const setDarkMode = () => {
     darkState.value = !darkState.value;
 };
 
-function toggleView(view) {
+const toggleView = (view) => {
     switch (view) {
         case "alpha":
             useHome.value = false;
@@ -79,5 +81,5 @@ function toggleView(view) {
             canReturn.value = !canReturn.value
             break;
     }
-}
+};
 </script>
