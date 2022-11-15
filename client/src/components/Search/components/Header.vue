@@ -1,6 +1,6 @@
 <template>
     <header
-        class="flex flex-row justify-between w-full h-16 px-3 py-5 list-none border-b dark:border-b-gray-800 md:px-5 dark:bg-slate-900 bg-gray-50">
+        class="flex flex-row justify-between w-full px-3 py-5 list-none border-b h-14 dark:border-b-gray-800 md:px-5 dark:bg-slate-900 bg-gray-50">
         <span class="flex w-full text-gray-500 md:w-8 md:relative md:left-10">
             <i class="flex justify-between w-full cursor-pointer md:items-center">
                 <!-- hamburger menu. -->

@@ -53,12 +53,12 @@ import {
   ref,
 } from "vue";
 import { useRouter } from "vue-router";
-import Header from "./components/Header.vue";
 import { Requests } from "../../proxy/Services";
+import { ErrorStates } from "../../proxy/ErrorScript";
+import Header from "./components/Header.vue";
 import DockTabs from "./components/DockTabs.vue";
 import image2 from "../../assets/Solutions_2.png";
 import Search_box from "./components/Search_box.vue";
-import { ErrorStates } from "../../proxy/ErrorScript";
 
 const SearchInteract = defineAsyncComponent(() => import("../Interactive/Search_Interact.vue"));
 const SearchResult = defineAsyncComponent(() => import("./components/Search_result.vue"));
@@ -66,11 +66,7 @@ const { errorMatcher } = ErrorStates;
 const { fetchAllWords } = Requests;
 const emitter = inject("emitter");
 const router = useRouter()
-
-//dynamic arrays.
-// const images = ref([image1, image2]); //👈 should be used to loop through homepage images.
 const array = ["Translates", "Teaches", "Transcends", "By Sinq.io"];
-let name = ref(array[3]);
 
 //function to randomize home text.
 function arrDelay(arr, delegate, delay) {
@@ -84,8 +80,8 @@ function arrDelay(arr, delegate, delay) {
   return interval;
 }
 
-
 //reactive states for all mini components
+let name = ref(array[3]);
 let hasResult = ref(false); //👈 if new search is truthy.
 let useIntro = ref(true); //👈 to show the intro section.
 let useSearchBar = ref(true) //👈 to show the tab buttons below.
@@ -99,13 +95,11 @@ let useError = ref(false); // 👈 to used to toggle the error display.
 let passError = ref(false); // 👈 to be sent to search-result.
 let passErrorCode = ref(0); // 👈 to be sent to search-result.
 let errorState = ref(""); // 👈 to be sent to search-result > search-card.
+let SearchClass = "mt-10 md:mt-0"; //reactive class states
 
 //dark nd light mode states.
 let currentState = ref(null);
 let darkState = ref(true);
-
-//reactive class states
-let SearchClass = "mt-10 md:mt-0";
 
 //emitters to grab user input.
 emitter.on("use-input-igbo", (payload) => {

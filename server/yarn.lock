@@ -898,6 +898,11 @@
   dependencies:
     "lodash" "^4.17.14"
 
+"async@^3.2.0":
+  "integrity" "sha512-iAB+JbDEGXhyIUavoDl9WP/Jj106Kz9DEn1DPgYw5ruDn0e3Wgi3sKFm55sASdGBNOQB8F59d9qQ7deqrHA8wQ=="
+  "resolved" "https://registry.npmjs.org/async/-/async-3.2.4.tgz"
+  "version" "3.2.4"
+
 "async@2.1.4":
   "integrity" "sha512-ZAxi5cea9DNM37Ld7lIj7c8SmOVaK/ns1pTiNI8vnQbyGsS5WuL+ImnU5UVECiIw43wlx9Wnr9iXn7MJymXacA=="
   "resolved" "https://registry.npmjs.org/async/-/async-2.1.4.tgz"
@@ -1836,6 +1841,13 @@
   "version" "2.8.4"
   dependencies:
     "async" "2.1.4"
+
+"getos@^3.1.1":
+  "integrity" "sha512-U56CfOK17OKgTVqozZjUKNdkfEv6jk5WISBJ8SHoagjE6L69zOwl3Z+O8myjY9MEW3i2HPWQBt/LTbCgcC973Q=="
+  "resolved" "https://registry.npmjs.org/getos/-/getos-3.2.1.tgz"
+  "version" "3.2.1"
+  dependencies:
+    "async" "^3.2.0"
 
 "getpass@^0.1.1":
   "integrity" "sha512-0fzj9JxOLfJ+XGLhR8ze3unN0KZCgZwiSSDz168VERjK8Wl8kVSdcu2kspd4s4wtAa1y/qrVRiAA0WclVsu0ng=="

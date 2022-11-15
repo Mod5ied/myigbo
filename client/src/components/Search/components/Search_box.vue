@@ -15,14 +15,7 @@
             </svg>
 
           </i>
-          <!-- <i @click="handleSubmit" class="input-icons-style" title="Search">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd"
-                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                clip-rule="evenodd" />
-            </svg>
-          </i> -->
-          <i class="input-icons-style" @click="useHistory = !useHistory" v-if="notTyping" title="History">
+          <i class="input-icons-style" @click="showHistory" title="History">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
               stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -36,7 +29,6 @@
                 d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
             </svg>
           </i> -->
-          <!-- !set to 14, cannot exist with 👆, one must !exist -->
           <i class="input-icons-style" v-if="isTyping" @click="clearInputBox">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd"
@@ -54,7 +46,7 @@
         </div>
         <!-- 👇 history tab. -->
         <Transition>
-          <SearchHistory v-if="useHistory" />
+          <SearchHistory v-if="useHistory" :show-history="useHistory" />
         </Transition>
       </span>
     </form>
@@ -62,11 +54,12 @@
 </template>
 
 <script setup>
-import { inject, ref, watchEffect, defineAsyncComponent } from "vue";
+import { inject, ref, watchEffect, defineAsyncComponent, onBeforeUnmount } from "vue";
+import { get, set, delMany, update } from "idb-keyval"
 const SearchHistory = defineAsyncComponent(() => import("../components/Search_history.vue"))
 const text1 = "Translate Igbo words";
 const text2 = "Translate English words";
-const useState = [false, true];
+// const useState = [false, true];
 const emitter = inject("emitter");
 
 //reactive input data.
@@ -89,9 +82,6 @@ const props = defineProps({
   SearchClass: String,
   DictClass: String,
 });
-const hideCard = () => {
-  emitter.emit("hide-card", useState);
-};
 const clearInputBox = () => {
   input.value = "";
 };
@@ -112,6 +102,12 @@ emitter.on("revert-btns", (payload) => {
   isTyping.value = payload[0];
   notTyping.value = payload[1];
 });
+emitter.on("append-to-search", (value) => {
+  input.value = value;
+})
+emitter.on("hide-history", () => {
+  useHistory.value = false;
+})
 
 //input 'fns()', emits many events across children components.
 const handleSubmit = function () {
@@ -122,12 +118,12 @@ const handleSubmit = function () {
           emitter.emit("use-input-english", input.value); // 👉search
           emitter.emit("hide-buttons", false); // 👉search-btns
           emitter.emit("show-results", true); // 👉search-result & Search
-          return;
+          return saveHistory(input.value, "igboHistories");
         case text2:
           emitter.emit("use-input-igbo", input.value);
           emitter.emit("hide-buttons", false);
           emitter.emit("show-results", true);
-          return;
+          return saveHistory(input.value, "englishHistories");
       }
     }
     return emitter.emit("invalid-word", 300);
@@ -142,7 +138,20 @@ const hideSearchButton = () => {
 const showSearchButton = () => {
   emitter.emit("show-search-button", true);
 };
-</script>
-<style scoped>
+const showHistory = () => {
+  if (useHistory.value == false ? useHistory.value = true : useHistory.value = false);
+}
 
-</style>
+const saveHistory = async (value = "", history = "") => {
+  const histories = await get(history);
+  if (!histories || histories == undefined) {
+    return await set(history, [value]);
+  }
+  histories.push(value)
+  await set(history, histories);
+}
+
+const wipeHistories = async () => {
+  await delMany(["englishHistories", "igboHistories"])
+}
+</script>

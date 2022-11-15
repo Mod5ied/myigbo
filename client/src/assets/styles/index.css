@@ -36,7 +36,7 @@
   @apply absolute flex flex-col justify-start w-11/12 mt-1 text-sm font-semibold border rounded md:hidden text-slate-700 h-1/4 bg-slate-50 dark:bg-slate-700 border-slate-400 dark:border-slate-600 top-16 left-5 dark:text-slate-400;
 }
 .headerLinks {
-  @apply hidden dark:bg-slate-700 md:gap-8 dark:md:bg-transparent md:h-16 md:relative md:-top-5 md:rounded-none md:flex md:border-none md:flex-row md:w-1/2;
+  @apply hidden dark:bg-slate-700 md:gap-8 dark:md:bg-transparent md:h-14 md:relative md:-top-5 md:rounded-none md:flex md:border-none md:flex-row md:w-1/2;
 }
 .headerAdminDropdown {
   @apply absolute z-20 flex-col justify-start w-11/12 text-sm font-semibold border rounded top-16 left-5 h-1/4 bg-slate-50 border-slate-400 dark:bg-slate-700 md:hidden;
