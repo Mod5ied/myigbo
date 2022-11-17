@@ -7,14 +7,14 @@ let currentState = ref(null);
 
 
 //fn that checks the localstorage for state changes & assigns to var.
-function checkStorage() {
+const checkStorage = () => {
   const state = localStorage.getItem("state");
   return state;
-}
+};
 currentState.value = checkStorage();
 
 //fn that persists either state based on {currentState} value.
-function persistState() {
+const persistState = () => {
   switch (currentState.value) {
     case "dark":
       parentDiv.value.classList.add("dark");
@@ -23,6 +23,16 @@ function persistState() {
       parentDiv.value.classList.remove("dark");
       break;
   }
+};
+
+const timeInMilSecs = (ms = 1) => {
+  return ms * 60 * 24
+}
+const wipeHistories = async () => {
+  /* wipes history after 24-hrs */
+  setTimeout(async () => {
+    await delMany(["englishHistories", "igboHistories"])
+  }, timeInMilSecs(1000))
 }
 
 //emitters that sets payload to localStorage database on emission of event.
@@ -43,6 +53,7 @@ emitter.on("set-theme", (payload) => {
 onMounted(() => {
   parentDiv.value = document.getElementById("parent");
   persistState();
+  wipeHistories();
 });
 </script>
 

@@ -33,16 +33,13 @@ const matchArrayToPlaceHolder = (histories, placeholder) => {
   switch (placeholder) {
     case "Translate Igbo words":
       console.log("igbo", histories[1]);
-      existingHistories.value  = histories[1].reverse(); //i f.ing did it. Histories now shows up from most recent.
+      existingHistories.value = histories[1].reverse(); //i f.ing did it. Histories now shows up from most recent.
       break;
     case "Translate English words":
       console.log("english", histories[0]);
-      existingHistories.value  = histories[0].reverse(); //i f.ing did it. Histories now shows up from most recent.
+      existingHistories.value = histories[0].reverse(); //i f.ing did it. Histories now shows up from most recent.
       break;
   }
-}
-const wipeHistories = async () => {
-  await delMany(["englishHistories", "igboHistories"])
 }
 
 watchEffect(async () => {
