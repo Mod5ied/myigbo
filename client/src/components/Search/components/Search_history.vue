@@ -1,36 +1,52 @@
 <template>
   <div class="input-history-cover" v-if="showHistory">
-    <ul class="history-list-cover" v-for="(obj) in existingHistories">
-      <li class="history-list" v-for="str of obj" v-text="str" @click="appendToSearch(str)"></li>
+    <ul class="history-list-cover">
+      <li class="history-list" v-for="obj in existingHistories" v-text="obj" @click="appendToSearch(obj)"></li>
     </ul>
   </div>
 </template>
 
 <script setup>
-import { inject, ref, onMounted } from "vue";
+import { inject, ref, watchEffect } from "vue";
 import { getMany } from "idb-keyval"
 
-/* should fetch data from localStorage and populate the UI */
 let existingHistories = ref([]);
 const emitter = inject("emitter");
 const Props = defineProps({
+  placeHolder: String,
   showHistory: {
     type: Boolean,
     default: false
   }
 })
 let showHistory = ref(Props.showHistory)
+let placeHolder = ref(Props.placeHolder)
 
 const appendToSearch = (value) => {
   emitter.emit("append-to-search", value)
   setTimeout(() => { emitter.emit("hide-history") }, 300)
 }
 const fetchHistory = async () => {
-  existingHistories.value = await getMany(["englishHistories", "igboHistories"])
+  return await getMany(["englishHistories", "igboHistories"])
+}
+const matchArrayToPlaceHolder = (histories, placeholder) => {
+  switch (placeholder) {
+    case "Translate Igbo words":
+      console.log("igbo", histories[1]);
+      existingHistories.value  = histories[1].reverse(); //i f.ing did it. Histories now shows up from most recent.
+      break;
+    case "Translate English words":
+      console.log("english", histories[0]);
+      existingHistories.value  = histories[0].reverse(); //i f.ing did it. Histories now shows up from most recent.
+      break;
+  }
+}
+const wipeHistories = async () => {
+  await delMany(["englishHistories", "igboHistories"])
 }
 
-onMounted(async () => {
-  await fetchHistory()
+watchEffect(async () => {
+  placeHolder.value = matchArrayToPlaceHolder(await fetchHistory(), placeHolder.value);
 })
 </script>
 

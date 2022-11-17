@@ -10,8 +10,10 @@
           <i @click="toggleTranslator" v-if="notTyping" class="input-icons-style" title="Switch Translator">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
               stroke="currentColor" class="w-6 h-6 text-red-400">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 00-3.7-3.7 48.678 48.678 0 00-7.324 0 4.006 4.006 0 00-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3l-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 003.7 3.7 48.656 48.656 0 007.324 0 4.006 4.006 0 003.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3l-3 3" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 00-3.7-3.7 48.678 48.678 
+                0 00-7.324 0 4.006 4.006 0 00-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3l-3-3m-12 3c0 
+                1.232.046 2.453.138 3.662a4.006 4.006 0 003.7 3.7 48.656 48.656 0 007.324 0 4.006 4.006 
+                0 003.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3l-3 3" />
             </svg>
 
           </i>
@@ -46,7 +48,7 @@
         </div>
         <!-- 👇 history tab. -->
         <Transition>
-          <SearchHistory v-if="useHistory" :show-history="useHistory" />
+          <SearchHistory v-if="useHistory" :show-history="useHistory" :place-holder="placeholder" />
         </Transition>
       </span>
     </form>
@@ -55,11 +57,10 @@
 
 <script setup>
 import { inject, ref, watchEffect, defineAsyncComponent, onBeforeUnmount } from "vue";
-import { get, set, delMany, update } from "idb-keyval"
+import { get, set, delMany } from "idb-keyval"
 const SearchHistory = defineAsyncComponent(() => import("../components/Search_history.vue"))
 const text1 = "Translate Igbo words";
 const text2 = "Translate English words";
-// const useState = [false, true];
 const emitter = inject("emitter");
 
 //reactive input data.
@@ -149,9 +150,5 @@ const saveHistory = async (value = "", history = "") => {
   }
   histories.push(value)
   await set(history, histories);
-}
-
-const wipeHistories = async () => {
-  await delMany(["englishHistories", "igboHistories"])
 }
 </script>
