@@ -151,19 +151,40 @@
 //   });
 //   return output;
 // }
-const arr = [
-  { name: "mother", translation: "nne" },
-  { name: "father", translation: "nna" },
-];
 
-/* predictive search tests ongoing... */
-function getIgboName(name) {
-  arr.find((obj) => getNearMatch(name, obj.translation));
-}
+// const arr = [
+//   { name: "mother", translation: "nne" },
+//   { name: "father", translation: "nna" },
+// ];
 
-function getNearMatch(word = "", match) {
-  const first3Words = word.split()
-  console.log(first3Words);
-}
+// /* predictive search tests ongoing... */
+// function getIgboName(name) {
+//   arr.find((obj) => getNearMatch(name, obj.translation));
+// }
 
-getNearMatch("nnam")
+// function getNearMatch(word = "", match) {
+//   const first3Words = word.split()
+//   console.log(first3Words);
+// }
+
+// getNearMatch("nnam")
+
+//todo: Maps are dataStructs thats holds a key-value pair where the key can be of any datatype.
+//todo: maps has a size props that returns the size of a map (unlike an object).
+//todo: we use the 'new Map()' command to create a new map.
+//todo: Map methods are: 'set', 'get', clear', 'delete', 'has', 'size', 'forEach', 'keys', 'values'.
+
+const cars = new Map([
+  ["audi", 100],
+  ["mitsubishi", 50],
+]);
+
+const bankAccount = new Map([
+  [20152016, "Ogwuru Patrick"],
+  [20142015, "Ogwuru Alfred"],
+]);
+
+let num = (Int16Array = 20.056);
+
+console.log(num.toPrecision(2));
+console.log(parseInt(num, 8));

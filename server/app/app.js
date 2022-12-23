@@ -1,10 +1,10 @@
 import express from "express";
 import { errorHandler } from "../errors/index.js";
 import { ApiError } from "../errors/errorParser.js";
-import * as dotenv from "dotenv";
+import { appRoutes } from "../routes/index.js";
 import cors from "cors";
 import helmet from "helmet";
-import Router from "../routes/routes.js";
+import * as dotenv from "dotenv";
 import logger from "../utils/log/logger.js";
 dotenv.config();
 
@@ -21,7 +21,7 @@ export class Application {
     this._server.use(helmet());
     this._server.use(cors());
 
-    this._server.use("/api/v1/", Router);
+    this._server.use(appRoutes);
     this._server.use(errorHandler);
   }
 

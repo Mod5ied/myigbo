@@ -11,7 +11,10 @@
     "pino",
     "savelog",
     "semibold",
+    "signin",
+    "signout",
     "Sinq",
     "toggl"
-  ]
+  ],
+  "editor.accessibilityPageSize": 30
 }

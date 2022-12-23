@@ -205,6 +205,8 @@ class Requests {
     try {
       fail.value = false;
       load.value = true;
+      
+      //todo: accept one or more words, put in an array and send to server! 
       const res = await deleteOnePost(del_con.value, payload.value);
       const { state, data } = res;
       setTimeout(async () => {
