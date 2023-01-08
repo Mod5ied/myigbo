@@ -53,8 +53,8 @@ import {
   ref,
 } from "vue";
 import { useRouter } from "vue-router";
-import { Requests } from "../../proxy/Services";
-import { ErrorStates } from "../../proxy/ErrorScript";
+import { Requests } from "../../../proxy/Services";
+import { ErrorStates } from "../../../proxy/ErrorScript";
 import Header from "./components/Header.vue";
 import DockTabs from "./components/DockTabs.vue";
 import image2 from "../../assets/Solutions_2.png";

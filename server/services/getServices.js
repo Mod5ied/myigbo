@@ -1,18 +1,18 @@
 class GetService {
   static getRecords = async (model) => {
-    const getResponse = await model.find({}).lean();
-    if (getResponse.length === 0) {
+    const records = await model.find({}).lean();
+    if (records.length === 0) {
       return null;
     }
-    return getResponse;
+    return records;
     // //! To fetch from the online Posts docs to the new Words doc: ✅
     // const staleWords = await Posts.find({});
   };
 
   static getOneRecord = async (model, payload) => {
-    const getResponse = await model.findOne({ name: payload }).lean();
-    if (!users) return false;
-    return getResponse;
+    const record = await model.findOne({ name: payload }).lean();
+    if (!record) return false;
+    return record;
   };
 
   static getUsers = async (model) => {

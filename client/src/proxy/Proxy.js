@@ -1,22 +1,22 @@
 "use strict";
-import { endPoints } from "../config/index.js";
+import { endPoints } from "../app/routes/api.routes.js";
 import axios from "axios";
 
 export class PostProxy {
+  /*** function returns a promise of an array of document. */
   static getWords = async () => {
     return new Promise(async (resolve, reject) => {
       try {
         const res = await axios.get(`${endPoints.url1}allWords`);
         const results = await res.data;
         resolve(results);
-        if (!results.state) {
-          throw new Error(results.state);
-        }
+        if (!results.state) throw new Error(results.state);
       } catch (err) {
         reject(err ?? err.response.data);
       }
     });
   };
+  /*** function returns a promise of a dict document. */
   static getDicts = async () => {
     return new Promise(async (resolve, reject) => {
       try {
@@ -28,26 +28,20 @@ export class PostProxy {
       }
     });
   };
-  /**
-   *@params {search} or {dict}.
-   */
+  /*** function returns a promise of single quiz document. */
   static getQuiz = async (quiz = "") => {
     return new Promise(async (resolve, reject) => {
       try {
         const res = await axios.get(`${endPoints.url2}${quiz}`);
         const results = await res.data;
         resolve(results);
-        if (results.state == false) {
-          throw new Error(results.state);
-        }
+        if (results.state == false) throw new Error(results.state);
       } catch (err) {
         reject(err ?? err.response.data);
       }
     });
   };
-  /**
-   *@params {data}, @constant {word or dict}.
-   */
+  /*** function accepts an object as payload, returns an object. */
   static registerWord = async (data = {}, constant = "") => {
     return new Promise(async (resolve, reject) => {
       try {
@@ -65,9 +59,7 @@ export class PostProxy {
     });
   };
 
-  /**
-   *@params {data}, @constant {search or dict}.
-   */
+  /*** function accepts an object with 4 properties, returns an object. */
   static registerQuiz = async (data = {}, constant = "") => {
     return new Promise(async (resolve, reject) => {
       try {
@@ -84,9 +76,7 @@ export class PostProxy {
       }
     });
   };
-  /**
-   *@params {data}, @constant {search or dict}.
-   */
+  /*** function asynchronously accepts an array of object and returns an object. */
   static batchUpload = async (data = [], constant = "") => {
     return new Promise(async (resolve, reject) => {
       try {
@@ -98,9 +88,7 @@ export class PostProxy {
       }
     });
   };
-  /**
-   *@params {data}, @constant {search or dict}.
-   */
+  /*** function accepts a text as payload and returns an object. */
   static deleteOnePost = async (data, constant = "") => {
     return new Promise(async (resolve, reject) => {
       try {
@@ -115,6 +103,7 @@ export class PostProxy {
     });
   };
   //! sends data in its request body rather than the params object.
+  /*** function accepts an object as payload, a string params and returns an object. */
   static updatePost = async (constant, data) => {
     return new Promise(async (resolve, reject) => {
       try {

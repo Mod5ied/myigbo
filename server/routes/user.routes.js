@@ -9,7 +9,8 @@ const u = new Users(mod, mod2, "user");
 const userRoutes = Router();
 
 userRoutes.get("/:email", [a.authorizeUser, u.fetchUser]);
-userRoutes.get("/", [ad.authorizeUser, u.fetchUsers]);
+// userRoutes.get("/", [ad.authorizeUser, u.fetchUsers]);
+userRoutes.get("/", [u.fetchUsers]);
 
 userRoutes.put("/update", [a.authorizeUser, u.updateUser]);
 
@@ -18,6 +19,8 @@ userRoutes.post("/signIn", [a.validateUser, u.signinUser]);
 
 userRoutes.delete("/resetToken", [a.validateUser, u.resetToken]);
 userRoutes.delete("/signOut", [a.validateUser, u.signoutUser]);
-userRoutes.delete("/remove", [ad.authorizeUser, u.removeUser]);
+// userRoutes.delete("/remove", [ad.authorizeUser, u.removeUser]);
+userRoutes.delete("/remove", [u.removeUser]);
+
 
 export { userRoutes };

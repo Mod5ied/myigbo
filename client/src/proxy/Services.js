@@ -11,7 +11,7 @@ const { getWords, getDicts, getQuiz, registerWord, registerQuiz, batchUpload, up
 class Requests {
   /**
    * @param {string} ok @param {string} serve @param {Array}
-   * store @param {string} store @param {string} fail @param {string} constant
+   * store @param {string} store @param {string} fail @param {string} constant.
    */
   static fetchWords = async (ok, serve, store, fail) => {
     let response;
@@ -278,26 +278,6 @@ class Requests {
       //todo: should logger here.
     }
   };
-
-  //!! TO BE Deprecated pre-production!
-  static useRefreshStore = (all, Router) => {
-    all.length = 0;
-    Utilities.useReload(all, true, 1000, Router);
-  };
-}
-
-class Utilities {
-  //!! TO BE Deprecated pre-production!
-  /**
-   * @param {string} key @param {boolean} value
-   *  @param {number} time @param {Function} router
-   */
-  static useReload = (key, value, time, router) => {
-    setTimeout(() => {
-      if ((key.value = value)) router.go();
-      return;
-    }, time);
-  };
 }
 
 class OfflineStorage {
@@ -450,4 +430,4 @@ class OfflineStorage {
     }
   };
 }
-export { OfflineStorage, Utilities, Requests };
+export { OfflineStorage, Requests };

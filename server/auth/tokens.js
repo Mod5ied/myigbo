@@ -1,7 +1,6 @@
 import jwt from "jsonwebtoken";
 import { config } from "dotenv";
 import { AccessTokens, RefTokens } from "../models/tokens.js";
-import { UserModel } from "../models/entities.js";
 config();
 
 class AuthTokens {
@@ -30,13 +29,15 @@ class AuthTokens {
     }
   }
   static async verifyTokens(tk) {
-    const verifiedResult = jwt.verify(tk, process.env.ACCESS_TOKEN_SECRET);
-    if (!verifiedResult || verifiedResult === null) return err;
+    jwt.verify(tk, process.env.ACCESS_TOKEN_SECRET, async (err, result) => {
+      if (err.message === "jwt expired") return false;
 
-    const token = await AccessTokens.find({ email: verifiedResult.email }).lean();
-    if (token.length === 0 && verifiedResult) return false;
+      const token = await AccessTokens.find({ email: result.email }).lean();
+      // token ain't found but result still ain't expired.
+      if (token.length === 0 && result) return false;
 
-    return verifiedResult;
+      return result;
+    });
   }
   static async verifyUserSession(email) {
     const token = await AccessTokens.find({ email }).select(["email"]).lean();

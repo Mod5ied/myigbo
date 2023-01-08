@@ -36,7 +36,7 @@
 				v-model.trim="genre" class="dark_inputs" />
 		</div>
 		<!-- submitting section 👇-->
-		<span class="flex flex-row items-center gap-2 p-2 w-11/12 md:w-4/5 text-right">
+		<span class="flex flex-row items-center w-11/12 gap-2 p-2 text-right md:w-4/5">
 			<button
 				class="sub-btns bg-emerald-600 hover:bg-emerald-500 dark:text-slate-100 dark:hover:text-slate-200 text-slate-100 hover:shadow-md hover:border-transparent">
 				Upload word
@@ -81,7 +81,7 @@
 <script setup>
 import { ref, watchEffect, inject, onMounted } from "vue";
 import isOnline from "is-online";
-import { Requests, OfflineStorage } from "../../../../proxy/Services";
+import { Requests, OfflineStorage } from "../../../proxy/Services";
 const { handleOffline } = OfflineStorage;
 const { addNewWord, addNewDict } = Requests;
 const emitter = inject("emitter");

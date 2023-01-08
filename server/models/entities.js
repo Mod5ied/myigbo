@@ -26,8 +26,6 @@ import { hashEmail } from "../utils/encryptions/encrypt.js";
 const userSchema = new Schema(
   {
     email: { type: String, required: true, unique: true, mutable: false, get: hashEmail },
-    firstName: { type: String, required: true },
-    lastName: { type: String, required: true, get: hashEmail },
     password: { type: String, required: true, get: () => null },
     rankings: { type: Number, default: 0 },
     role: { type: String, default: "user" },
@@ -43,8 +41,6 @@ const userSchema = new Schema(
 const adminSchema = new Schema(
   {
     email: { type: String, required: true, unique: true, mutable: false, get: hashEmail },
-    firstName: { type: String, required: true },
-    lastName: { type: String, required: true },
     password: { type: String, required: true, get: () => null },
     activated: { type: Boolean, default: true } /* should be false by default. */,
     role: { type: String, default: "admin" },

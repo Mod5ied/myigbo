@@ -42,8 +42,8 @@
 </template>
 
 <script setup>
-import { Requests } from "../../proxy/Services";
-import { ErrorStates } from "../../proxy/ErrorScript";
+import { Requests } from "../../../proxy/Services";
+import { ErrorStates } from "../../../proxy/ErrorScript";
 import DictSearch from "./components/Dict_search.vue";
 // import ErrorBoundary from "../../ErrorBoundary.vue";
 import {

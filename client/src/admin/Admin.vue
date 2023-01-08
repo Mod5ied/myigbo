@@ -1,6 +1,6 @@
 <template>
   <Transition>
-    <Loader location="nil" :show-loader="showLoader" class="absolute opacity-90 dark:opacity-75 w-full h-full z-30" />
+    <Loader location="nil" :show-loader="showLoader" class="absolute z-30 w-full h-full opacity-90 dark:opacity-75" />
   </Transition>
   <div id="home"
     class="flex flex-col items-center justify-start overflow-x-hidden bg-gray-100 select-none dark:bg-slate-800">
@@ -52,19 +52,19 @@
         <PeekWords v-if="usePeek" />
         <Transition>
           <img src="../../assets/home.svg"
-            class="w-2/3 md:w-2/5 relative bottom-32 opacity-30 z-10" alt="lets-learn">
+            class="relative z-10 w-2/3 md:w-2/5 bottom-32 opacity-30" alt="lets-learn">
         </Transition>
       </main>
     </div>
-    <Sidebar class="absolute bottom-0 md:hidden z-20" />
+    <Sidebar class="absolute bottom-0 z-20 md:hidden" />
   </div>
 </template>
 <script setup>
 import { ref, inject, defineAsyncComponent} from "vue";
-import { OfflineStorage } from "../../proxy/Services";
+import { OfflineStorage } from "../proxy/Services";
 import Header1 from "./components/Header.vue";
 import Sidebar from "./components/Sidebar.vue";
-import Loader from "../Interactive/Loader.vue";
+import Loader from "../app/components/Interactive/Loader.vue";
 
 const AddWord = defineAsyncComponent(() => import("../Admin/views/AddWord.vue"));
 const AddAudio = defineAsyncComponent(() => import("../Admin/views/AddAudio.vue"));

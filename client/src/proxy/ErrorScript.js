@@ -25,13 +25,6 @@ class ErrorStates {
       sending necessary logs to log engine.
     */
   }
-  static useUniversal(fn) {
-    try {
-      const res = fn();
-    } catch (err) {
-      return (res = res);
-    }
-  }
 }
 
 export { ErrorStates };

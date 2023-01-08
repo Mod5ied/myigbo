@@ -1,4 +1,5 @@
 <script setup>
+import { delMany } from "idb-keyval";
 import { inject, onMounted, ref } from "vue";
 const emitter = inject("emitter");
 

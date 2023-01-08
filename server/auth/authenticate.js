@@ -12,7 +12,7 @@ class Authorization {
     if (typeof this.role === "string") this.role = [this.role];
 
     const bearerToken = req.headers["authorization"];
-    if (!bearerToken) return next(ApiError.notFoundRequest("UnauthorizedRequest, Token not found."))
+    if (!bearerToken) return next(ApiError.unauthorizedRequest("UnauthorizedRequest, Token not found."));
 
     req.bearer = bearerToken && bearerToken.split(" ")[1];
     const verifiedPayload = await AuthTokens.verifyTokens(req.bearer);
@@ -28,6 +28,8 @@ class Authorization {
 
   /*** method is  used on login route only. */
   validateUser = async (req, res, next) => {
+    if (!req.body) return next(ApiError.badRequest("Request body is null"));
+
     const { email, password: rawPassword } = req.body;
     const SelectOptions = ["email", "password", "activated", "role"];
     const User = await this.model.findOne({ email }).select(SelectOptions).lean();
@@ -35,7 +37,7 @@ class Authorization {
     if (User && User.activated) {
       let { email, password, role } = User;
       const DoesMatch = await compareHashed({ hashedPassword: password, rawPassword });
-      if (!DoesMatch) return res.status(401).json({ error: "Incorrect email or password" });
+      if (!DoesMatch) return next(ApiError.unauthorizedRequest("Incorrect email or password"));
 
       //todo: Look into this 👇
       password = null;
@@ -46,15 +48,17 @@ class Authorization {
       return next();
     }
 
-    return res.status(403).json({ error: "User account is not activated or not found" });
+    return next(ApiError.accessDeniedRequest("User account is not activated or not found"));
   };
 
   /*** method is used on register route only. */
   validateNewUser = async (req, res, next) => {
+    if (!req.body) return next(ApiError.badRequest("Request body is null"));
+    
     const { email } = req.body;
     const User = await this.model.findOne({ email: email }).lean();
-    if (User) return res.status(400).json({ error: "User account already exists" });
-    next();
+    if (User) return next(ApiError.badRequest("User account already exists"));
+    return next();
   };
 }
 

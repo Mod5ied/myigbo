@@ -4,6 +4,7 @@ import { PostService } from "../services/postServices.js";
 import { GetService } from "../services/getServices.js";
 import { ApiError } from "../errors/errorParser.js";
 import { AuthTokens } from "../auth/tokens.js";
+import { UserModel } from "../models/entities.js";
 
 class Users {
   constructor(user_model, token_model, user_role) {
@@ -13,13 +14,15 @@ class Users {
   }
 
   signupUser = async (req, res, next) => {
+    if (!req.body || req.body == null) return next(ApiError.notFoundRequest("Request body was not found"));
+
     const user = await PostService.createUser(this.userModel, req.body);
     if (!user) return next(ApiError.badRequest("Could not create user account."));
     return res.status(201).json({ message: "Account created" });
   };
 
   signinUser = async (req, res, next) => {
-    const { _id, email, activated } = req.payload;
+    const { _id, email, role, activated } = req.payload;
     const doesExist = await AuthTokens.verifyUserSession(email);
     if (doesExist) return next(ApiError.badRequest("User is already logged in"));
 
@@ -27,7 +30,7 @@ class Users {
     if (!userToken) return next(ApiError.badRequest("Something happened while signing in"));
 
     const { accessToken, ...rest } = userToken;
-    return res.status(200).json({ token: accessToken, user: { _id, email, activated } });
+    return res.status(200).json({ token: accessToken, user: { _id, email, role, activated } });
   };
 
   signoutUser = async (req, res, next) => {
@@ -46,6 +49,7 @@ class Users {
   };
 
   removeUser = async (req, res, next) => {
+    return await UserModel.deleteMany({})
     if (req.payload.role === "admin" && req.payload.email) {
       const result = await DeleteService.deleteUser(this.userModel, req.payload);
       if (!result) return next(ApiError.badRequest("User was not removed"));
@@ -55,12 +59,12 @@ class Users {
   };
 
   fetchUsers = async (req, res, next) => {
-    if (req.payload.role == "admin") {
-      const users = await GetService.getUsers(this.userModel);
-      if (!users) return next(ApiError.notFoundRequest("Accounts were not found"));
-      return res.status(200).json(users);
-    }
-    return next(ApiError.unauthorizedRequest("Request is unauthorized"));
+    // if (req.payload.role == "admin") {
+    const users = await GetService.getUsers(this.userModel);
+    if (!users) return next(ApiError.notFoundRequest("Accounts were not found"));
+    return res.status(200).json(users);
+    // }
+    // return next(ApiError.unauthorizedRequest("Request is unauthorized"));
   };
 
   fetchUser = async (req, res, next) => {
