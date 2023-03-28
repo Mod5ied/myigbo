@@ -5,7 +5,7 @@ module.exports = {
     extend: {
       fontFamily: {
         body: ["Nunito"],
-        // load: ["Cinzel"]
+        search: ["Righteous"],
       },
     },
   },

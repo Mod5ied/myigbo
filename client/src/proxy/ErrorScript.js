@@ -27,4 +27,4 @@ class ErrorStates {
   }
 }
 
-export { ErrorStates };
+export default ErrorStates;

@@ -13,7 +13,9 @@ class WordsController {
   }
 
   static postWord = async (req, res, next) => {
-    // if (req.params === null) return next(ApiError.notAvailableRequest("Path is invalid"));
+    // if (req.payload.role === "admin" && req.payload.email === checkAdminEmail()) {
+    //   /** checkAdminEmail is a middleware that chks if email is valid. */
+    // } 
     if (req.payload.role === "admin" && req.payload.email === adminEmail) {
       const constant = { name: req.body.name, genre: req.body.genre, translation: req.body.translation };
       const postResponse = await PostService.postRecord(Words, constant);
@@ -26,7 +28,10 @@ class WordsController {
   };
 
   static getWords = async (req, res, next) => {
-    if (req.payload.role === "admin" && req.payload.email === adminEmail) {
+    // if (req.payload.role === "admin" && req.payload.email === checkAdminEmail()) {
+    //   /** checkAdminEmail is a middleware that chks if email is valid. */
+    // } 
+    if (['user', 'admin'].includes(req.payload.role) && req.payload.email) {
       const getResponse = await GetService.getUsers(Words);
       if (getResponse === null) return next(ApiError.notFoundRequest(`Resource does not exist`));
 
@@ -36,8 +41,7 @@ class WordsController {
   };
 
   static getOneWord = async (req, res, next) => {
-    // if (req.params.name.length <= 1) return next(ApiError.badRequest("Path is invalid"));
-    if (req.payload.role === "user" && req.payload.email === userEmail) {
+    if (req.payload.role === "user" && req.payload.email) {
       const constant = req.params.name;
       const getResponse = await GetService.getOneRecord(Words, constant);
       if (getResponse === null) return next(ApiError.notFoundRequest(`Resource does not exist`));
@@ -49,8 +53,7 @@ class WordsController {
   };
 
   static deleteWord = async (req, res, next) => {
-    // if (req.params.name === null) return next(ApiError.notAvailableRequest("Path is invalid"));
-    if (req.payload.role === "admin" && req.payload.email === adminEmail) {
+    if (req.payload.role === "admin" && req.payload.email) {
       const constant = req.params.name;
       const deleteResponse = await DeleteService.deleteRecord(Words, constant);
       if (!deleteResponse) return next(ApiError.notFoundRequest(`Resource does not exist`));

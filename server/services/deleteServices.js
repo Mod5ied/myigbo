@@ -45,12 +45,12 @@ class DeleteService {
     return true;
   };
 
-  /***  gets access to the email and returns a link to delete current token */
+  /***  deletes token associated with email and emails user a new token generation link */
   static resetUserToken = async (payload) => {
     const result = await AccessTokens.deleteMany({ email: payload.email });
     if (result.deletedCount <= 0) return false;
     return result;
-    /* now a new token is created and attached to a link sent to client */
+    /* next, a new token is created and attached to a link sent to client */
   };
 
   static refreshUserToken = (payload) => {};

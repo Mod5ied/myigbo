@@ -27,7 +27,6 @@
 
 <script setup>
 import { ref, onBeforeMount, inject } from "vue";
-import { router } from "../app/routes/app.routes";
 import { authService } from "../services/auth.service";
 
 const emitter = inject("emitter");
@@ -70,7 +69,3 @@ async function execSignup() {
 
 onBeforeMount(async () => { });
 </script>
-
-<style scoped>
-
-</style>

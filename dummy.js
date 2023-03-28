@@ -174,17 +174,23 @@
 //todo: we use the 'new Map()' command to create a new map.
 //todo: Map methods are: 'set', 'get', clear', 'delete', 'has', 'size', 'forEach', 'keys', 'values'.
 
-const cars = new Map([
-  ["audi", 100],
-  ["mitsubishi", 50],
-]);
+// const cars = new Map([
+//   ["audi", 100],
+//   ["mitsubishi", 50],
+// ]);
 
-const bankAccount = new Map([
-  [20152016, "Ogwuru Patrick"],
-  [20142015, "Ogwuru Alfred"],
-]);
+// const bankAccount = new Map([
+//   [20152016, "Ogwuru Patrick"],
+//   [20142015, "Ogwuru Alfred"],
+// ]);
 
-let num = (Int16Array = 20.056);
+// let num = (Int16Array = 20.056);
 
-console.log(num.toPrecision(2));
-console.log(parseInt(num, 8));
+// console.log(num.toPrecision(2));
+// console.log(parseInt(num, 8));
+
+const str = 'mother';
+
+let newStr = str.slice(0,3)
+
+console.log(newStr);

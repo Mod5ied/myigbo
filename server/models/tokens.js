@@ -16,10 +16,11 @@ const AccessSchema = new Schema({
 //todo: "Find a way to restart selfDestruct procedure after server goes down."
 AccessSchema.static({
   selfDestructToken: function (email) {
+    console.log('');
     /* wipes doc after 9-mins */
-    setTimeout(async () => {
-      await this.deleteOne({ email: email });
-    }, 90000);
+    // setTimeout(async () => {
+    //   await this.deleteOne({ email: email });
+    // }, 90000);
 
     /* wipes doc after one hour */
     // setTimeout(async () => {

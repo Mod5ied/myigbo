@@ -15,8 +15,9 @@ class Authorization {
     if (!bearerToken) return next(ApiError.unauthorizedRequest("UnauthorizedRequest, Token not found."));
 
     req.bearer = bearerToken && bearerToken.split(" ")[1];
-    const verifiedPayload = await AuthTokens.verifyTokens(req.bearer);
-    if (!verifiedPayload) return next(ApiError.unauthorizedRequest("Token is expired."));
+    let verifiedPayload = await AuthTokens.verifyTokens(req.bearer);
+    
+    if (verifiedPayload === false) return next(ApiError.unauthorizedRequest("Token is expired."));
 
     if (this.role.length && !this.role.includes(verifiedPayload.role)) {
       return next(ApiError.unauthorizedRequest("UnauthorizedRequest, Admin pass required."));
@@ -54,7 +55,7 @@ class Authorization {
   /*** method is used on register route only. */
   validateNewUser = async (req, res, next) => {
     if (!req.body) return next(ApiError.badRequest("Request body is null"));
-    
+
     const { email } = req.body;
     const User = await this.model.findOne({ email: email }).lean();
     if (User) return next(ApiError.badRequest("User account already exists"));
